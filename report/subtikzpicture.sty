@@ -1,0 +1,47 @@
+\NeedsTeXFormat{LaTeX2e}
+
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+
+\newbox\subtikz@scratchbox
+\pgfutil@protected\def\subtikzpicturedef#1#2#3{%
+    \expandafter\gdef\csname #1@Anchor\endcsname{}%
+    \expandafter\gdef\csname #1@setanchors\endcsname{%
+        \setbox\subtikz@scratchbox=\hbox{%
+        \tikzpicture
+        \draw (0,0) coordinate (#1-origin);
+        \csname#1\endcsname{T-#1}{#1-origin}{}
+        \foreach [count=\i] \anchor in {#2}
+        % reference anchor is -center
+        \draw (0,{2-\i/2}) let \p1 = ($(T-#1-subtikz@reference)-(T-#1-\anchor)$) in
+            node[right]{\anchor: \x1,\y1 \expandafter\xdef\csname #1@Anchor\anchor\endcsname{++(\x1,\y1)}};
+        \endtikzpicture
+        }%
+    }%
+    \expandafter\gdef\csname #1@subfix@begin\endcsname{%
+        \@ifundefined{subfix@attach@modified}{}{%
+            \expandafter\let\csname #1@old@subfix\expandafter\endcsname\csname subfix\endcsname%
+            \expandafter\let\csname subfix\expandafter\endcsname\csname #1@subfix@modified\endcsname%
+        }%
+    }%
+    \@ifundefined{subfix@attach@modified}{}{%
+        \expandafter\xdef\csname #1@subfix@modified\endcsname##1{\subtikz@subfix@prefix ##1}%
+    }%
+    \expandafter\gdef\csname #1@subfix@end\endcsname{%
+        \@ifundefined{subfix@attach@modified}{}{%
+            \expandafter\let\csname subfix\expandafter\endcsname\csname #1@old@subfix\endcsname%
+        }%
+    }%
+    \expandafter\gdef\csname#1\endcsname##1##2##3{%
+        {\csname #1@subfix@begin\endcsname%
+        \draw (##2) \csname #1@Anchor##3\endcsname coordinate(##1-subtikz@reference) coordinate (##1-start);%
+        #3
+        \csname #1@subfix@end\endcsname}%
+    }%
+}
+\long\def\subtikzpictureactivate#1{\csname #1@setanchors\endcsname}
+
+\def\subtikz@subfix@prefix{}
+
+%% set this, and subtikzpicture will attach the modified subfix macro
+\let\subfix@attach@modified\relax

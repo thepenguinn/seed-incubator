@@ -1,0 +1,6 @@
+*.pdf
+*.tstp
+*.aux
+*.log
+*/.lunatikz/dep_cache
+*/.lunatikz/subfix_cache
