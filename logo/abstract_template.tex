@@ -1,0 +1,143 @@
+\ifundef{\author}{
+    \def\author{Name of Author}
+} {}
+
+\ifundef{\supervisor}{
+    \def\supervisor{Name of Supervisor}
+} {}
+
+\ifundef{\title}{
+    \def\title{TITLE OF THE WORK}
+} {}
+
+\ifundef{\subtitle}{
+    \def\subtitle{COURSE NAME}
+} {}
+
+\ifundef{\subsubtitle}{
+    \def\subsubtitle{COURSE WORK TYPE}
+} {}
+
+\ifundef{\authordesc}{
+    \def\authordesc{
+        First line \\
+        second line \\
+        third line \\
+    }
+} {}
+
+\ifundef{\supervisordesc}{
+    \def\supervisordesc{
+        First line \\
+        second line \\
+        third line \\
+    }
+} {}
+
+\ifundef{\abstractcontent}{
+    \def\abstractcontent{
+        Say something about what this paper is about.
+    }
+} {}
+
+\renewcommand{\maketitle} {
+    \begin{center}
+        {\LARGE \bfseries \subtitle}
+        \vspace{50pt} \\
+        {\bfseries \subsubtitle}
+        \vspace{10pt}
+    \end{center}
+
+    \begin{center}
+        \rule{\textwidth}{.75pt}
+        \vspace{2pt}
+    \end{center}
+
+    \begin{center}
+        {\huge \bfseries \title}
+        \vspace{2pt}
+    \end{center}
+
+    \begin{center}
+        \rule{\textwidth}{.75pt}
+        \vspace{30pt}
+    \end{center}
+
+    \begin{center}
+        \begin{minipage}{.86\textwidth}
+            {\large
+            \noindent
+            \textit{Author}
+            \hfill
+            \textit{Supervisor}
+
+            \vspace{4pt}
+
+            \noindent
+            {\begin{minipage}[m] {0.4\textwidth}
+                \vfill
+                \raggedright
+                {\linespread{1.2} \itshape \bfseries \author}
+            \end{minipage}
+            \hfill
+            \begin{minipage}[m] {0.4\textwidth}
+                \vfill
+                \raggedleft
+                {\linespread{1.2} \itshape \bfseries \supervisor}
+            \end{minipage}}
+
+            \vspace{15pt}
+
+            \noindent
+            {\begin{minipage}[b] {0.4\textwidth}
+                \vfill
+                \raggedright
+                {\small \itshape \authordesc}
+            \end{minipage}
+            \hfill
+            \begin{minipage}[b] {0.4\textwidth}
+                \vfill
+                \raggedleft
+                {\small \itshape \supervisordesc}
+            \end{minipage}}
+
+            }
+        \end{minipage}
+    \end{center}
+}
+
+\renewenvironment{abstract} {
+    \vspace{30pt}
+    \begin{center}
+        {\large \bfseries \abstractname}
+    \end{center}
+    \vspace{4pt}
+} {
+}
+
+\newcommand\makeabstractpage[0] {
+
+    \maketitle
+
+    \vspace{20pt}
+
+    \begin{abstract}
+        \begin{center}
+            \begin{minipage}{0.86\textwidth}
+                \setlength{\parindent}{20pt}
+                {\large
+
+                \abstractcontent
+
+                }
+            \end{minipage}
+        \end{center}
+    \end{abstract}
+
+    \vspace{80pt}
+    \begin{center}
+        {\LARGE \bfseries
+        \today
+        }
+    \end{center}
+}
