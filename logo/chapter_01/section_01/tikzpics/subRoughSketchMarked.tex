@@ -1,0 +1,141 @@
+\def\roughSketchLinePadding{1}
+
+\subtikzpicturedef{subRoughSketchMarked} {
+    origin,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subRoughtSketch {#1-sketch} {#1-origin} {origin}
+
+    %% marking
+    \draw
+    ($(#1-sketch-primaryLeafTop)!0.20!(#1-sketch-primaryLeafRight)$)
+    ++(\roughSketchLinePadding, 0) coordinate (#1-primaryLeafMarkAnchor)
+    ($(#1-sketch-secondaryLeafRight)!0.50!(#1-sketch-secondaryLeafBottom)$)
+    ++(0.25 + \roughSketchLinePadding, 0) coordinate (#1-secondaryLeafMarkAnchor)
+    ($(#1-sketch-seedTopLeft)!0.50!(#1-sketch-seedBottomLeft)$)
+    ++(-\roughSketchLinePadding, 0) coordinate (#1-seedMarkAnchor)
+    ;
+
+    %% markings
+    \draw
+    (#1-sketch-southeast) ++(6, 0) coordinate (#1-vrtRight)
+    (#1-sketch-southwest) ++(-6, 0) coordinate (#1-vrtLeft)
+
+    %% primary line
+    (#1-primaryLeafMarkAnchor) coordinate (#1-primaryLineStartNode)
+    (#1-primaryLeafMarkAnchor -| #1-vrtRight) ++(-2, 0)
+    coordinate (#1-primaryLineFirstNode)
+    (#1-primaryLeafMarkAnchor -| #1-vrtRight) ++(0, -2)
+    coordinate (#1-primaryLineSecondNode)
+    (#1-vrtRight) ++(0, -6) coordinate (#1-primaryLineThirdNode)
+    ++(-1, -1) coordinate (#1-primaryLineEndNode)
+
+    %% secondary line
+    (#1-secondaryLeafMarkAnchor) coordinate (#1-secondaryLineStartNode)
+    (#1-secondaryLeafMarkAnchor) ++(2, -2) coordinate (#1-secondaryLineFirstNode)
+    (#1-secondaryLineFirstNode -| #1-vrtRight)  coordinate (#1-secondaryLineEndNode)
+
+    %% seed line
+    (#1-seedMarkAnchor) coordinate (#1-seedLineStartNode)
+    (#1-seedLineStartNode -| #1-vrtLeft) ++(2, 0)
+    coordinate (#1-seedLineFirstNode)
+    (#1-seedLineStartNode -| #1-vrtLeft) ++(0, -2)
+    coordinate (#1-seedLineSecondNode)
+    (#1-vrtLeft) ++(0, -12) coordinate (#1-seedLineThirdNode)
+    ++(1, -1) coordinate (#1-seedLineEndNode)
+    ;
+
+    \draw [bgcol!40!fgcol, rounded corners = 0.1cm]
+    %% drawing
+
+    %% primary line
+    (#1-primaryLineStartNode)
+    -- (#1-primaryLineFirstNode)
+    -- (#1-primaryLineSecondNode)
+    -- (#1-primaryLineThirdNode)
+    -- (#1-primaryLineEndNode)
+
+    %% secondary line
+    (#1-secondaryLineStartNode)
+    -- (#1-secondaryLineFirstNode)
+    -- (#1-secondaryLineEndNode)
+
+    %% primary line
+    (#1-seedLineStartNode)
+    -- (#1-seedLineFirstNode)
+    -- (#1-seedLineSecondNode)
+    -- (#1-seedLineThirdNode)
+    -- (#1-seedLineEndNode)
+
+    ;
+
+    \draw [bgcol!40!fgcol, fill = bgcol]
+    (#1-primaryLineStartNode) circle (0.25cm)
+    (#1-primaryLineEndNode) circle (0.25cm)
+    (#1-secondaryLineStartNode) circle (0.25cm)
+    (#1-seedLineStartNode) circle (0.25cm)
+    (#1-seedLineEndNode) circle (0.25cm)
+    ;
+
+    %% seed notes
+
+    \draw
+    (#1-seedLineEndNode)
+    node (#1-seedNotesNode) [right = 1cm, anchor = west] {
+        \begin{minipage} {8cm}
+            \Large
+            {\huge \textsc{Seed}}
+            \scshape
+            \vspace{1pt}
+            \begin{center}
+                \rule {\textwidth} {1pt}
+            \end{center}
+            \vspace{1pt}
+            \begin{itemize} [label=, leftmargin=*]
+                \item Polygon shaped.
+                \item Line art styled.
+                \item Cracked.
+                \item Earthly hues.
+            \end{itemize}
+        \end{minipage}
+    }
+    ;
+
+    %% leaf notes
+
+    \draw
+    (#1-primaryLineEndNode)
+    node (#1-leafNotesNode) [left = 1cm, anchor = east] {
+        \begin{minipage} {8cm}
+            \Large
+            \raggedleft
+            {\huge\textsc{Leaves}}
+            \scshape
+            \vspace{1pt}
+            \begin{center}
+                \rule {\textwidth} {1pt}
+            \end{center}
+            \vspace{1pt}
+            \begin{itemize} [label=, leftmargin=*]
+                \raggedleft
+                \item Polygon shaped.
+                \item Line art styled.
+                \item Two leaves stacked.
+                \item Pastel greens.
+            \end{itemize}
+        \end{minipage}
+    }
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-sketch-north)} {(#1-seedNotesNode)}
+    {(#1-vrtLeft)} {(#1-vrtRight)}
+    ;
+
+}
+
+\subtikzpictureactivate{subRoughSketchMarked}

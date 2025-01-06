@@ -1,0 +1,71 @@
+\subtikzpicturedef{subRoughtSketch} {
+    origin,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    seedBottomLeft, seedBottomRight, seedTopLeft, seedTopRight,
+    primaryLeafBottom, primaryLeafLeft, primaryLeafRight, primaryLeafTop,
+    secondaryLeafBottom, secondaryLeafLeft, secondaryLeafRight, secondaryLeafTop,
+    seedMid, primaryLeafMid, secondaryLeafMid%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \draw
+    %% marking seed
+    (#1-origin) coordinate (#1-seedBottomLeft)
+    (#1-origin) ++(1, 2) coordinate (#1-seedTopLeft)
+    (#1-origin) ++(5, 0) coordinate (#1-seedBottomRight)
+    (#1-seedBottomRight) ++(-0.5, 2.5) coordinate (#1-seedTopRight)
+    ;
+    \draw
+    (#1-seedBottomLeft)
+    -- (#1-seedBottomRight)
+    -- (#1-seedTopRight)
+    -- (#1-seedTopLeft)
+    -- cycle
+    ;
+    \draw
+    %% marking primary leaf
+    (#1-seedBottomRight) ++(0.25,0) coordinate (#1-primaryLeafBottom)
+    (#1-primaryLeafBottom) ++(-2,4) coordinate (#1-primaryLeafLeft)
+    (#1-primaryLeafBottom) ++(2.25,4.5) coordinate (#1-primaryLeafRight)
+    (#1-primaryLeafBottom) ++(0.25,10) coordinate (#1-primaryLeafTop)
+    ;
+    \draw
+    (#1-primaryLeafBottom)
+    -- (#1-primaryLeafRight)
+    -- (#1-primaryLeafTop)
+    -- (#1-primaryLeafLeft)
+    -- cycle
+    ;
+    \draw
+    %% marking secondary leaf
+    (#1-primaryLeafBottom) ++(0.75,-0.25) coordinate (#1-secondaryLeafBottom)
+    (#1-secondaryLeafBottom) ++(-0.75,4) coordinate (#1-secondaryLeafLeft)
+    (#1-secondaryLeafBottom) ++(3.75,3) coordinate (#1-secondaryLeafRight)
+    (#1-secondaryLeafBottom) ++(3.25,8.5) coordinate (#1-secondaryLeafTop)
+    ;
+    \draw
+    (#1-secondaryLeafBottom)
+    -- (#1-secondaryLeafRight)
+    -- (#1-secondaryLeafTop)
+    -- (#1-secondaryLeafLeft)
+    -- cycle
+    ;
+    \draw
+    %% marking mids
+    ($(#1-seedTopLeft)!0.50!(#1-seedBottomRight)$)
+    coordinate (#1-seedMid)
+    ($(#1-primaryLeafLeft)!0.50!(#1-primaryLeafRight)$)
+    ++(0, 2.5) coordinate (#1-primaryLeafMid)
+    ($(#1-secondaryLeafLeft)!0.70!(#1-secondaryLeafRight)$)
+    coordinate (#1-secondaryLeafMid)
+    ;
+    \draw
+    %% marking geo coords
+    \markgeocoordinate {#1}
+    {(#1-primaryLeafTop)} {(#1-secondaryLeafBottom)}
+    {(#1-seedBottomLeft)} {(#1-secondaryLeafRight)}
+    ;
+}
+
+\subtikzpictureactivate{subRoughtSketch}

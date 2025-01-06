@@ -1,0 +1,38 @@
+return {
+    ["endBasicSeed"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endRoughSketch"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["endRoughSketchMarked"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["endSeedBase"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedClip"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subBasicSeed"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subRoughSketchMarked"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subRoughtSketch"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subSeedBase"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedClip"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+}

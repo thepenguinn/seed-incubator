@@ -9,7 +9,7 @@ WORKS := $(wildcard work_*/work.tex)
 SECTIONS := $(wildcard chapter_*/section_*/section.tex)
 SECTIONS := $(wildcard work_*/section_*/section.tex)
 
-TIKZPICS := $(wildcard */tikzpics/*.tex)
+TIKZPICS := $(shell find -type f -wholename "*/tikzpics/*.tex")
 
 ABSTRACT := abstract_template.tex abstract.tex
 
