@@ -1,0 +1,18 @@
+\begin{tikzpicture} [
+        transform shape,
+        scale = 0.5,
+        %rounded corners = 0.3cm,
+        every path/.style = {thick, > = latex},
+    ]
+
+    \draw
+    (0,0) coordinate (origin)
+    ;
+
+    \subSeedBase {base} {origin} {center}
+
+    \filldraw [fgcol!20!bgcol, rounded corners = 1pt]
+    \ovrDrawSeedBase {base}
+    ;
+
+\end{tikzpicture}

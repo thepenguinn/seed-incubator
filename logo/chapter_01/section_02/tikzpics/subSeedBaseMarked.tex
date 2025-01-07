@@ -1,0 +1,14 @@
+\subtikzpicturedef{subSeedBaseMarked} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedBase {#1-seedBase} {#1-origin} {center}
+
+    %\filldraw [fgcol!20!bgcol, rounded corners = 1pt]
+    %\ovrDrawSeedBase {#1-seedBase}
+    %;
+
+}
+
+\subtikzpictureactivate{subSeedBaseMarked}

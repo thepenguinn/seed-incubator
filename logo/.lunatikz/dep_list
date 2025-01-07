@@ -1,7 +1,4 @@
 return {
-    ["endBasicSeed"] = {
-        ["parent_dir"] = "chapter_01/section_02/tikzpics",
-    },
     ["endRoughSketch"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
@@ -15,9 +12,6 @@ return {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["endSeedClip"] = {
-        ["parent_dir"] = "chapter_01/section_02/tikzpics",
-    },
-    ["subBasicSeed"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["subRoughSketchMarked"] = {

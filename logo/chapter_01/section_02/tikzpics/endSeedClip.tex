@@ -1,0 +1,18 @@
+\begin{tikzpicture} [
+        transform shape,
+        scale = 0.5,
+        %rounded corners = 0.3cm,
+        every path/.style = {thick, > = latex},
+    ]
+
+    \draw
+    (0,0) coordinate (origin)
+    ;
+
+    \subSeedClip {clip} {origin} {origin}
+
+    \filldraw [bgcol!60!fgcol, even odd rule, rounded corners = 1pt]
+    \ovrDrawSeedClip {clip}
+    ;
+
+\end{tikzpicture}

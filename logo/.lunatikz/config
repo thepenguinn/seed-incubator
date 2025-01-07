@@ -1,0 +1,4 @@
+return {
+    ["style.file"] = "colorscheme.sty",
+    ["style.macro"] = "usepackage",
+}
