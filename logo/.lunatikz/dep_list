@@ -14,6 +14,9 @@ return {
     ["endSeedClip"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
+    ["endSeedColored"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
     ["endSeedSlice"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
@@ -30,6 +33,9 @@ return {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["subSeedClip"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedColored"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["subSeedSlice"] = {

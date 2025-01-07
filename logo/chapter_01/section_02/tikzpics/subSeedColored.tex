@@ -1,0 +1,26 @@
+%\definecolor{seedColorPrimary} {RGB} {206, 159, 152}
+%\definecolor{seedColorSecondary} {RGB} {242, 215, 206}
+
+%\definecolor{seedColorSecondary} {RGB} {188, 153, 123}
+
+\definecolor{seedColorPrimary} {RGB} {161, 114, 96}
+\definecolor{seedColorSecondary} {RGB} {179, 137, 113}
+
+\subtikzpicturedef{subSeedColored} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedSlice {#1-seedSlice} {#1-origin} {origin}
+
+    \fill [fill = seedColorPrimary, rounded corners = 1pt]
+    \ovrDrawSeedLeftSlice {#1-seedSlice}
+    ;
+
+    \fill [fill = seedColorSecondary, rounded corners = 1pt]
+    \ovrDrawSeedRightSlice {#1-seedSlice}
+    ;
+
+}
+
+\subtikzpictureactivate{subSeedColored}
