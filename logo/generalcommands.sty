@@ -1,3 +1,20 @@
+%\tikzset{
+%    o/.style={
+%        shorten >=#1,
+%        decoration={
+%            markings,
+%            mark={
+%                at position 1
+%                with {
+%                    \draw circle [radius=#1];
+%                }
+%            }
+%        },
+%        postaction=decorate
+%    },
+%    o/.default=2pt
+%}
+
 \newcommand\getmagnitude[2] {
     let \p{#1-tmpcoord} = #2,
     \n{#1-magtmp} = {veclen(\x{#1-tmpcoord}, \y{#1-tmpcoord})}
