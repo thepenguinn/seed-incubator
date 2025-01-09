@@ -11,7 +11,9 @@ SECTIONS := $(wildcard work_*/section_*/section.tex)
 
 TIKZPICS := $(wildcard */tikzpics/*.tex)
 
-ABSTRACT := abstract_template.tex abstract.tex
+ABSTRACT := abstract_template.tex abstract.tex abstract.bib
+
+PRJPLAN := prjplan.tex
 
 build: main.pdf view
 
@@ -28,9 +30,19 @@ abstract: abstract.pdf view_abstract
 
 abstract.pdf: preamble.tex colorscheme.sty $(ABSTRACT)
 	pdflatex -shell-escape -halt-on-error abstract.tex
+	biber abstract
+	pdflatex -shell-escape -halt-on-error abstract.tex
 
 view_abstract:
 	$(VIEWER) abstract.pdf
+
+prjplan: prjplan.pdf view_prjplan
+
+prjplan.pdf: preamble.tex colorscheme.sty $(PRJPLAN)
+	pdflatex -shell-escape -halt-on-error prjplan.tex
+
+view_prjplan:
+	$(VIEWER) prjplan.pdf
 
 view:
 	$(VIEWER) main.pdf
