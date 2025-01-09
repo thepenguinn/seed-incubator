@@ -4,3 +4,7 @@
 *.log
 */.lunatikz/dep_cache
 */.lunatikz/subfix_cache
+*.bcf
+*.bbl
+*.blg
+*.run.xml
