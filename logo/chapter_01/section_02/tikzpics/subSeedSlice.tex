@@ -7,6 +7,18 @@
     northeast, northwest, southeast, southwest,
     center,
     origin,
+    leftTopCorner,
+    leftMostCorner,
+    leftBottomCorner,
+    rightBottomCorner,
+    rightMostCorner,
+    rightTopCorner,
+    innerLeftMostCorner,
+    innerLeftTopCorner,
+    innerLeftBottomCorner,
+    innerRightMostCorner,
+    innerRightBottomCorner,
+    innerRightTopCorner,
     outerRightBottomSliceCorner,
     innerRightBottomSliceCorner,
     innerRightTopSliceCorner,
@@ -96,6 +108,28 @@
     \markgeocoordinate {#1}
     {(#1-seedBase-north)} {(#1-seedBase-south)}
     {(#1-seedBase-west)} {(#1-seedBase-east)}
+    ;
+
+    %% seedBase
+
+    \draw
+    (#1-seedBase-leftTopCorner) coordinate (#1-leftTopCorner)
+    (#1-seedBase-leftMostCorner) coordinate (#1-leftMostCorner)
+    (#1-seedBase-leftBottomCorner) coordinate (#1-leftBottomCorner)
+    (#1-seedBase-rightBottomCorner) coordinate (#1-rightBottomCorner)
+    (#1-seedBase-rightMostCorner) coordinate (#1-rightMostCorner)
+    (#1-seedBase-rightTopCorner) coordinate (#1-rightTopCorner)
+    ;
+
+    %% seedClip
+
+    \draw
+    (#1-seedClip-innerLeftMostCorner) coordinate (#1-innerLeftMostCorner)
+    (#1-seedClip-innerLeftTopCorner) coordinate (#1-innerLeftTopCorner)
+    (#1-seedClip-innerLeftBottomCorner) coordinate (#1-innerLeftBottomCorner)
+    (#1-seedClip-innerRightMostCorner) coordinate (#1-innerRightMostCorner)
+    (#1-seedClip-innerRightBottomCorner) coordinate (#1-innerRightBottomCorner)
+    (#1-seedClip-innerRightTopCorner) coordinate (#1-innerRightTopCorner)
     ;
 
 }
