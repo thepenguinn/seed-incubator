@@ -41,6 +41,10 @@ prjplan: prjplan.pdf view_prjplan
 prjplan.pdf: preamble.tex colorscheme.sty $(PRJPLAN)
 	pdflatex -shell-escape -halt-on-error prjplan.tex
 
+abt_plan: prjplan.pdf abstract.pdf
+	pdftk prjplan.pdf abstract.pdf output group_10.pdf
+	$(VIEWER) group_10.pdf
+
 view_prjplan:
 	$(VIEWER) prjplan.pdf
 
@@ -50,4 +54,4 @@ view:
 send:
 	$(SENDER) main.pdf
 
-.PHONY: view build force view_abstract abstract
+.PHONY: view build force view_abstract abstract prjplan abt_plan
