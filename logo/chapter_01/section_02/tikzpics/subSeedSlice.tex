@@ -1,6 +1,6 @@
 \def\seedSliceAngle{120}
-\def\seedSliceThickness{0.4}
-\def\seedSliceThickness{0.4}
+\def\seedSliceThickness{0.40}
+\def\seedSliceDisFromLeft{1.30}
 
 \subtikzpicturedef{subSeedSlice} {
     north, south, east, west,
@@ -39,7 +39,9 @@
 
     %% right slice
 
-    ($(#1-seedBase-leftBottomCorner)!0.95!(#1-seedBase-rightBottomCorner)$)
+    %($(#1-seedBase-leftBottomCorner)!0.95!(#1-seedBase-rightBottomCorner)$)
+    (#1-seedBase-rightBottomCorner -| #1-seedBase-rightMostCorner)
+    ++(-\seedSliceDisFromLeft, 0)
     coordinate (#1-outerRightBottomSliceCorner)
 
     (#1-outerRightBottomSliceCorner)

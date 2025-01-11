@@ -1,0 +1,160 @@
+\subtikzpicturedef{subSeedSliceMarked} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedSlice {#1-seedSlice} {#1-origin} {origin}
+
+    \fill [seedBaseStyle]
+    \ovrDrawSeedLeftSlice {#1-seedSlice}
+    \ovrDrawSeedRightSlice {#1-seedSlice}
+    ;
+
+    %% slice width
+
+    \draw [seedOuterMarkStyle]
+    (#1-seedSlice-outerRightTopSliceCorner)
+    ++(0, \seedMarkPad)
+    coordinate (#1-tmp1)
+    (#1-seedSlice-outerLeftTopSliceCorner)
+    ++(0, \seedMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedSlice-outerLeftTopSliceCorner--#1-seedSlice-outerLeftBottomSliceCorner)
+    coordinate (#1-sliceWidthDimFirst)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedSlice-outerRightTopSliceCorner--#1-seedSlice-outerRightBottomSliceCorner)
+    coordinate (#1-sliceWidthDimFourth)
+
+    (#1-seedSlice-outerLeftTopSliceCorner)
+    ++({\seedSliceAngle}:1)
+    coordinate (#1-sliceWidthDimSecond)
+    coordinate (#1-tmp1)
+
+    (#1-tmp1)
+    ++({\seedSliceAngle - 90}:0.1)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedSlice-outerRightTopSliceCorner--#1-seedSlice-outerRightBottomSliceCorner)
+    coordinate (#1-sliceWidthDimThird)
+
+    (#1-sliceWidthDimFirst)
+    node [ocirc] {}
+    -- (#1-sliceWidthDimSecond)
+    -- (#1-sliceWidthDimThird)
+    -- (#1-sliceWidthDimFourth)
+    node [ocirc] {}
+
+    ;
+
+    \path [seedOuterMarkStyle]
+    (#1-sliceWidthDimSecond)
+    -- (#1-sliceWidthDimThird)
+    node [midway, above = 4pt, sloped] {\seedSliceThickness}
+    ;
+
+    %% slice distance from left most
+
+    \draw [seedOuterMarkStyle]
+    (#1-seedSlice-outerRightBottomSliceCorner)
+    ++(0, -\seedMarkPad)
+    coordinate (#1-sliceDisDimFirst)
+
+    (#1-seedSlice-outerRightBottomSliceCorner)
+    ++(0, -1)
+    coordinate (#1-sliceDisDimSecond)
+
+    (#1-seedSlice-rightBottomCorner)
+    ++({\seedBaseLargeAngle - 90}:\seedMarkPad)
+    coordinate (#1-tmp1)
+    (#1-seedSlice-rightMostCorner)
+    ++({\seedBaseLargeAngle - 90}:\seedMarkPad)
+    coordinate (#1-tmp2)
+
+    (#1-seedSlice-rightMostCorner |- #1-sliceDisDimSecond)
+    coordinate (#1-sliceDisDimThird)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-sliceDisDimThird--#1-seedSlice-rightMostCorner)
+    coordinate (#1-sliceDisDimFourth)
+
+    (#1-sliceDisDimFirst)
+    node [ocirc] {}
+    -- (#1-sliceDisDimSecond)
+    -- (#1-sliceDisDimThird)
+    -- (#1-sliceDisDimFourth)
+    node [ocirc] {}
+
+    ;
+
+    \path [seedOuterMarkStyle]
+    (#1-sliceDisDimSecond)
+    -- (#1-sliceDisDimThird)
+    node [midway, below = 4pt, sloped] {\seedSliceDisFromLeft}
+    ;
+
+    %% angle
+
+    \draw [seedOuterMarkStyle]
+
+    (#1-seedSlice-innerLeftTopSliceCorner)
+    ++(0, -\seedMarkPad)
+    coordinate (#1-tmp1)
+
+    (#1-seedSlice-innerRightTopSliceCorner)
+    ++(0, -\seedMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedSlice-innerLeftTopSliceCorner--#1-seedSlice-innerLeftBottomSliceCorner)
+    coordinate (#1-angleDimStart)
+
+    (#1-seedSlice-innerLeftBottomSliceCorner)
+    ++(0, \seedMarkPad)
+    coordinate (#1-tmp1)
+
+    (#1-seedSlice-innerRightBottomSliceCorner)
+    ++(0, \seedMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedSlice-innerLeftTopSliceCorner--#1-seedSlice-innerLeftBottomSliceCorner)
+    coordinate (#1-angleDimEnd)
+
+    (#1-angleDimStart)
+    node [ocirc] {}
+    -- (#1-angleDimEnd)
+    node [ocirc] {}
+
+    ($(#1-angleDimStart)!0.25!(#1-angleDimEnd)$)
+    coordinate (#1-angleDimCenter)
+
+    (#1-angleDimCenter)
+    ++(-0.3, 0)
+    arc (180:{180 + \seedSliceAngle}:0.3)
+
+    (#1-angleDimCenter)
+    -- ++(-1, 0)
+    coordinate (#1-angleDimLabel)
+    node [ocirc] {}
+    node [left = 4pt] {\seedSliceAngle$^\circ$}
+    ;
+
+}
+
+\subtikzpictureactivate{subSeedSliceMarked}
