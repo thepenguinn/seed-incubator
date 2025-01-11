@@ -1,6 +1,9 @@
 \def\seedMarkPad{8pt}
 
 \subtikzpicturedef{subSeedBaseMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
@@ -180,6 +183,12 @@
     node [left = 4pt] {\seedBaseSmallAngle$^\circ$}
     (#1-seedBase-rightMostCorner) ++(-0.5, 0)
     arc (180:{180 - \seedBaseSmallAngle}:0.5)
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedBase-north)} {(#1-seedBase-south)}
+    {(#1-seedBase-west)} {(#1-seedBase-east)}
     ;
 
 }

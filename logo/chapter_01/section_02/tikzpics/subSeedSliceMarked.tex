@@ -1,4 +1,7 @@
 \subtikzpicturedef{subSeedSliceMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
@@ -153,6 +156,12 @@
     coordinate (#1-angleDimLabel)
     node [ocirc] {}
     node [left = 4pt] {\seedSliceAngle$^\circ$}
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedSlice-north)} {(#1-seedSlice-south)}
+    {(#1-seedSlice-west)} {(#1-seedSlice-east)}
     ;
 
 }

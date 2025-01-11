@@ -7,6 +7,9 @@
 \definecolor{seedColorSecondary} {RGB} {179, 137, 113}
 
 \subtikzpicturedef{subSeedColor} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
@@ -19,6 +22,12 @@
 
     \fill [fill = seedColorSecondary, rounded corners = 1pt]
     \ovrDrawSeedRightSlice {#1-seedSlice}
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedSlice-north)} {(#1-seedSlice-south)}
+    {(#1-seedSlice-west)} {(#1-seedSlice-east)}
     ;
 
 }

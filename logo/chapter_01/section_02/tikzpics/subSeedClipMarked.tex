@@ -1,6 +1,9 @@
 \def\seedMarkPad{8pt}
 
 \subtikzpicturedef{subSeedClipMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
@@ -193,6 +196,13 @@
     (#1-horiThickDimSecond) -- (#1-horiThickDimThird)
     node [seedColorLine, midway, above = 4pt, sloped] {\seedLineSmallThickness}
     ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedClip-north)} {(#1-seedClip-south)}
+    {(#1-seedClip-west)} {(#1-seedClip-east)}
+    ;
+
 }
 
 
