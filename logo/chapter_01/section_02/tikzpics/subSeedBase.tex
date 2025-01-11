@@ -12,6 +12,28 @@
 \def\seedBaseCornerRadius{0.05}
 \def\seedBaseCornerRadiusInCm{\seedBaseCornerRadius cm}
 
+\tikzset{
+    seedBaseStyle/.style = {
+        seedColorGray,
+        opacity = 0.5,
+        rounded corners = \seedBaseCornerRadiusInCm,
+    },
+    seedOuterMarkStyle/.style = {
+        seedColorLine,
+        very thin,
+    },
+    seedInnerMarkStyle/.style = {
+        bgcol,
+        thin,
+    },
+    seedBaseTikzPicStyle/.style = {
+        transform shape,
+        scale = 0.5,
+        %rounded corners = 0.3cm,
+        every path/.style = {thick, > = latex},
+    },
+}
+
 \subtikzpicturedef{subSeedBase} {
     origin,
     north, south, east, west,

@@ -7,17 +7,17 @@
 
     \subSeedClip {#1-seedClip} {#1-origin} {origin}
 
-    \filldraw [opacity = 0.3, rounded corners = \seedBaseCornerRadiusInCm]
+    \filldraw [seedBaseStyle]
     \ovrDrawSeedClip {#1-seedClip}
     ;
 
-    \draw [seedColorLine, thin, dashdotted, rounded corners = \seedBaseCornerRadiusInCm]
+    \draw [seedOuterMarkStyle, rounded corners = \seedBaseCornerRadiusInCm]
     \ovrDrawSeedBase {#1-seedClip-seedBase}
     ;
 
     %% large slant line thickness
 
-    \draw [seedColorLine, thin, dashdotted]
+    \draw [seedOuterMarkStyle]
     (#1-seedClip-seedBase-leftMostCorner)
     ++({-90 -\seedBaseSmallAngle}:\seedMarkPad)
     coordinate (#1-tmp1)
@@ -75,7 +75,7 @@
 
     %% label
 
-    \path [seedColorLine, thin]
+    \path [seedOuterMarkStyle]
     (#1-largeSlantThickDimSecond) -- (#1-largeSlantThickDimThird)
     node [seedColorLine, midway, below = 4pt, sloped] {\seedLineSmallThickness}
     ;
@@ -84,7 +84,7 @@
     %% small slant line thickness
     %%
 
-    \draw [seedColorLine, thin, dashdotted]
+    \draw [seedOuterMarkStyle]
     (#1-seedClip-seedBase-leftTopCorner)
     ++(0, \seedMarkPad)
     coordinate (#1-tmp1)
@@ -138,14 +138,14 @@
 
     %% label
 
-    \path [seedColorLine, thin]
+    \path [seedOuterMarkStyle]
     (#1-smallSlantThickDimSecond) -- (#1-smallSlantThickDimThird)
     node [seedColorLine, midway, above = 4pt, sloped] {\seedLineLargeThickness}
     ;
 
     %% horizontal line thickness
 
-    \draw [seedColorLine, thin, dashdotted]
+    \draw [seedOuterMarkStyle]
     (#1-seedClip-seedBase-rightBottomCorner)
     ++(\seedBaseLargeAngle - 90:\seedMarkPad)
     coordinate (#1-tmp1)
@@ -189,7 +189,7 @@
 
     %% label
 
-    \path [seedColorLine, thin]
+    \path [seedOuterMarkStyle]
     (#1-horiThickDimSecond) -- (#1-horiThickDimThird)
     node [seedColorLine, midway, above = 4pt, sloped] {\seedLineSmallThickness}
     ;

@@ -7,13 +7,13 @@
 
     \subSeedBase {#1-seedBase} {#1-origin} {center}
 
-    \filldraw [opacity = 0.3, rounded corners = \seedBaseCornerRadiusInCm]
+    \filldraw [seedBaseStyle]
     \ovrDrawSeedBase {#1-seedBase}
     ;
 
     %% label corner roundness
 
-    \draw [bgcol, thin]
+    \draw [seedInnerMarkStyle]
     (#1-seedBase-rightBottomCorner)
     ++({((180 - \seedBaseSmallAngle) / 2) + \seedBaseSmallAngle)}:{2 * \seedBaseCornerRadiusInCm})
     coordinate (#1-cornerRadiusCenter)
@@ -22,7 +22,7 @@
 
     %% label
 
-    \draw [bgcol, thin]
+    \draw [seedInnerMarkStyle]
     (#1-cornerRadiusCenter)
     ++(135:{2 * \seedBaseCornerRadiusInCm})
     coordinate (#1-tmp1)
@@ -59,7 +59,7 @@
 
     %% marking width
 
-    \draw [seedColorLine, very thin, rounded corners = 0.2]
+    \draw [seedOuterMarkStyle, very thin]
     (#1-seedBase-leftMostCorner |- #1-seedBase-leftBottomCorner)
     ++(0, -1) coordinate (#1-vrtBelow)
 
@@ -102,14 +102,14 @@
     ;
 
     %% label width
-    \draw [seedColorLine]
+    \draw [seedOuterMarkStyle]
     ($(#1-seedBase-leftMostCorner |- #1-vrtBelow)!0.50!(#1-seedBase-rightMostCorner |- #1-vrtBelow)$)
     node [seedColorLine, below = 4pt] {\seedBaseTotalWidth}
     ;
 
     %% marking large slant side
 
-    \draw [seedColorLine, very thin]
+    \draw [seedOuterMarkStyle, very thin]
     (#1-seedBase-leftTopCorner) ++({90 + \seedBaseLargeAngle}:\seedMarkPad)
     coordinate (#1-largeSlantDimFirst)
     (#1-seedBase-leftTopCorner) ++({90 + \seedBaseLargeAngle}:1)
@@ -129,14 +129,14 @@
 
     %% label small slant
 
-    \path [seedColorLine, very thin]
+    \path [seedOuterMarkStyle]
     (#1-largeSlantDimSecond) -- (#1-largeSlantDimThird)
     node [seedColorLine, midway, above = 4pt, sloped] {\seedBaseLargeBendLength}
     ;
 
     %% marking small slant side
 
-    \draw [seedColorLine, very thin]
+    \draw [seedOuterMarkStyle, very thin]
     (#1-seedBase-rightTopCorner) ++({90 - \seedBaseSmallAngle}:\seedMarkPad)
     coordinate (#1-smallSlantDimFirst)
     (#1-seedBase-rightTopCorner) ++({90 - \seedBaseSmallAngle}:1)
@@ -157,14 +157,14 @@
 
     %% label small slant
 
-    \path [seedColorLine, very thin]
+    \path [seedOuterMarkStyle]
     (#1-smallSlantDimSecond) -- (#1-smallSlantDimThird)
     node [seedColorLine, midway, above = 4pt, sloped] {\seedBaseSmallBendLength}
     ;
 
     %% angles
 
-    \draw [bgcol, thin]
+    \draw [seedInnerMarkStyle]
     (#1-seedBase-leftMostCorner)
     -- ++(2, 0)
     node [ocirc] {}
@@ -173,7 +173,7 @@
     arc (0:{\seedBaseLargeAngle}:0.5)
     ;
 
-    \draw [bgcol, thin]
+    \draw [seedInnerMarkStyle]
     (#1-seedBase-rightMostCorner)
     -- ++(-2, 0)
     node [ocirc] {}

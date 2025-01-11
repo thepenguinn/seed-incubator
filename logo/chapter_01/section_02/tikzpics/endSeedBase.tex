@@ -1,18 +1,15 @@
 \begin{tikzpicture} [
-        transform shape,
-        scale = 0.5,
-        %rounded corners = 0.3cm,
-        every path/.style = {thick, > = latex},
+        seedBaseTikzPicStyle,
     ]
 
     \draw
     (0,0) coordinate (origin)
     ;
 
-    \subSeedBase {base} {origin} {center}
+    \subSeedBase {seedBase} {origin} {center}
 
-    \filldraw [fgcol!20!bgcol, rounded corners = 1pt]
-    \ovrDrawSeedBase {base}
+    \filldraw [seedBaseStyle]
+    \ovrDrawSeedBase {seedBase}
     ;
 
 \end{tikzpicture}

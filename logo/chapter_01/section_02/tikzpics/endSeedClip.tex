@@ -1,8 +1,5 @@
 \begin{tikzpicture} [
-        transform shape,
-        scale = 0.5,
-        %rounded corners = 0.3cm,
-        every path/.style = {thick, > = latex},
+        seedBaseTikzPicStyle,
     ]
 
     \draw
@@ -11,7 +8,7 @@
 
     \subSeedClip {clip} {origin} {origin}
 
-    \filldraw [bgcol!60!fgcol, even odd rule, rounded corners = 1pt]
+    \filldraw [seedBaseStyle, even odd rule]
     \ovrDrawSeedClip {clip}
     ;
 
