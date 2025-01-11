@@ -1,0 +1,15 @@
+\subtikzpicturedef{subSeedLine} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedClip {#1-seedClip} {#1-origin} {origin}
+
+    \fill [seedBaseStyle, even odd rule]
+    \ovrDrawSeedBase {#1-seedClip-seedBase}
+    \ovrDrawSeedClip {#1-seedClip}
+    ;
+
+}
+
+\subtikzpictureactivate{subSeedLine}
