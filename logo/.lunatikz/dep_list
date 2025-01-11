@@ -17,7 +17,7 @@ return {
     ["endSeedClipMarked"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
-    ["endSeedColored"] = {
+    ["endSeedColor"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["endSeedSlice"] = {
@@ -44,7 +44,7 @@ return {
     ["subSeedClipMarked"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
-    ["subSeedColored"] = {
+    ["subSeedColor"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["subSeedSlice"] = {
