@@ -1,15 +1,116 @@
+\def\seedFinalDisHori{8}
+\def\seedFinalDisVert{10}
+
+\def\seedLineBendLen{2}
+\def\seedLineRadius{0.1cm}
+
 \subtikzpicturedef{subSeedFinal} {
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
 
-    %subSeedBaseMarked.tex
-    %subSeedClipMarked.tex
-    %subSeedLine.tex
-    %subSeedSliceMarked.tex
-    %subSeedColor.tex
-    %% TODO: subSeedColorMarked.tex
+    \draw
+    (#1-origin)
+    coordinate (#1-seedBaseMarked)
+    (#1-origin)
+    ++(0, -\seedFinalDisVert)
+    coordinate (#1-seedClipMarked)
+    (#1-seedClipMarked)
+    ++(0, -\seedFinalDisVert)
+    coordinate (#1-seedSliceMarked)
+    (#1-seedSliceMarked)
+    ++(0, -\seedFinalDisVert)
+    coordinate (#1-seedColorMarked)
+    ;
+
+    \subSeedBaseMarked {#1-seedBaseMarked} {#1-seedBaseMarked} {center}
+
+    \subSeedClipMarked {#1-seedClipMarked} {#1-seedClipMarked} {center}
+
+    \subSeedSliceMarked {#1-seedSliceMarked} {#1-seedSliceMarked} {center}
+
+    \subSeedColorMarked {#1-seedColorMarked} {#1-seedColorMarked} {center}
+
+    \draw [seedColorLine, rounded corners = \seedLineRadius]
+    (#1-seedBaseMarked-seedBase-rightMostCorner)
+    ++(\seedLineMarkPad, 0)
+    coordinate (#1-firstLineStart)
+    (#1-seedClipMarked-seedClip-seedBase-rightMostCorner)
+    ++(\seedLineMarkPad, 0)
+    coordinate (#1-firstLineEnd)
+
+    (#1-seedClipMarked-seedClip-seedBase-leftMostCorner)
+    ++(-\seedLineMarkPad, 0)
+    coordinate (#1-secondLineStart)
+    (#1-seedSliceMarked-seedSlice-leftMostCorner)
+    ++(-\seedLineMarkPad, 0)
+    coordinate (#1-secondLineEnd)
+
+    (#1-firstLineStart)
+    ++(4,0)
+    coordinate (#1-firstLineFirst)
+    ++(\seedLineBendLen, -\seedLineBendLen)
+    coordinate (#1-firstLineSecond)
+
+    (#1-firstLineEnd)
+    ++(4,0)
+    coordinate (#1-firstLineFourth)
+    ++(\seedLineBendLen, \seedLineBendLen)
+    coordinate (#1-firstLineThird)
+
+    (#1-firstLineStart)
+    -- (#1-firstLineFirst)
+    -- (#1-firstLineSecond)
+    -- (#1-firstLineThird)
+    -- (#1-firstLineFourth)
+    -- (#1-firstLineEnd)
+
+    (#1-secondLineStart)
+    ++(-4,0)
+    coordinate (#1-secondLineFirst)
+    ++(-\seedLineBendLen, -\seedLineBendLen)
+    coordinate (#1-secondLineSecond)
+
+    (#1-secondLineEnd)
+    ++(-4,0)
+    coordinate (#1-secondLineFourth)
+    ++(-\seedLineBendLen, \seedLineBendLen)
+    coordinate (#1-secondLineThird)
+
+    (#1-secondLineStart)
+    -- (#1-secondLineFirst)
+    -- (#1-secondLineSecond)
+    -- (#1-secondLineThird)
+    -- (#1-secondLineFourth)
+    -- (#1-secondLineEnd)
+
+    %% third line
+
+    ($(#1-seedSliceMarked-south)!0.30!(#1-seedColorMarked-north)$)
+    --
+    ($(#1-seedSliceMarked-south)!0.70!(#1-seedColorMarked-north)$)
+
+    ;
+
+    \draw [seedColorLine, fill = bgcol]
+    (#1-firstLineStart)
+    circle (0.2cm)
+    (#1-firstLineEnd)
+    circle (0.2cm)
+
+    (#1-secondLineStart)
+    circle (0.2cm)
+    (#1-secondLineEnd)
+    circle (0.2cm)
+
+    ($(#1-seedSliceMarked-south)!0.30!(#1-seedColorMarked-north)$)
+    circle (0.2cm)
+    ($(#1-seedSliceMarked-south)!0.70!(#1-seedColorMarked-north)$)
+    circle (0.2cm)
+
+    ;
 
 }
+
 
 \subtikzpictureactivate{subSeedFinal}

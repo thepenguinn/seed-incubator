@@ -10,13 +10,14 @@
 
     \subSeedClip {#1-seedClip} {#1-origin} {origin}
 
-    \fill [seedBaseStyle]
+    \fill [seedBaseStyle, even odd rule]
     \ovrDrawSeedClip {#1-seedClip}
-    ;
-
-    \draw [seedOuterMarkStyle, rounded corners = \seedBaseCornerRadiusInCm]
     \ovrDrawSeedBase {#1-seedClip-seedBase}
     ;
+
+    %\draw [seedOuterMarkStyle, rounded corners = \seedBaseCornerRadiusInCm]
+    %\ovrDrawSeedBase {#1-seedClip-seedBase}
+    %;
 
     %% large slant line thickness
 

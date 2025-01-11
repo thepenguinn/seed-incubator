@@ -1,4 +1,3 @@
-\def\seedColorMarkPad{0.75}
 \def\seedColorMarkStartRadius{0.2cm}
 
 \subtikzpicturedef{subSeedColorMarked} {
@@ -13,7 +12,7 @@
 
     \draw [seedColorLine, rounded corners = 0.15cm]
     (#1-seedColor-seedSlice-rightMostCorner)
-    ++(\seedColorMarkPad, 0)
+    ++(\seedLineMarkPad, 0)
     coordinate (#1-rightLineStart)
 
     (#1-rightLineStart)
@@ -25,7 +24,7 @@
     coordinate (#1-rightLineEnd)
 
     (#1-seedColor-seedSlice-leftMostCorner)
-    ++(-\seedColorMarkPad, 0)
+    ++(-\seedLineMarkPad, 0)
     coordinate (#1-leftLineStart)
 
     (#1-leftLineStart)
