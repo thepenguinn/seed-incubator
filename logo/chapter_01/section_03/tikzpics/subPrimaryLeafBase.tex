@@ -1,0 +1,58 @@
+\subtikzpicturedef{subPrimaryLeafBase} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    #1-outerLeftBottomCorner,
+    #1-outerLeftMostCorner,
+    #1-outerLeftTopCorner,
+    #1-outerRightTopCorner,
+    #1-outerRightMostCorner,
+    #1-outerRightBottomCorner,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subLeafBase {#1-leafBase} {#1-origin} {origin}
+
+    \draw
+    (#1-origin)
+    coordinate (#1-outerLeftBottomCorner)
+    ++(\leafBaseThickness, 0)
+    coordinate (#1-outerRightBottomCorner)
+
+    (#1-outerLeftBottomCorner)
+    ++(\leafBaseAngle:\leafBaseEdgeLength)
+    coordinate (#1-outerLeftMostCorner)
+
+    (#1-outerRightBottomCorner)
+    ++({180 - \leafBaseAngle}:\leafBaseEdgeLength)
+    coordinate (#1-outerRightMostCorner)
+
+    (#1-outerLeftMostCorner)
+    ++({180 - \leafBaseAngle}:\leafBaseEdgeLength)
+    coordinate (#1-outerLeftTopCorner)
+
+    (#1-outerRightMostCorner)
+    ++(\leafBaseAngle:\leafBaseEdgeLength)
+    coordinate (#1-outerRightTopCorner)
+
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-outerRightTopCorner)} {(#1-outerRightBottomCorner)}
+    {(#1-outerLeftMostCorner)} {(#1-outerRightMostCorner)}
+    ;
+
+}
+
+\subtikzpictureactivate{subPrimaryLeafBase}
+
+\newcommand\ovrConnectPrimaryLeafBase[1] {
+    (#1-outerLeftBottomCorner)
+    -- (#1-outerLeftMostCorner)
+    -- (#1-outerLeftTopCorner)
+    -- (#1-outerRightTopCorner)
+    -- (#1-outerRightMostCorner)
+    -- (#1-outerRightBottomCorner)
+    -- cycle
+}

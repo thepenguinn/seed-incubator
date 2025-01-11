@@ -2,6 +2,9 @@ return {
     ["endLeafBase"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
+    ["endPrimaryLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
     ["endRoughSketch"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
@@ -39,6 +42,9 @@ return {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["subLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subPrimaryLeafBase"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subRoughSketchMarked"] = {
