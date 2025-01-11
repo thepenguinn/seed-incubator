@@ -20,6 +20,9 @@ return {
     ["endSeedColor"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
+    ["endSeedFinal"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
     ["endSeedLine"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
@@ -48,6 +51,9 @@ return {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["subSeedColor"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedFinal"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["subSeedLine"] = {
