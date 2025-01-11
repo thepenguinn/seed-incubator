@@ -1,0 +1,38 @@
+\def\leafBaseAngle{120}
+\def\leafBaseThickness{0.45}
+\def\leafBaseEdgeLength{7.00}
+
+\def\leafMarkPad{8pt}
+
+\def\leafBaseCornerRadius{0.05}
+\def\leafBaseCornerRadiusInCm{\leafBaseCornerRadius cm}
+
+\tikzset{
+    leafBaseStyle/.style = {
+        leafColorGray,
+        opacity = 0.5,
+        rounded corners = \leafBaseCornerRadiusInCm,
+    },
+    leafOuterMarkStyle/.style = {
+        leafColorLine,
+        very thin,
+    },
+    leafInnerMarkStyle/.style = {
+        bgcol,
+        thin,
+    },
+    leafBaseTikzPicStyle/.style = {
+        transform shape,
+        scale = 0.5,
+        %rounded corners = 0.3cm,
+        every path/.style = {thick, > = latex},
+    },
+}
+
+\subtikzpicturedef{subLeafBase} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+}
+
+\subtikzpictureactivate{subLeafBase}

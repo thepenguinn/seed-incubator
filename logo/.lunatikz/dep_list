@@ -1,4 +1,7 @@
 return {
+    ["endLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
     ["endRoughSketch"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
@@ -34,6 +37,9 @@ return {
     },
     ["endSeedSliceMarked"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subRoughSketchMarked"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
