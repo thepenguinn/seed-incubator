@@ -8,6 +8,9 @@ return {
     ["endPrimaryLeafClip"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
+    ["endPrimaryLeafCut"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
     ["endRoughSketch"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
@@ -51,6 +54,9 @@ return {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subPrimaryLeafClip"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subPrimaryLeafCut"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subRoughSketchMarked"] = {

@@ -1,0 +1,91 @@
+\subtikzpicturedef{subPrimaryLeafCut} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    innerCutTop,
+    innerCutBottom,
+    outerCutTop,
+    outerCutBottom,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subPrimaryLeafClip {#1-primaryLeafClip} {#1-origin} {origin}
+
+    \draw
+
+    %% lower cut
+
+    (#1-primaryLeafClip-primaryLeafBase-outerLeftBottomCorner)
+    ++(\leafBaseSecondaryXOffset, -\leafBaseSecondaryYOffset)
+    coordinate (#1-tmp1)
+
+    (#1-tmp1)
+    ++(\leafBaseAngle:\leafBaseSecondaryEdgeLength)
+    coordinate (#1-secLeftMost)
+
+    (#1-tmp1)
+    ++({90 + \leafBaseAngle}:\leafBaseCutThickness)
+    coordinate (#1-tmp1)
+
+    (#1-secLeftMost)
+    ++({90 + \leafBaseAngle}:\leafBaseCutThickness)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-primaryLeafClip-innerBottomCorner--#1-primaryLeafClip-innerRightCorner)
+    coordinate (#1-innerCutBottom)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-primaryLeafClip-primaryLeafBase-outerRightBottomCorner--#1-primaryLeafClip-primaryLeafBase-outerRightMostCorner)
+    coordinate (#1-outerCutBottom)
+
+    %% upper cut
+
+    (#1-secLeftMost)
+    ++({270 - \leafBaseAngle}:\leafBaseCutThickness)
+    coordinate (#1-tmp1)
+    ++({180 - \leafBaseAngle}:\leafBaseCutThickness)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-primaryLeafClip-innerTopCorner--#1-primaryLeafClip-innerRightCorner)
+    coordinate (#1-innerCutTop)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-primaryLeafClip-primaryLeafBase-outerRightTopCorner--#1-primaryLeafClip-primaryLeafBase-outerRightMostCorner)
+    coordinate (#1-outerCutTop)
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-primaryLeafClip-north)} {(#1-primaryLeafClip-south)}
+    {(#1-primaryLeafClip-west)} {(#1-primaryLeafClip-east)}
+    ;
+
+}
+
+\subtikzpictureactivate{subPrimaryLeafCut}
+
+\newcommand\ovrConnectPrimaryLeafCut[1] {
+    (#1-primaryLeafClip-primaryLeafBase-outerLeftBottomCorner)
+    -- (#1-primaryLeafClip-primaryLeafBase-outerLeftMostCorner)
+    -- (#1-primaryLeafClip-primaryLeafBase-outerLeftTopCorner)
+    -- (#1-primaryLeafClip-primaryLeafBase-outerRightTopCorner)
+    -- (#1-outerCutTop)
+    -- (#1-innerCutTop)
+    -- (#1-primaryLeafClip-innerTopCorner)
+    -- (#1-primaryLeafClip-innerLeftCorner)
+    -- (#1-primaryLeafClip-innerBottomCorner)
+    -- (#1-innerCutBottom)
+    -- (#1-outerCutBottom)
+    -- (#1-primaryLeafClip-primaryLeafBase-outerRightBottomCorner)
+    -- cycle
+}
