@@ -2,6 +2,9 @@ return {
     ["endLeafBase"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
+    ["endLeavesBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
     ["endPrimaryLeafBase"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
@@ -54,6 +57,9 @@ return {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["subLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subLeavesBase"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subPrimaryLeafBase"] = {
