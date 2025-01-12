@@ -11,6 +11,9 @@ return {
     ["endLeavesColor"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
+    ["endLeavesColorMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
     ["endLeavesFinal"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
@@ -87,6 +90,9 @@ return {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subLeavesColor"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subLeavesColorMarked"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subLeavesFinal"] = {

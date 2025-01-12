@@ -1,0 +1,21 @@
+\subtikzpicturedef{subLeavesColorMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subLeavesColor {#1-leavesColor} {#1-origin} {origin}
+
+    \ovrDrawPrimaryLeafColored {#1-leavesColor}
+    \ovrDrawSecondaryLeafColored {#1-leavesColor}
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-leavesColor-north)} {(#1-leavesColor-south)}
+    {(#1-leavesColor-west)} {(#1-leavesColor-east)}
+    ;
+}
+
+\subtikzpictureactivate{subLeavesColorMarked}
