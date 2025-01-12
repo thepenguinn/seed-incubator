@@ -1,0 +1,65 @@
+\subtikzpicturedef{subSecondaryLeafClipMarked} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subSecondaryLeafClip {#1-secondaryLeafClip} {#1-origin} {origin}
+
+    \fill [leafBaseStyle, even odd rule]
+    \ovrConnectSecondaryLeafBase {#1-secondaryLeafClip-secondaryLeafBase}
+    \ovrConnectSecondaryLeafClip {#1-secondaryLeafClip}
+    ;
+
+    \draw [leafOuterMarkStyle]
+    (#1-secondaryLeafClip-secondaryLeafBase-outerRightMostCorner)
+    ++({\leafBaseAngle - 90}:\leafMarkPad)
+    coordinate (#1-tmp1)
+
+    (#1-secondaryLeafClip-secondaryLeafBase-outerRightTopCorner)
+    ++({\leafBaseAngle - 90}:\leafMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-secondaryLeafClip-secondaryLeafBase-outerRightBottomCorner--#1-secondaryLeafClip-secondaryLeafBase-outerRightMostCorner)
+    coordinate (#1-thickDimFirst)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-secondaryLeafClip-innerRightCorner--#1-secondaryLeafClip-innerBottomCorner)
+    coordinate (#1-thickDimFourth)
+
+    (#1-thickDimFourth)
+    ++({180 - \leafBaseAngle}:{1cm - \leafMarkPad})
+    coordinate (#1-thickDimThird)
+
+    (#1-thickDimThird)
+    coordinate (#1-tmp1)
+    ++({90 - \leafBaseAngle}:0.1)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-secondaryLeafClip-secondaryLeafBase-outerRightBottomCorner--#1-secondaryLeafClip-secondaryLeafBase-outerRightMostCorner)
+    coordinate (#1-thickDimSecond)
+
+    (#1-thickDimFirst)
+    node [ocirc] {}
+    -- (#1-thickDimSecond)
+    -- (#1-thickDimThird)
+    -- (#1-thickDimFourth)
+    node [ocirc] {}
+
+    ;
+
+    \path [leafOuterMarkStyle]
+    (#1-thickDimSecond)
+    -- (#1-thickDimThird)
+    node [midway, sloped, above = 4pt] {\leafBaseThickness}
+    ;
+
+}
+
+\subtikzpictureactivate{subSecondaryLeafClipMarked}
