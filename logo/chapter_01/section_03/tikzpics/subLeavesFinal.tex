@@ -1,3 +1,5 @@
+\def\leafConnectPad{1.5cm}
+
 \subtikzpicturedef{subLeavesFinal} {
     origin%
 } {
@@ -25,6 +27,10 @@
     ++(6, -10)
     coordinate (#1-leavesBase)
 
+    (#1-primaryLeafClip)
+    ++(0, -28)
+    coordinate (#1-leavesColor)
+
     ;
 
     \subPrimaryLeafBaseMarked {#1-primaryLeafBase} {#1-origin} {center}
@@ -32,6 +38,173 @@
     \subSecondaryLeafBaseMarked {#1-secondaryLeafBase} {#1-secondaryLeafBase} {center}
     \subSecondaryLeafClipMarked {#1-secondaryLeafClip} {#1-secondaryLeafClip} {center}
     \subLeavesBaseMarked {#1-leavesBase} {#1-leavesBase} {center}
+    \subLeavesColorMarked {#1-leavesColor} {#1-leavesColor} {center}
+
+    %% first line
+
+    \draw [leafInterConnectStyle]
+    (#1-primaryLeafBase-north)
+    ++(0,\leafConnectPad)
+    coordinate (#1-firstLineNodeFirst)
+    ++(-1,1)
+    coordinate (#1-firstLineNodeSecond)
+
+    (#1-primaryLeafClip-north)
+    ++(0,\leafConnectPad)
+    coordinate (#1-firstLineNodeFourth)
+    ++(1,1)
+    coordinate (#1-firstLineNodeThird)
+
+    (#1-firstLineNodeFirst)
+    -- (#1-firstLineNodeSecond)
+    -- (#1-firstLineNodeThird)
+    -- (#1-firstLineNodeFourth)
+
+    ;
+
+    %% second line
+    \draw [leafInterConnectStyle]
+    (#1-secondaryLeafBase-south)
+    ++(0, -\leafConnectPad)
+    coordinate (#1-secondLineNodeFirst)
+    ++(1, -1)
+    coordinate (#1-secondLineNodeSecond)
+
+    (#1-secondaryLeafClip-south)
+    ++(0, -\leafConnectPad)
+    coordinate (#1-secondLineNodeFourth)
+    ++(-1, -1)
+    coordinate (#1-secondLineNodeThird)
+
+    (#1-secondLineNodeFirst)
+    -- (#1-secondLineNodeSecond)
+    -- (#1-secondLineNodeThird)
+    -- (#1-secondLineNodeFourth)
+
+    ;
+
+    %% third line
+    \draw [leafInterConnectStyle]
+    (#1-secondaryLeafClip-east)
+    ++(\leafConnectPad, 0)
+    coordinate (#1-thirdLineNodeFirst)
+
+    (#1-leavesBase-east)
+    ++(\leafConnectPad, 0)
+    ++(-1, 1)
+    coordinate (#1-thirdLineNodeFifth)
+    ++(1, 1)
+    coordinate (#1-thirdLineNodeFourth)
+
+    (#1-thirdLineNodeFirst -| #1-thirdLineNodeFourth)
+    coordinate (#1-tmp)
+    (#1-tmp)
+    ++(-2, 0)
+    coordinate (#1-thirdLineNodeSecond)
+    (#1-tmp)
+    ++(0, -2)
+    coordinate (#1-thirdLineNodeThird)
+
+    (#1-thirdLineNodeFirst)
+    -- (#1-thirdLineNodeSecond)
+    -- (#1-thirdLineNodeThird)
+    -- (#1-thirdLineNodeFourth)
+    -- (#1-thirdLineNodeFifth)
+
+    ;
+
+    %% fourth line
+    \draw [leafInterConnectStyle]
+    (#1-primaryLeafClip-west)
+    ++(-\leafConnectPad, 0)
+    coordinate (#1-fourthLineNodeFirst)
+    ++(-1, -1)
+    coordinate (#1-fourthLineNodeSecond)
+
+    (#1-fourthLineNodeSecond |- #1-leavesBase-west)
+    coordinate (#1-tmp)
+    (#1-tmp)
+    ++(0, 2)
+    coordinate (#1-fourthLineNodeThird)
+    (#1-tmp)
+    ++(2, 0)
+    coordinate (#1-fourthLineNodeFourth)
+
+    (#1-leavesBase-west)
+    ++(-\leafConnectPad, 0)
+    coordinate (#1-fourthLineNodeFifth)
+
+    (#1-fourthLineNodeFirst)
+    -- (#1-fourthLineNodeSecond)
+    -- (#1-fourthLineNodeThird)
+    -- (#1-fourthLineNodeFourth)
+    -- (#1-fourthLineNodeFifth)
+
+    ;
+
+    %% fifth line
+    \draw [leafInterConnectStyle]
+    (#1-leavesColor-south)
+    %++(0, -\leafConnectPad)
+    ++(3, 1)
+    coordinate (#1-fifthLineNodeSixth)
+    ++(1, -1)
+    coordinate (#1-fifthLineNodeFifth)
+
+    (#1-leavesBase-east)
+    ++(\leafConnectPad, 0)
+    ++(-1, -3)
+    coordinate (#1-fifthLineNodeFirst)
+    ++(1, -1)
+    coordinate (#1-fifthLineNodeSecond)
+
+    (#1-fifthLineNodeFifth -| #1-fifthLineNodeSecond)
+    coordinate (#1-tmp)
+    (#1-tmp)
+    ++(0, 2)
+    coordinate (#1-fifthLineNodeThird)
+    (#1-tmp)
+    ++(-2, 0)
+    coordinate (#1-fifthLineNodeFourth)
+
+    (#1-fifthLineNodeFirst)
+    -- (#1-fifthLineNodeSecond)
+    -- (#1-fifthLineNodeThird)
+    -- (#1-fifthLineNodeFourth)
+    -- (#1-fifthLineNodeFifth)
+    -- (#1-fifthLineNodeSixth)
+
+    ;
+
+    \draw [leafInterConnectEndStyle]
+    (#1-firstLineNodeFirst)
+    circle (0.2cm)
+    (#1-firstLineNodeFourth)
+    circle (0.2cm)
+
+    (#1-secondLineNodeFirst)
+    circle (0.2cm)
+    (#1-secondLineNodeFourth)
+    circle (0.2cm)
+
+    (#1-thirdLineNodeFirst)
+    circle (0.2cm)
+    (#1-thirdLineNodeFifth)
+    circle (0.2cm)
+
+    (#1-fourthLineNodeFirst)
+    circle (0.2cm)
+    (#1-fourthLineNodeFifth)
+    circle (0.2cm)
+
+    (#1-fifthLineNodeFirst)
+    circle (0.2cm)
+    (#1-fifthLineNodeSixth)
+    circle (0.2cm)
+
+    ;
+
+
 
 }
 
