@@ -1,0 +1,82 @@
+\subtikzpicturedef{subLeavesBaseMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subLeavesBase {#1-leavesBase} {#1-origin} {origin}
+
+    \fill [leafBaseStyle]
+    \ovrConnectPrimaryLeafCut {#1-leavesBase-primaryLeafCut}
+    ;
+
+    \fill [leafBaseStyle, even odd rule]
+    \ovrConnectSecondaryLeafBase {#1-leavesBase-secondaryLeafClip-secondaryLeafBase}
+    \ovrConnectSecondaryLeafClip {#1-leavesBase-secondaryLeafClip}
+    ;
+
+    \draw [leafOuterMarkStyle]
+    (#1-leavesBase-secondaryLeaf-outerLeftTopCorner)
+    ++(0, \leafMarkPad)
+    coordinate (#1-tmp1)
+    (#1-leavesBase-secondaryLeaf-outerRightTopCorner)
+    ++(0, \leafMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-leavesBase-secondaryLeaf-outerLeftMostCorner--#1-leavesBase-secondaryLeaf-outerLeftTopCorner)
+    coordinate (#1-cutThickDimFirst)
+
+    (#1-leavesBase-primaryLeaf-outerRightTopCorner)
+    ++({\leafBaseAngle - 90}:\leafMarkPad)
+    coordinate (#1-tmp1)
+    (#1-leavesBase-primaryLeaf-outerRightMostCorner)
+    ++({\leafBaseAngle - 90}:\leafMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-leavesBase-primaryLeaf-outerCutTop--#1-leavesBase-primaryLeaf-innerCutTop)
+    coordinate (#1-cutThickDimFourth)
+
+    (#1-cutThickDimFirst)
+    ++({180 - \leafBaseAngle}:{1cm - \leafMarkPad})
+    coordinate (#1-cutThickDimSecond)
+    coordinate (#1-tmp1)
+    ++({90 - \leafBaseAngle}:0.1)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-leavesBase-primaryLeaf-outerCutTop--#1-leavesBase-primaryLeaf-innerCutTop)
+    coordinate (#1-cutThickDimThird)
+
+    (#1-cutThickDimFirst)
+    node [ocirc] {}
+    -- (#1-cutThickDimSecond)
+    -- (#1-cutThickDimThird)
+    -- (#1-cutThickDimFourth)
+    node [ocirc] {}
+
+    ;
+
+    \path [leafOuterMarkStyle]
+    (#1-cutThickDimSecond)
+    -- (#1-cutThickDimThird)
+    node [midway, sloped, above = 4pt] {\leafBaseCutThickness}
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-leavesBase-north)} {(#1-leavesBase-south)}
+    {(#1-leavesBase-west)} {(#1-leavesBase-east)}
+    ;
+
+}
+
+\subtikzpictureactivate{subLeavesBaseMarked}
