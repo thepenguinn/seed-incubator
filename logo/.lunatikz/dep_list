@@ -11,6 +11,9 @@ return {
     ["endLeavesColor"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
+    ["endLeavesFinal"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
     ["endPrimaryLeafBase"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
@@ -84,6 +87,9 @@ return {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subLeavesColor"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subLeavesFinal"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subPrimaryLeafBase"] = {

@@ -1,0 +1,38 @@
+\subtikzpicturedef{subLeavesFinal} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subLeafBase {base} {#1-origin} {origin}
+
+    \draw
+    (#1-origin)
+    coordinate (#1-primaryLeafBase)
+    ++(-9, 0)
+    coordinate (#1-primaryLeafClip)
+
+    ($(#1-primaryLeafBase)!0.50!(#1-primaryLeafClip)$)
+    ++(0, -9)
+    coordinate (#1-secondaryLeafBase)
+
+    (#1-primaryLeafBase)
+    ++(9, 0)
+    coordinate (#1-tmp)
+    ($(#1-primaryLeafBase)!0.50!(#1-tmp)$)
+    ++(0, -9)
+    coordinate (#1-secondaryLeafClip)
+
+    (#1-secondaryLeafClip)
+    ++(6, -10)
+    coordinate (#1-leavesBase)
+
+    ;
+
+    \subPrimaryLeafBaseMarked {#1-primaryLeafBase} {#1-origin} {center}
+    \subPrimaryLeafClipMarked {#1-primaryLeafClip} {#1-primaryLeafClip} {center}
+    \subSecondaryLeafBaseMarked {#1-secondaryLeafBase} {#1-secondaryLeafBase} {center}
+    \subSecondaryLeafClipMarked {#1-secondaryLeafClip} {#1-secondaryLeafClip} {center}
+    \subLeavesBaseMarked {#1-leavesBase} {#1-leavesBase} {center}
+
+}
+
+\subtikzpictureactivate{subLeavesFinal}
