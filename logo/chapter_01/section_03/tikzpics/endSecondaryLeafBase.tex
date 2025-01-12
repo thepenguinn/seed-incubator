@@ -1,0 +1,13 @@
+\begin{tikzpicture} [
+        leafBaseTikzPicStyle,
+    ]
+
+    \draw (0, 0) coordinate (origin) ;
+
+    \subSecondaryLeafBase {secondaryLeafBase} {origin} {origin}
+
+    \fill [leafBaseStyle]
+    \ovrConnectSecondaryLeafBase {secondaryLeafBase}
+    ;
+
+\end{tikzpicture}
