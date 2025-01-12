@@ -15,20 +15,20 @@
     %% length, angle
 
     \draw [leafOuterMarkStyle]
-    (#1-secondaryLeafBase-outerLeftTopCorner)
-    ++({270 - \leafBaseAngle}:\leafMarkPad)
+    (#1-secondaryLeafBase-outerRightTopCorner)
+    ++({\leafBaseAngle - 90}:\leafMarkPad)
     coordinate (#1-lineMarkFirst)
 
-    (#1-secondaryLeafBase-outerLeftTopCorner)
-    ++({270 - \leafBaseAngle}:1)
+    (#1-secondaryLeafBase-outerRightTopCorner)
+    ++({\leafBaseAngle - 90}:1)
     coordinate (#1-lineMarkSecond)
 
-    (#1-secondaryLeafBase-outerLeftMostCorner)
-    ++({270 - \leafBaseAngle}:\leafMarkPad)
+    (#1-secondaryLeafBase-outerRightMostCorner)
+    ++({\leafBaseAngle - 90}:\leafMarkPad)
     coordinate (#1-lineMarkFourth)
 
-    (#1-secondaryLeafBase-outerLeftMostCorner)
-    ++({270 - \leafBaseAngle}:1)
+    (#1-secondaryLeafBase-outerRightMostCorner)
+    ++({\leafBaseAngle - 90}:1)
     coordinate (#1-lineMarkThird)
 
     (#1-lineMarkFirst)
