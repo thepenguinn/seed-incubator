@@ -1,4 +1,7 @@
 \subtikzpicturedef{subSecondaryLeafClipMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
@@ -59,6 +62,13 @@
     -- (#1-thickDimThird)
     node [midway, sloped, above = 4pt] {\leafBaseThickness}
     ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-secondaryLeafClip-north)} {(#1-secondaryLeafClip-south)}
+    {(#1-secondaryLeafClip-west)} {(#1-secondaryLeafClip-east)}
+    ;
+
 
 }
 
