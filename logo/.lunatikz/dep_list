@@ -20,6 +20,9 @@ return {
     ["endSecondaryLeafBase"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
+    ["endSecondaryLeafClip"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
     ["endSeedBase"] = {
         ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
@@ -69,6 +72,9 @@ return {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
     ["subSecondaryLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subSecondaryLeafClip"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
     ["subSeedBase"] = {
