@@ -77,6 +77,92 @@
     {(#1-leavesBase-west)} {(#1-leavesBase-east)}
     ;
 
+    %% y offset
+
+    \draw [leafOuterMarkStyle]
+    (#1-leavesBase-secondaryLeaf-outerLeftBottomCorner)
+    ++({\leafBaseAngle + 90}:\leafMarkPad)
+    coordinate (#1-tmp1)
+
+    (#1-leavesBase-secondaryLeaf-outerLeftMostCorner)
+    ++({\leafBaseAngle + 90}:\leafMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-leavesBase-secondaryLeaf-outerLeftBottomCorner--#1-leavesBase-secondaryLeaf-outerRightBottomCorner)
+    coordinate (#1-yOffFirst)
+
+    %%
+
+    (#1-leavesBase-primaryLeaf-outerLeftBottomCorner)
+    ++({\leafBaseAngle + 90}:\leafMarkPad)
+    coordinate (#1-tmp1)
+
+    (#1-leavesBase-primaryLeaf-outerLeftMostCorner)
+    ++({\leafBaseAngle + 90}:\leafMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-leavesBase-primaryLeaf-outerLeftBottomCorner--#1-leavesBase-primaryLeaf-outerRightBottomCorner)
+    coordinate (#1-yOffFourth)
+
+    %%
+
+    (#1-yOffFourth)
+    ++(-{(1cm - \leafMarkPad)}, 0)
+    coordinate (#1-yOffThird)
+    (#1-yOffThird |- #1-yOffFirst)
+    coordinate (#1-yOffSecond)
+
+    (#1-yOffFirst)
+    node [ocirc] {}
+    -- (#1-yOffSecond)
+    -- (#1-yOffThird)
+    -- (#1-yOffFourth)
+    node [ocirc] {}
+
+    ;
+
+    \path [leafOuterMarkStyle]
+    (#1-yOffSecond)
+    -- (#1-yOffThird)
+    node [midway, sloped, above = 4pt] {\leafBaseSecondaryYOffset}
+    ;
+
+    %% x offset
+
+    \draw [leafOuterMarkStyle]
+    (#1-leavesBase-secondaryLeaf-outerLeftBottomCorner)
+    ++(0, -\leafMarkPad)
+    coordinate (#1-xOffFirst)
+    ++(0, -{(1cm - \leafMarkPad)})
+    coordinate (#1-xOffSecond)
+
+    (#1-leavesBase-primaryLeaf-outerLeftBottomCorner |- #1-xOffFirst)
+    coordinate (#1-xOffFourth)
+
+    (#1-leavesBase-primaryLeaf-outerLeftBottomCorner |- #1-xOffSecond)
+    coordinate (#1-xOffThird)
+
+    (#1-xOffFirst)
+    node [ocirc] {}
+    -- (#1-xOffSecond)
+    -- (#1-xOffThird)
+    -- (#1-xOffFourth)
+    node [ocirc] {}
+
+    ;
+
+    \path [leafOuterMarkStyle]
+    (#1-xOffSecond)
+    -- (#1-xOffThird)
+    node [midway, sloped, below = 4pt] {\leafBaseSecondaryXOffset}
+    ;
+
 }
 
 \subtikzpictureactivate{subLeavesBaseMarked}
