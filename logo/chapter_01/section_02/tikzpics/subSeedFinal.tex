@@ -46,13 +46,22 @@
     ++(-\seedLineMarkPad, 0)
     coordinate (#1-secondLineEnd)
 
+    (#1-firstLineStart)
+    ++(\seedLineBendVertLen, 0)
+    coordinate (#1-firstLineFirst)
+
     (#1-firstLineEnd)
     ++(0, \seedLineBendVertLen)
-    coordinate (#1-firstLineFirst)
+    coordinate (#1-firstLineSecond)
 
     (#1-firstLineStart)
     -- (#1-firstLineFirst)
+    -- (#1-firstLineSecond)
     -- (#1-firstLineEnd)
+
+    (#1-secondLineEnd)
+    ++(-\seedLineBendVertLen, 0)
+    coordinate (#1-secondLineSecond)
 
     (#1-secondLineStart)
     ++(0, -\seedLineBendVertLen)
@@ -60,6 +69,7 @@
 
     (#1-secondLineStart)
     -- (#1-secondLineFirst)
+    -- (#1-secondLineSecond)
     -- (#1-secondLineEnd)
 
     ;
