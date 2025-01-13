@@ -12,17 +12,12 @@
 
 %\definecolor{ColorBg} {RGB} {31, 30, 24}
 
-\tikzset{
-    sapTikzPicStyle/.style = {
-        scale = 0.5,
-    },
-}
-
 \subtikzpicturedef{subSapColor} {
     primaryLeaf-center,
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
+    \subSapBase {#1-sapBase} {#1-origin} {origin}
 
     \draw (#1-origin) coordinate (#1-seed) ;
 

@@ -38,6 +38,9 @@ return {
     ["endRoughSketchMarked"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
+    ["endSapBase"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
     ["endSapColor"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
@@ -121,6 +124,9 @@ return {
     },
     ["subRoughtSketch"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subSapBase"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
     ["subSapColor"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",

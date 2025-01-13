@@ -1,0 +1,13 @@
+\tikzset{
+    sapTikzPicStyle/.style = {
+        scale = 0.5,
+    },
+}
+
+\subtikzpicturedef{subSapBase} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+}
+
+\subtikzpictureactivate{subSapBase}
