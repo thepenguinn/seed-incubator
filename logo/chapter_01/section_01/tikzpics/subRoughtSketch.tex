@@ -1,3 +1,10 @@
+\tikzset{
+    roughSketchStyle/.style = {
+        roughSketchColorBase,
+        ultra thick,
+    }
+}
+
 \subtikzpicturedef{subRoughtSketch} {
     origin,
     north, south, east, west,
@@ -16,7 +23,7 @@
     (#1-origin) ++(5, 0) coordinate (#1-seedBottomRight)
     (#1-seedBottomRight) ++(-0.5, 2.5) coordinate (#1-seedTopRight)
     ;
-    \draw
+    \draw [roughSketchStyle]
     (#1-seedBottomLeft)
     -- (#1-seedBottomRight)
     -- (#1-seedTopRight)
@@ -30,7 +37,7 @@
     (#1-primaryLeafBottom) ++(2.25,4.5) coordinate (#1-primaryLeafRight)
     (#1-primaryLeafBottom) ++(0.25,10) coordinate (#1-primaryLeafTop)
     ;
-    \draw
+    \draw [roughSketchStyle]
     (#1-primaryLeafBottom)
     -- (#1-primaryLeafRight)
     -- (#1-primaryLeafTop)
@@ -44,7 +51,7 @@
     (#1-secondaryLeafBottom) ++(3.75,3) coordinate (#1-secondaryLeafRight)
     (#1-secondaryLeafBottom) ++(3.25,8.5) coordinate (#1-secondaryLeafTop)
     ;
-    \draw
+    \draw [roughSketchStyle]
     (#1-secondaryLeafBottom)
     -- (#1-secondaryLeafRight)
     -- (#1-secondaryLeafTop)
