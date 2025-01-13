@@ -12,31 +12,34 @@
     \ovrDrawSecondaryLeafColored {#1-leavesColor}
 
     \draw [leafInterConnectStyle]
-    ($(#1-leavesColor-primaryLeaf-outerRightTopCorner)!0.10!(#1-leavesColor-primaryLeaf-outerRightMostCorner)$)
+    ($(#1-leavesColor-primaryLeaf-outerRightTopCorner)!0.085!(#1-leavesColor-primaryLeaf-outerRightMostCorner)$)
     ++(\leafConnectPad, 0)
     coordinate (#1-primaryLineFirst)
-    ++(7, 0)
+    ++(1, 1)
     coordinate (#1-primaryLineSecond)
-    ++(1.5, -1.5)
+    ++(6, 0)
     coordinate (#1-primaryLineThird)
+    ++(1.5, -1.5)
+    coordinate (#1-primaryLineFourth)
 
     (#1-primaryLineFirst)
     -- (#1-primaryLineSecond)
     -- (#1-primaryLineThird)
+    -- (#1-primaryLineFourth)
 
     ;
 
     \draw [leafInterConnectEndStyle, fill = leafColorPrimary]
-    (#1-primaryLineThird)
+    (#1-primaryLineFourth)
     circle (\leafColorMarkEndRadius)
     ;
 
     \draw
-    (#1-primaryLineThird)
+    (#1-primaryLineFourth)
     node (#1-primaryLineNode) [below = 1.5cm, anchor = north] {
         \begin{minipage} {6cm}
             \Large
-            \raggedleft
+            \raggedright
             {\huge\textsc{Sage}}
             \scshape
             \vspace{1pt}
