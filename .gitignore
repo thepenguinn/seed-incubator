@@ -10,3 +10,5 @@
 *.run.xml
 */**/icon/*.png
 */**/icon/*.svg
+misc
+report/sig
