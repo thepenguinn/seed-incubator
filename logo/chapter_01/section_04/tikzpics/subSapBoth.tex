@@ -1,0 +1,43 @@
+\subtikzpicturedef{subSapBoth} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subSapMono {#1-sapMono} {#1-origin} {origin}
+
+    \draw
+    (#1-sapMono-north)
+    ++(0, 4.5)
+    coordinate (#1-lineCenter)
+    ++(0, 9.5)
+    coordinate (#1-sapColor)
+    ;
+
+    \draw [sapOuterMarkStyle]
+    (#1-lineCenter)
+    ++(-4.5, 0)
+    -- ++(9, 0)
+    ;
+
+    \draw [sapOuterMarkStyle, fill= bgcol]
+    (#1-lineCenter)
+    ++(-4.5, 0) circle (0.2cm)
+    ++(9, 0) circle (0.2cm)
+    ;
+
+    \subSapColor {#1-sapColor} {#1-sapColor} {south}
+
+    %\draw
+    %(#1-sapColor-north) node [ocirc] {}
+    %(#1-sapColor-south) node [ocirc] {}
+    %(#1-sapColor-east) node [ocirc] {}
+    %(#1-sapColor-west) node [ocirc] {}
+    %(#1-sapColor-northeast) node [ocirc] {}
+    %(#1-sapColor-northwest) node [ocirc] {}
+    %(#1-sapColor-southeast) node [ocirc] {}
+    %(#1-sapColor-southwest) node [ocirc] {}
+    %(#1-sapColor-center) node [ocirc] {}
+    %;
+
+}
+
+\subtikzpictureactivate{subSapBoth}
