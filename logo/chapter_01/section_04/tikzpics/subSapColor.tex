@@ -14,6 +14,9 @@
 
 \subtikzpicturedef{subSapColor} {
     primaryLeaf-center,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
@@ -39,6 +42,12 @@
 
     \draw
     (#1-leaves-primaryLeaf-center) coordinate (#1-primaryLeaf-center)
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-leaves-north)} {(#1-leaves-south)}
+    {(#1-seed-west)} {(#1-leaves-east)}
     ;
 
 }

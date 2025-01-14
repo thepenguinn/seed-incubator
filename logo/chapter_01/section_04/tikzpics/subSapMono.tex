@@ -1,4 +1,7 @@
 \subtikzpicturedef{subSapMono} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
@@ -22,6 +25,13 @@
         \ovrConnectSecondaryLeafClip {#1-leavesBase-secondaryLeafClip}
         ;
     \end{scope}
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-leavesBase-north)} {(#1-leavesBase-south)}
+    {(#1-seedSlice-west)} {(#1-leavesBase-east)}
+    ;
+
 }
 
 \subtikzpictureactivate{subSapMono}
