@@ -44,6 +44,9 @@ return {
     ["endSapColor"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
+    ["endSapMono"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
     ["endSecondaryLeafBase"] = {
         ["parent_dir"] = "chapter_01/section_03/tikzpics",
     },
@@ -129,6 +132,9 @@ return {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
     ["subSapColor"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["subSapMono"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
     ["subSecondaryLeafBase"] = {
