@@ -1,18 +1,6 @@
-%\definecolor{darkColorBg} {RGB} {74, 71, 57}
-%\definecolor{midColorBg} {RGB} {116, 113, 90}
-%\definecolor{lightColorBg} {RGB} {156, 152, 127}
+\definecolor{ColorBg} {RGB} {31, 30, 24}
 
-%\definecolor{darkColorBg} {RGB} {21, 20, 16}
-%\definecolor{midColorBg} {RGB} {26, 25, 20}
-%\definecolor{lightColorBg} {RGB} {36, 34, 26}
-
-%\definecolor{darkColorBg} {RGB} {66, 63, 50}
-%\definecolor{midColorBg} {RGB} {110, 105, 84}
-%\definecolor{lightColorBg} {RGB} {153, 146, 121}
-
-%\definecolor{ColorBg} {RGB} {31, 30, 24}
-
-\subtikzpicturedef{subSapColor} {
+\subtikzpicturedef{subSapIcon} {
     primaryLeaf-center,
     north, south, east, west,
     northeast, northwest, southeast, southwest,
@@ -21,17 +9,21 @@
 } {
     \draw (#1-start) coordinate (#1-origin);
     \subSapBase {#1-sapBase} {#1-origin} {origin}
-
     \draw (#1-origin) coordinate (#1-seed) ;
 
     \subSeedColor {#1-seed} {#1-seed} {center}
 
     \subLeavesColor {#1-leaves} {#1-seed-innerRightBottomSliceCorner} {primaryLeaf-outerLeftBottomCorner}
 
+    \fill [fill = ColorBg]
+    (#1-leaves-primaryLeaf-center)
+    ++(0,-0.5)
+    circle (10.5cm)
+    ;
+
     \ovrDrawSeedLeftSlice {#1-seed}
 
     \ovrDrawPrimaryLeafColored {#1-leaves}
-
     \ovrDrawSecondaryLeafColored {#1-leaves}
 
     \draw
@@ -46,4 +38,4 @@
 
 }
 
-\subtikzpictureactivate{subSapColor}
+\subtikzpictureactivate{subSapIcon}

@@ -47,6 +47,9 @@ return {
     ["endSapColor"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
+    ["endSapIcon"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
     ["endSapMono"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
@@ -138,6 +141,9 @@ return {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
     ["subSapColor"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["subSapIcon"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
     ["subSapMono"] = {
