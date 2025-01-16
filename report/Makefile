@@ -20,10 +20,14 @@ build: main.pdf view
 force:
 	lunatikz build main.tex
 	pdflatex -shell-escape -halt-on-error main.tex
+	biber main
+	pdflatex -shell-escape -halt-on-error main.tex
 	$(VIEWER) main.pdf
 
 main.pdf: main.tex preamble.tex colorscheme.sty $(ABSTRACT) $(CHAPTERS) $(SECTIONS) $(WORKS) $(TIKZPICS)
 	lunatikz build main.tex
+	pdflatex -shell-escape -halt-on-error main.tex
+	biber main
 	pdflatex -shell-escape -halt-on-error main.tex
 
 abstract: abstract.pdf view_abstract
