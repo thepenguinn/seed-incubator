@@ -3,8 +3,8 @@
 </h3>
 
 <h4 align="center">
-  <a>SEED INC</a>
+  <a>Seed Inc.</a>
 </h4>
 
 > [!CAUTION]<br>
-> Still Work In Progress.
+> Work In Progress.
