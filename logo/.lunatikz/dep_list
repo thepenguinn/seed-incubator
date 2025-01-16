@@ -50,6 +50,9 @@ return {
     ["endSapIcon"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
+    ["endSapIconLine"] = {
+        ["parent_dir"] = "chapter_01/icon/tikzpics",
+    },
     ["endSapMono"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
     },
@@ -145,6 +148,9 @@ return {
     },
     ["subSapIcon"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["subSapIconLine"] = {
+        ["parent_dir"] = "chapter_01/icon/tikzpics",
     },
     ["subSapMono"] = {
         ["parent_dir"] = "chapter_01/section_04/tikzpics",

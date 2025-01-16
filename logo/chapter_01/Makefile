@@ -24,13 +24,12 @@ view:
 send:
 	$(SENDER) chapter.pdf
 
-icon: _icon_lunatikz icon/icon.png
+icon: _icon_lunatikz icon/icon.png icon/icon_line.png
 
 _icon_lunatikz:
 	lunatikz build --style icon icon/icon.tex
 
 icon/icon.pdf: section_04/tikzpics/icon/endSapIcon.pdf
-	echo cp...
 	cp section_04/tikzpics/icon/endSapIcon.pdf icon/icon.pdf
 
 icon/icon.svg: icon/icon.pdf
@@ -38,5 +37,17 @@ icon/icon.svg: icon/icon.pdf
 
 icon/icon.png: icon/icon.svg
 	rsvg-convert -w 1920 -h 1920 -o icon/icon.png icon/icon.svg
+
+
+# line icon
+
+icon/icon_line.pdf: icon/tikzpics/icon/endSapIconLine.pdf
+	cp icon/tikzpics/icon/endSapIconLine.pdf icon/icon_line.pdf
+
+icon/icon_line.svg: icon/icon_line.pdf
+	pdf2svg icon/icon_line.pdf icon/icon_line.svg
+
+icon/icon_line.png: icon/icon_line.svg
+	rsvg-convert -w 1920 -h 1920 -o icon/icon_line.png icon/icon_line.svg
 
 .PHONY: view build force icon _icon_lunatikz _gen_icons

@@ -1,0 +1,25 @@
+\subtikzpicturedef{subSapIconLine} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subSapColor {#1-sapColor} {#1-origin} {origin}
+
+    %% padding to make the pdf square
+
+    \draw
+    (#1-sapColor-south)
+    ++(0, -1)
+    coordinate (#1-tmp1)
+
+    let \p{#1-tmp} = ($(#1-sapColor-primaryLeaf-center)-(#1-sapColor-primaryLeaf-center |- #1-tmp1)$),
+    \n{#1-tmpmag} = {veclen(\x{#1-tmp}, \y{#1-tmp})}
+    in
+    (#1-sapColor-primaryLeaf-center) ++(\n{#1-tmpmag}, 0) coordinate (#1-tmp2)
+    (#1-sapColor-primaryLeaf-center) ++(-\n{#1-tmpmag}, 0) coordinate (#1-tmp2)
+    (#1-sapColor-primaryLeaf-center) ++(0, \n{#1-tmpmag}) coordinate (#1-tmp2)
+    (#1-sapColor-primaryLeaf-center) ++(0, -\n{#1-tmpmag}) coordinate (#1-tmp2)
+    ;
+
+}
+
+\subtikzpictureactivate{subSapIconLine}
