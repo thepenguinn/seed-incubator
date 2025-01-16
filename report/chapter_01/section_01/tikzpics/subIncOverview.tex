@@ -1,0 +1,60 @@
+\subtikzpicturedef{subIncOverview} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subFigBase {#1-figBase} {#1-origin} {origin}
+
+    \draw
+    (#1-origin)
+    node (#1-emcu) [
+       absInnerModule,
+    ] {EMCU};
+
+    \node (#1-sinc) [
+        absInnerModule,
+        right = of #1-emcu,
+        xshift = 0.5cm,
+    ] {SINC} ;
+    \draw
+    ($(#1-emcu.north)!0.50!(#1-sinc.north)$)
+    coordinate (#1-mid)
+    ;
+
+    \draw [innerConnect]
+    (#1-emcu) -- (#1-sinc)
+    ;
+
+    \innerEnclosureNode {#1-enclosure} {#1-sinc.south east} {#1-emcu.north west}
+
+    \node (#1-labelInterface) [
+        absInnerLabel,
+        below = of #1-mid
+    ] {Interface} ;
+
+    %% user and sapling
+
+    \node (#1-sapling) [
+        absOuterModule,
+        left = of #1-enclosure,
+        xshift = -1cm,
+    ] {\Huge \faSeedling} ;
+
+    \node (#1-user) [
+        absOuterModule,
+        right = of #1-enclosure,
+        xshift = 1cm,
+    ] {\Huge \faUser} ;
+
+    %% connections
+
+    \draw [outerConnectTo]
+    (#1-sapling) -- (#1-enclosure)
+    ;
+
+    \draw [outerConnectTo]
+    (#1-user) -- (#1-enclosure)
+    ;
+
+}
+
+\subtikzpictureactivate{subIncOverview}
