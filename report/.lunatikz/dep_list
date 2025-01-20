@@ -2,10 +2,19 @@ return {
     ["endIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
+    ["endAbsOneBitRegister"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsCtkDiagramBase"] = {
+        ["parent_dir"] = "tikzpics",
+    },
     ["subFigBase"] = {
         ["parent_dir"] = "tikzpics",
     },
     ["subIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subAbsOneBitRegister"] = {
+        ["parent_dir"] = "tikzpics",
     },
 }

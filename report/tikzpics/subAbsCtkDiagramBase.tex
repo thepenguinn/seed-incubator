@@ -1,0 +1,19 @@
+\tikzset{
+    absCtkTikzPicStyle/.style = {
+    },
+    absCtkModule/.style = {
+        thick,
+        rounded corners = 0.2cm,
+    },
+}
+
+\def\absCtkPinPad{0.25}
+
+\subtikzpicturedef{subAbsCtkDiagramBase} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subFigBase {#1-figBase} {#1-origin} {origin}
+}
+
+\subtikzpictureactivate{subAbsCtkDiagramBase}
