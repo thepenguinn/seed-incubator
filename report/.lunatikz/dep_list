@@ -14,6 +14,9 @@ return {
     ["endAbsOneBitRegister"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["endAbsPTC"] = {
+        ["parent_dir"] = "chapter_02/tikzpics",
+    },
     ["endAbsSensorModule"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -37,6 +40,9 @@ return {
     },
     ["subAbsOneBitRegister"] = {
         ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsPTC"] = {
+        ["parent_dir"] = "chapter_02/tikzpics",
     },
     ["subAbsSensorModule"] = {
         ["parent_dir"] = "tikzpics",
