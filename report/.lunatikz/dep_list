@@ -20,6 +20,9 @@ return {
     ["endAbsSensorModule"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["endAbsServo"] = {
+        ["parent_dir"] = "chapter_02/tikzpics",
+    },
     ["endIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
@@ -46,6 +49,9 @@ return {
     },
     ["subAbsSensorModule"] = {
         ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsServo"] = {
+        ["parent_dir"] = "chapter_02/tikzpics",
     },
     ["subFigBase"] = {
         ["parent_dir"] = "tikzpics",
