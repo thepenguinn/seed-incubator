@@ -6,8 +6,7 @@ VIEWER = viewpdf
 CHAPTERS := $(wildcard chapter_*/chapter.tex)
 WORKS := $(wildcard work_*/work.tex)
 
-SECTIONS := $(wildcard chapter_*/section_*/section.tex)
-SECTIONS := $(wildcard work_*/section_*/section.tex)
+SECTIONS := $(wildcard chapter_*/section_*/section.tex) $(wildcard work_*/section_*/section.tex)
 
 TIKZPICS := $(wildcard */tikzpics/*.tex)
 
