@@ -1,0 +1,48 @@
+\def\absBufferWidth{1.5}
+\def\absBufferHeight{1}
+
+\subtikzpicturedef{subAbsBuffer} {
+    l0, r0,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw [absCtkModule]
+    (#1-origin) coordinate (#1-bottomLeftCorner)
+    (#1-bottomLeftCorner) ++(\absBufferWidth, \absBufferHeight)
+    coordinate (#1-topRightCorner)
+
+    \markgeocoordinate {#1}
+    {(#1-topRightCorner)} {(#1-bottomLeftCorner)}
+    {(#1-bottomLeftCorner)} {(#1-topRightCorner)}
+
+    (#1-west) ++(-\absCtkPinPad, 0)
+    coordinate (#1-l0)
+    (#1-east) ++(\absCtkPinPad, 0)
+    coordinate (#1-r0)
+
+    \markgeocoordinate {#1}
+    {(#1-north)} {(#1-south)}
+    {(#1-l0)} {(#1-r0)}
+
+    (#1-bottomLeftCorner) rectangle (#1-topRightCorner)
+
+    ;
+}
+
+\subtikzpictureactivate{subAbsBuffer}
+
+%% subpicname bufname
+\newcommand\ovrAbsBufferDrawLabelName[2] {
+    \draw [absCtkModule]
+    (#1-center)
+    node [
+        inner sep = 0pt,
+        anchor = center,
+    ] {#2}
+    ;
+}
