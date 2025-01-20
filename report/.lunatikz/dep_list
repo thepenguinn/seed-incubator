@@ -1,11 +1,20 @@
 return {
-    ["endIncOverview"] = {
-        ["parent_dir"] = "chapter_01/section_01/tikzpics",
-    },
     ["endAbsOneBitRegister"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["endAbsSensorModule"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["endIncOverview"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
     ["subAbsCtkDiagramBase"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsOneBitRegister"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsSensorModule"] = {
         ["parent_dir"] = "tikzpics",
     },
     ["subFigBase"] = {
@@ -13,8 +22,5 @@ return {
     },
     ["subIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
-    },
-    ["subAbsOneBitRegister"] = {
-        ["parent_dir"] = "tikzpics",
     },
 }
