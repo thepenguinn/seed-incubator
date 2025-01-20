@@ -104,13 +104,17 @@
 %% for graphicx
 %% https://tex.stackexchange.com/questions/439918/set-default-value-for-max-width-of-includegraphics
 
-\expandafter\patchcmd\csname Gin@ii\endcsname
-{\setkeys {Gin}{#1}}
-{%
-    \setkeys {Gin}
-    {max width = 0.8\textwidth, max height = 0.4\textwidth, keepaspectratio, #1}%
-}
-{}{}
+%\expandafter\patchcmd\csname Gin@ii\endcsname
+%{\setkeys {Gin}{#1}}
+%{%
+%    \setkeys {Gin}
+%    {max width = 0.8\textwidth, max height = 0.4\textwidth, keepaspectratio, #1}%
+%}
+%{}{}
+
+\def\IGXMaxWidth{0.8\textwidth}
+\def\IGXMaxHeight{0.8\textheight}
+\def\IGXDefaultOptionalArgs{keepaspectratio}
 
 \makeatletter
 \def\fps@figure{htbp}
