@@ -16,6 +16,11 @@ PRJPLAN := prjplan.tex
 
 build: main.pdf view
 
+fast:
+	lunatikz build main.tex
+	pdflatex -shell-escape -halt-on-error main.tex
+	$(VIEWER) main.pdf
+
 force:
 	lunatikz build main.tex
 	pdflatex -shell-escape -halt-on-error main.tex
@@ -57,4 +62,4 @@ view:
 send:
 	$(SENDER) main.pdf
 
-.PHONY: view build force view_abstract abstract prjplan abt_plan
+.PHONY: view build fast force view_abstract abstract prjplan abt_plan
