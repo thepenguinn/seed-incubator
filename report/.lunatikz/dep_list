@@ -2,6 +2,9 @@ return {
     ["endAbsActuatorModule"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["endAbsMuxFour"] = {
+        ["parent_dir"] = "tikzpics",
+    },
     ["endAbsOneBitRegister"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -15,6 +18,9 @@ return {
         ["parent_dir"] = "tikzpics",
     },
     ["subAbsCtkDiagramBase"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsMuxFour"] = {
         ["parent_dir"] = "tikzpics",
     },
     ["subAbsOneBitRegister"] = {
