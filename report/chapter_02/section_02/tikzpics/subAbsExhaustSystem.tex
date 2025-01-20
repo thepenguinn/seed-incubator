@@ -1,0 +1,151 @@
+\subtikzpicturedef{subAbsExhaustSystem} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw
+    (#1-origin) coordinate (#1-f0)
+    ;
+
+    \subAbsActuatorModule {#1-f0} {#1-f0} {center}
+    \subAbsActuatorModule {#1-f1} {#1-f0-cr0 |- #1-f0-cb0} {at0}
+    \subAbsActuatorModule {#1-f2} {#1-f1-cr0 |- #1-f1-cb0} {at0}
+
+    \draw
+    (#1-f2-cr1) ++(1, 0) coordinate (#1-srDir2)
+    ;
+
+    \subAbsOneBitRegister {#1-srDir2} {#1-srDir2} {l0}
+    \subAbsOneBitRegister {#1-srDir1} {#1-srDir2-l0 |- #1-f1-cr1} {l0}
+    \subAbsOneBitRegister {#1-srDir0} {#1-srDir1-l0 |- #1-f0-cr1} {l0}
+
+    \draw
+    (#1-f2-cb0) ++(0, -1) coordinate (#1-srPwr3)
+    ;
+
+    \subAbsOneBitRegister {#1-srPwr3} {#1-srPwr3} {t0}
+    \subAbsOneBitRegister {#1-srPwr2} {#1-srPwr3-t0 -| #1-f1-cb0} {t0}
+    \subAbsOneBitRegister {#1-srPwr1} {#1-srPwr3-t0 -| #1-f0-cb0} {t0}
+
+    \draw
+    (#1-srPwr3-b0) ++(0, -1) coordinate (#1-srPwr4)
+    ;
+
+    \subAbsOneBitRegister {#1-srPwr4} {#1-srPwr4} {t0}
+    \subAbsOneBitRegister {#1-srPwr5} {#1-srPwr4-t0 -| #1-srPwr2-b0} {t0}
+
+    %% rest of srDir
+
+    \draw
+    (#1-srPwr4-b0) ++(0, -1) coordinate (#1-p1)
+    ;
+
+    \subAbsActuatorModule {#1-p1} {#1-p1} {ct0}
+    \subAbsActuatorModule {#1-p0} {#1-p1-cb0 -| #1-srPwr5-b0} {ct0}
+
+    \draw
+    (#1-srPwr1-l0)
+    ++($(#1-srPwr1-r0)-(#1-srPwr2-l0)$)
+    coordinate (#1-srPwr0)
+    ;
+
+    \subAbsOneBitRegister {#1-srPwr0} {#1-srPwr0} {r0}
+
+    \draw
+    (#1-srPwr0-t0)
+    ++(0, 1)
+    coordinate (#1-ptc)
+    ;
+
+    \subAbsPTC {#1-ptc} {#1-ptc} {b0}
+
+    \draw
+    (#1-srPwr0-b0)
+    ++(0, -1)
+    coordinate (#1-esp)
+    ;
+
+    \subAbsESP {#1-esp} {#1-esp} {t1}
+
+    \draw
+    (#1-esp-b1) ++(0, -1) coordinate (#1-servo)
+    ;
+
+    \subAbsServo {#1-servo} {#1-servo} {t0}
+
+    \subAbsOneBitRegister {#1-srDir3} {#1-srDir2-l0 |- #1-p1-cr0} {l0}
+    \subAbsOneBitRegister {#1-srDir4} {#1-srDir2-l0 |- #1-p0-cr0} {l0}
+
+    %% labelling
+
+    \foreach \x in {0, 1, 2} {
+        \ovrAbsActuatorModuleDrawLabelName {#1-f\x} {F\x} {CTRL}
+    }
+
+    \foreach \x in {0, 1} {
+        \ovrAbsActuatorModuleDrawLabelName {#1-p\x} {P\x} {CTRL}
+    }
+
+    \ovrAbsESPDrawLabelName {#1-esp} {ESP}
+
+    \ovrAbsServoDrawLabelName {#1-servo} {SVO}
+
+    \ovrAbsPTCDrawLabelName {#1-ptc} {PTC}
+
+    %% drawing connections
+
+    \foreach \start/\stop in {
+        %% esp to shift reg power
+        #1-esp-t1/#1-srPwr0-b0,
+        %% servo
+        #1-esp-b1/#1-servo-t0,
+        %% ptc
+        #1-srPwr0-t0/#1-ptc-b0,
+        %% shift reg direction
+        #1-srDir0-b0/#1-srDir1-t0,
+        #1-srDir1-b0/#1-srDir2-t0,
+        #1-srDir2-b0/#1-srDir3-t0,
+        #1-srDir3-b0/#1-srDir4-t0,
+        %% shift reg power
+        #1-srPwr0-r0/#1-srPwr1-l0,
+        #1-srPwr1-r0/#1-srPwr2-l0,
+        #1-srPwr2-r0/#1-srPwr3-l0,
+        %%
+        #1-srPwr3-b0/#1-srPwr4-t0,
+        #1-srPwr4-l0/#1-srPwr5-r0,
+        %% panels
+        #1-p0-ct0/#1-srPwr5-b0,
+        #1-p1-ct0/#1-srPwr4-b0,
+        %%
+        #1-p0-cr0/#1-srDir4-l0,
+        #1-p1-cr0/#1-srDir3-l0,
+        %% fans
+        #1-f0-cb0/#1-srPwr1-t0,
+        #1-f1-cb0/#1-srPwr2-t0,
+        #1-f2-cb0/#1-srPwr3-t0,
+        %%
+        #1-f0-cr1/#1-srDir0-l0,
+        #1-f1-cr1/#1-srDir1-l0,
+        #1-f2-cr1/#1-srDir2-l0%
+    } {
+        \draw [
+            absCtkInnerConnection,
+        ]
+        (\start) -- (\stop)
+        ;
+    }
+
+    %% drawing the connection from esp to direction shift reg
+
+    \draw [absCtkInnerConnection]
+    (#1-p0-cb0) ++(0, -0.5) coordinate (#1-tmp)
+    (#1-esp-b5)
+    -- (#1-esp-b5 |- #1-tmp)
+    -- (#1-srDir4-b0 |- #1-tmp)
+    -- (#1-srDir4-b0)
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsExhaustSystem}

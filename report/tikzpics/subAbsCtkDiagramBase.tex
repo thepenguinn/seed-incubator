@@ -5,9 +5,21 @@
         thick,
         rounded corners = 0.2cm,
     },
+    absCtkAuxModule/.style = {
+        thick,
+        dashdotted,
+        %colorShadowGray,
+        rounded corners = 0.2cm,
+    },
+    absCtkInnerConnection/.style = {
+        thick,
+        colorShadowGray,
+        rounded corners = 0.2cm,
+        DUInterConnectFromOpenToOpen = 3pt,
+    },
 }
 
-\def\absCtkPinPad{0.25}
+\def\absCtkPinPad{0.50}
 
 \subtikzpicturedef{subAbsCtkDiagramBase} {
     origin%

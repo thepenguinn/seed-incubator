@@ -7,6 +7,7 @@
 \def\absActuatorModuleGap{0.25}
 
 \subtikzpicturedef{subAbsActuatorModule} {
+    at0, ab0,
     al0, ct0, cb0, cr0, cr1,
     north, south, east, west,
     northeast, northwest, southeast, southwest,
@@ -38,6 +39,14 @@
 
     (#1-center) coordinate (#1-actCenter)
 
+    (#1-south)
+    ++(0, -\absCtkPinPad)
+    coordinate (#1-ab0)
+
+    (#1-north)
+    ++(0, \absCtkPinPad)
+    coordinate (#1-at0)
+
     (#1-west) ++(-\absCtkPinPad, 0) coordinate (#1-al0)
 
     %% control circuit
@@ -61,11 +70,11 @@
 
     (#1-center) coordinate (#1-ctrlCenter)
 
-    (#1-northwest) ++(0.25, \absCtkPinPad) coordinate (#1-ct0)
-    (#1-southwest) ++(0.25, -\absCtkPinPad) coordinate (#1-cb0)
+    (#1-northwest) ++(0.5, \absCtkPinPad) coordinate (#1-ct0)
+    (#1-southwest) ++(0.5, -\absCtkPinPad) coordinate (#1-cb0)
 
-    (#1-northeast) ++(\absCtkPinPad, -0.25) coordinate (#1-cr0)
-    (#1-southeast) ++(\absCtkPinPad,  0.25) coordinate (#1-cr1)
+    (#1-northeast) ++(\absCtkPinPad, -0.5) coordinate (#1-cr0)
+    (#1-southeast) ++(\absCtkPinPad,  0.5) coordinate (#1-cr1)
 
     \markgeocoordinate {#1}
     {(#1-ct0)} {(#1-cb0)}
