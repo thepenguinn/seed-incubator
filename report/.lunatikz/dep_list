@@ -26,6 +26,9 @@ return {
     ["endAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
     },
+    ["endAbsTempHumeSensor"] = {
+        ["parent_dir"] = "tikzpics",
+    },
     ["endIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
@@ -58,6 +61,9 @@ return {
     },
     ["subAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["subAbsTempHumeSensor"] = {
+        ["parent_dir"] = "tikzpics",
     },
     ["subFigBase"] = {
         ["parent_dir"] = "tikzpics",
