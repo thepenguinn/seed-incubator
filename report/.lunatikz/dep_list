@@ -14,6 +14,9 @@ return {
     ["endAbsHumidifierSystem"] = {
         ["parent_dir"] = "chapter_03/section_01/tikzpics",
     },
+    ["endAbsHumiditySensorSystem"] = {
+        ["parent_dir"] = "chapter_03/section_02/tikzpics",
+    },
     ["endAbsMuxFour"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -55,6 +58,9 @@ return {
     },
     ["subAbsHumidifierSystem"] = {
         ["parent_dir"] = "chapter_03/section_01/tikzpics",
+    },
+    ["subAbsHumiditySensorSystem"] = {
+        ["parent_dir"] = "chapter_03/section_02/tikzpics",
     },
     ["subAbsMuxFour"] = {
         ["parent_dir"] = "tikzpics",
