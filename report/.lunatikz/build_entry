@@ -4,4 +4,5 @@ return {
     ["chapter_01/section_01"] = "section.tex",
     ["chapter_02"] = "chapter.tex",
     ["chapter_02/section_02"] = "section.tex",
+    ["chapter_02/section_03"] = "section.tex",
 }

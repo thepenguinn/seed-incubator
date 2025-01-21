@@ -1,0 +1,42 @@
+\subtikzpicturedef{subAbsThermalSensorSystem} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw
+    (#1-origin) coordinate (#1-esp)
+    ;
+
+    \subAbsESP {#1-esp} {#1-esp} {center}
+
+    \draw
+    (#1-esp-r0) ++(1, 0) coordinate (#1-dhFirst)
+    ;
+
+    \subAbsTempHumeSensor {#1-dhFirst} {#1-dhFirst} {l0}
+    \subAbsTempHumeSensor {#1-dhSecond} {#1-dhFirst-l0 |- #1-esp-r5} {l0}
+
+    %% labelling
+
+    \ovrAbsESPDrawLabelName {#1-esp} {ESP}
+
+    \ovrAbsTempHumeSensorDrawLabelName {#1-dhFirst} {DH22 - 0}
+    \ovrAbsTempHumeSensorDrawLabelName {#1-dhSecond} {DH22 - 1}
+
+    %% connections
+
+    \foreach \start/\stop in {
+        #1-esp-r0/#1-dhFirst-l0,
+        #1-esp-r5/#1-dhSecond-l0%
+    } {
+        \draw [
+            absCtkInnerConnection,
+        ]
+        (\start) -- (\stop)
+        ;
+    }
+
+}
+
+\subtikzpictureactivate{subAbsThermalSensorSystem}

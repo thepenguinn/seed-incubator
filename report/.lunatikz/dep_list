@@ -29,6 +29,9 @@ return {
     ["endAbsTempHumeSensor"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["endAbsThermalSensorSystem"] = {
+        ["parent_dir"] = "chapter_02/section_03/tikzpics",
+    },
     ["endIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
@@ -64,6 +67,9 @@ return {
     },
     ["subAbsTempHumeSensor"] = {
         ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsThermalSensorSystem"] = {
+        ["parent_dir"] = "chapter_02/section_03/tikzpics",
     },
     ["subFigBase"] = {
         ["parent_dir"] = "tikzpics",
