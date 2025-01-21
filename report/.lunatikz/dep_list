@@ -11,6 +11,9 @@ return {
     ["endAbsExhaustSystem"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
     },
+    ["endAbsHumidifierSystem"] = {
+        ["parent_dir"] = "chapter_03/section_01/tikzpics",
+    },
     ["endAbsMuxFour"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -49,6 +52,9 @@ return {
     },
     ["subAbsExhaustSystem"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
+    ["subAbsHumidifierSystem"] = {
+        ["parent_dir"] = "chapter_03/section_01/tikzpics",
     },
     ["subAbsMuxFour"] = {
         ["parent_dir"] = "tikzpics",
