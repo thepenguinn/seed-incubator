@@ -12,7 +12,7 @@
     \draw (#1-start) coordinate (#1-origin);
     \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
 
-    \draw [absCtkModule]
+    \draw [absCtkAuxModule]
     (#1-origin) coordinate (#1-bottomLeftCorner)
     (#1-bottomLeftCorner) ++(\absMuxFourWidth, \absMuxFourHeight)
     coordinate (#1-topRightCorner)
@@ -22,10 +22,10 @@
     {(#1-bottomLeftCorner)} {(#1-topRightCorner)}
 
     (#1-northwest) ++(-\absCtkPinPad, 0)
-    ++(0, -0.5) coordinate (#1-l0) ++(0, -0.25)
-    ++(0, -0.5) coordinate (#1-l1) ++(0, -0.25)
-    ++(0, -0.5) coordinate (#1-l2) ++(0, -0.25)
-    ++(0, -0.5) coordinate (#1-l3)
+    ++(0, -{\absMuxFourHeight / 8}) coordinate (#1-l0)
+    ++(0, -{\absMuxFourHeight / 4}) coordinate (#1-l1)
+    ++(0, -{\absMuxFourHeight / 4}) coordinate (#1-l2)
+    ++(0, -{\absMuxFourHeight / 4}) coordinate (#1-l3)
 
     (#1-southwest) ++(0.5, -\absCtkPinPad)
     coordinate (#1-b0)

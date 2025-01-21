@@ -32,6 +32,9 @@ return {
     ["endAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
     },
+    ["endAbsSoilMoistureSensorSystem"] = {
+        ["parent_dir"] = "chapter_05/section_02/tikzpics",
+    },
     ["endAbsTempHumeSensor"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -76,6 +79,9 @@ return {
     },
     ["subAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["subAbsSoilMoistureSensorSystem"] = {
+        ["parent_dir"] = "chapter_05/section_02/tikzpics",
     },
     ["subAbsTempHumeSensor"] = {
         ["parent_dir"] = "tikzpics",
