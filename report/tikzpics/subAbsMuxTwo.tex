@@ -1,0 +1,59 @@
+\def\absMuxTwoWidth{2.5}
+\def\absMuxTwoHeight{4}
+
+\subtikzpicturedef{subAbsMuxTwo} {
+    l0, l1,
+    b0, r0,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw [absCtkAuxModule]
+    (#1-origin) coordinate (#1-bottomLeftCorner)
+    (#1-bottomLeftCorner) ++(\absMuxTwoWidth, \absMuxTwoHeight)
+    coordinate (#1-topRightCorner)
+
+    \markgeocoordinate {#1}
+    {(#1-topRightCorner)} {(#1-bottomLeftCorner)}
+    {(#1-bottomLeftCorner)} {(#1-topRightCorner)}
+
+    (#1-northwest) ++(-\absCtkPinPad, 0)
+    ++(0, -{\absMuxTwoHeight / 4}) coordinate (#1-l0)
+    ++(0, -{\absMuxTwoHeight / 2}) coordinate (#1-l1)
+
+    (#1-southwest) ++(0.5, -\absCtkPinPad)
+    coordinate (#1-b0)
+    ++(0.5, 0) coordinate (#1-b1)
+
+    (#1-northeast) ++(\absCtkPinPad, -0.5)
+    coordinate (#1-r0)
+
+    (#1-bottomLeftCorner) rectangle (#1-topRightCorner)
+
+    (#1-center) coordinate (#1-muxCenter)
+
+    \markgeocoordinate {#1}
+    {(#1-north)} {(#1-b0)}
+    {(#1-l0)} {(#1-r0)}
+
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsMuxTwo}
+
+%% subtikzname muxname
+\newcommand\ovrAbsMuxTwoDrawLabelName[2] {
+    \draw [absCtkModule]
+    (#1-muxCenter)
+    node [
+        inner sep = 0pt,
+        anchor = center,
+    ] {#2}
+    ;
+}

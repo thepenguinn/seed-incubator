@@ -23,6 +23,9 @@ return {
     ["endAbsMuxFour"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["endAbsMuxTwo"] = {
+        ["parent_dir"] = "tikzpics",
+    },
     ["endAbsOneBitRegister"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -78,6 +81,9 @@ return {
         ["parent_dir"] = "chapter_04/section_02/tikzpics",
     },
     ["subAbsMuxFour"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsMuxTwo"] = {
         ["parent_dir"] = "tikzpics",
     },
     ["subAbsOneBitRegister"] = {
