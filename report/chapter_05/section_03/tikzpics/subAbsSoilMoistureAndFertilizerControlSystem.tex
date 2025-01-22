@@ -1,0 +1,82 @@
+\subtikzpicturedef{subAbsSoilMoistureAndFertilizerControlSystem} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw
+    (#1-origin) coordinate (#1-cv0)
+    ;
+
+    \subAbsActuatorModule {#1-cv0} {#1-cv0} {center}
+    \subAbsActuatorModule {#1-cv1} {#1-cv0-cr0 |- #1-cv0-cb0} {at0}
+    \subAbsActuatorModule {#1-wv0} {#1-cv1-cr0 |- #1-cv1-cb0} {at0}
+
+    \draw
+    (#1-cv0-al0 |- #1-wv0-cb0) ++(0, -1.25) coordinate (#1-cv2)
+    ;
+
+    \subAbsActuatorModule {#1-cv2} {#1-cv2} {al0}
+    \subAbsActuatorModule {#1-cv3} {#1-cv2-cr0 |- #1-cv2-cb0} {at0}
+    \subAbsActuatorModule {#1-fv0} {#1-cv3-cr0 |- #1-cv3-cb0} {at0}
+
+    \draw
+    (#1-wv0-cr0) ++(1, 0) coordinate (#1-rightVert)
+    ;
+
+    \subAbsOneBitRegister {#1-sr0} {#1-cv0-cr1 -| #1-rightVert} {l0}
+    \subAbsOneBitRegister {#1-sr1} {#1-cv1-cr1 -| #1-rightVert} {l0}
+    \subAbsOneBitRegister {#1-sr2} {#1-wv0-cr1 -| #1-rightVert} {l0}
+
+    \subAbsOneBitRegister {#1-sr3} {#1-cv2-cr1 -| #1-rightVert} {l0}
+    \subAbsOneBitRegister {#1-sr4} {#1-cv3-cr1 -| #1-rightVert} {l0}
+    \subAbsOneBitRegister {#1-sr5} {#1-fv0-cr1 -| #1-rightVert} {l0}
+
+    \draw
+    (#1-sr0-r0) ++(1, 0) coordinate (#1-esp)
+    ;
+
+    \subAbsESP {#1-esp} {#1-esp} {l1}
+
+    %% labelling
+
+    \ovrAbsActuatorModuleDrawLabelName {#1-cv0} {CV0} {CTRL}
+    \ovrAbsActuatorModuleDrawLabelName {#1-cv1} {CV1} {CTRL}
+    \ovrAbsActuatorModuleDrawLabelName {#1-cv2} {CV2} {CTRL}
+    \ovrAbsActuatorModuleDrawLabelName {#1-cv3} {CV3} {CTRL}
+
+    \ovrAbsActuatorModuleDrawLabelName {#1-wv0} {WV0} {CTRL}
+    \ovrAbsActuatorModuleDrawLabelName {#1-fv0} {FV0} {CTRL}
+
+    \ovrAbsESPDrawLabelName {#1-esp} {ESP}
+
+    %% connections
+
+    \foreach \start/\stop in {
+        %% to esp
+        #1-sr0-r0/#1-esp-l1,
+        %% to control ctks
+        #1-sr0-l0/#1-cv0-cr1,
+        #1-sr1-l0/#1-cv1-cr1,
+        #1-sr2-l0/#1-wv0-cr1,
+        #1-sr3-l0/#1-cv2-cr1,
+        #1-sr4-l0/#1-cv3-cr1,
+        #1-sr5-l0/#1-fv0-cr1,
+        %% shift register
+        #1-sr0-b0/#1-sr1-t0,
+        #1-sr1-b0/#1-sr2-t0,
+        #1-sr2-b0/#1-sr3-t0,
+        #1-sr3-b0/#1-sr4-t0,
+        #1-sr4-b0/#1-sr5-t0%
+    } {
+        \draw [
+            absCtkInnerConnection,
+        ]
+        (\start) -- (\stop)
+        ;
+    }
+
+
+}
+
+\subtikzpictureactivate{subAbsSoilMoistureAndFertilizerControlSystem}

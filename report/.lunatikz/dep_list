@@ -32,6 +32,9 @@ return {
     ["endAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
     },
+    ["endAbsSoilMoistureAndFertilizerControlSystem"] = {
+        ["parent_dir"] = "chapter_05/section_03/tikzpics",
+    },
     ["endAbsSoilMoistureSensorSystem"] = {
         ["parent_dir"] = "chapter_05/section_02/tikzpics",
     },
@@ -79,6 +82,9 @@ return {
     },
     ["subAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["subAbsSoilMoistureAndFertilizerControlSystem"] = {
+        ["parent_dir"] = "chapter_05/section_03/tikzpics",
     },
     ["subAbsSoilMoistureSensorSystem"] = {
         ["parent_dir"] = "chapter_05/section_02/tikzpics",
