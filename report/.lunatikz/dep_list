@@ -35,6 +35,9 @@ return {
     ["endAbsReservoirFourLevelSensorSystem"] = {
         ["parent_dir"] = "chapter_06/section_02/tikzpics",
     },
+    ["endAbsReservoirTwoLevelSensorSystem"] = {
+        ["parent_dir"] = "chapter_06/section_03/tikzpics",
+    },
     ["endAbsSensorModule"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -94,6 +97,9 @@ return {
     },
     ["subAbsReservoirFourLevelSensorSystem"] = {
         ["parent_dir"] = "chapter_06/section_02/tikzpics",
+    },
+    ["subAbsReservoirTwoLevelSensorSystem"] = {
+        ["parent_dir"] = "chapter_06/section_03/tikzpics",
     },
     ["subAbsSensorModule"] = {
         ["parent_dir"] = "tikzpics",
