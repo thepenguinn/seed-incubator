@@ -1,0 +1,110 @@
+\subtikzpicturedef{subAbsLightSensingSystem} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw
+    (#1-origin) coordinate (#1-mux)
+    ;
+
+    \subAbsMuxFour {#1-mux} {#1-mux} {center}
+
+    \draw
+    (#1-mux-l0) ++(-3, 0) coordinate (#1-s0)
+    (#1-mux-l1) ++(-3, 0) coordinate (#1-s1)
+    (#1-mux-l2) ++(-3, 0) coordinate (#1-s2)
+    (#1-mux-l3) ++(-3, 0) coordinate (#1-s3)
+    ;
+
+    \subAbsSensorModule {#1-s0} {#1-s0} {r0}
+    \subAbsSensorModule {#1-s1} {#1-s1} {r0}
+    \subAbsSensorModule {#1-s2} {#1-s2} {r0}
+    \subAbsSensorModule {#1-s3} {#1-s3} {r0}
+
+    \draw
+    (#1-mux-b0) ++(0, -1) coordinate (#1-esp)
+    ;
+
+    \subAbsESP {#1-esp} {#1-esp} {t0}
+
+    \draw
+    (#1-esp-l4 -| #1-s3-l0) coordinate (#1-b0)
+    ;
+
+    \subAbsBuffer {#1-b0} {#1-b0} {l0}
+
+    \draw
+    (#1-b0-r0) ++(0.75, 0) coordinate (#1-sr0)
+    ;
+
+    \subAbsOneBitRegister {#1-sr0} {#1-sr0} {l0}
+
+    %% labelling
+
+    \ovrAbsESPDrawLabelName {#1-esp} {ESP}
+
+    \ovrAbsSensorModuleDrawLabelName {#1-s1} {LDR}
+    \ovrAbsSensorModuleDrawLabelName {#1-s0} {LDR}
+    \ovrAbsSensorModuleDrawLabelName {#1-s2} {LDR}
+    \ovrAbsSensorModuleDrawLabelName {#1-s3} {LDR}
+
+    \ovrAbsMuxDrawLabelName {#1-mux} {MUX}
+
+    \ovrAbsBufferDrawLabelName {#1-b0} {BUF}
+
+    %% connections
+
+    \foreach \start/\stop in {
+        #1-sr0-r0/#1-esp-l4,
+        #1-sr0-l0/#1-b0-r0,
+        %%
+        #1-s0-r0/#1-mux-l0,
+        #1-s1-r0/#1-mux-l1,
+        #1-s2-r0/#1-mux-l2,
+        #1-s3-r0/#1-mux-l3,
+        %%
+        #1-esp-t0/#1-mux-b0,
+        #1-esp-t1/#1-mux-b1%
+    } {
+        \draw [
+            absCtkInnerConnection,
+        ]
+        (\start) -- (\stop)
+        ;
+    }
+
+    \draw
+    (#1-b0-l0) ++(-1,0) coordinate (#1-leftVert)
+    ;
+
+    \foreach \start in {
+        #1-s0-l0,
+        #1-s1-l0,
+        #1-s2-l0,
+        #1-s3-l0%
+    } {
+        \draw [
+            absCtkInnerConnection,
+        ]
+        (\start)
+        -- (\start -| #1-leftVert)
+        -- (#1-b0-l0 -| #1-leftVert)
+        -- (#1-b0-l0)
+        ;
+    }
+
+    \draw
+    (#1-esp-r4) ++(1,0) coordinate (#1-rightVert)
+    ;
+
+    \draw [absCtkInnerConnection]
+    (#1-esp-r4)
+    -- (#1-esp-r4 -| #1-rightVert)
+    -- (#1-mux-r0 -| #1-rightVert)
+    -- (#1-mux-r0)
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsLightSensingSystem}
