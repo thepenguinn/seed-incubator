@@ -29,6 +29,9 @@ return {
     ["endAbsPTC"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
     },
+    ["endAbsReservoirFourLevelSensorSystem"] = {
+        ["parent_dir"] = "chapter_06/section_02/tikzpics",
+    },
     ["endAbsSensorModule"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -82,6 +85,9 @@ return {
     },
     ["subAbsPTC"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["subAbsReservoirFourLevelSensorSystem"] = {
+        ["parent_dir"] = "chapter_06/section_02/tikzpics",
     },
     ["subAbsSensorModule"] = {
         ["parent_dir"] = "tikzpics",
