@@ -1,0 +1,61 @@
+\subtikzpicturedef{subAbsLightingControlSystem} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw
+    (#1-origin) coordinate (#1-esp)
+    ;
+
+    \subAbsESP {#1-esp} {#1-esp} {center}
+
+    \draw
+    (#1-esp-r0) ++(1, 0) coordinate (#1-sr0)
+    ;
+
+    \subAbsOneBitRegister {#1-sr0} {#1-sr0} {l0}
+
+    \draw
+    (#1-sr0-b0) ++(0, -1) coordinate (#1-sr1)
+    ;
+
+    \subAbsOneBitRegister {#1-sr1} {#1-sr1} {t0}
+
+    \draw
+    (#1-sr0-r0) ++(1, 0) coordinate (#1-ul0)
+    ;
+
+
+    \begin{scope} [
+            rotate = 180,
+        ]
+        \subAbsActuatorModule {#1-ul0} {#1-ul0} {cr1}
+        \subAbsActuatorModule {#1-vl0} {#1-ul0-cr1 |- #1-sr1-r0} {cr1}
+    \end{scope}
+
+    %% labelling
+
+    \ovrAbsESPDrawLabelName {#1-esp} {ESP}
+
+    \ovrAbsActuatorModuleDrawLabelName {#1-ul0} {UL0} {CTRL}
+
+    \ovrAbsActuatorModuleDrawLabelName {#1-vl0} {VL0} {CTRL}
+
+    %% connections
+
+    \foreach \start/\stop in {
+        #1-esp-r0/#1-sr0-l0,
+        #1-sr0-b0/#1-sr1-t0,
+        #1-sr0-r0/#1-ul0-cr1,
+        #1-sr1-r0/#1-vl0-cr1%
+    } {
+        \draw [
+            absCtkInnerConnection,
+        ]
+        (\start) -- (\stop)
+        ;
+    }
+}
+
+\subtikzpictureactivate{subAbsLightingControlSystem}

@@ -20,6 +20,9 @@ return {
     ["endAbsLightSensingSystem"] = {
         ["parent_dir"] = "chapter_04/section_02/tikzpics",
     },
+    ["endAbsLightingControlSystem"] = {
+        ["parent_dir"] = "chapter_04/section_03/tikzpics",
+    },
     ["endAbsMuxFour"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -82,6 +85,9 @@ return {
     },
     ["subAbsLightSensingSystem"] = {
         ["parent_dir"] = "chapter_04/section_02/tikzpics",
+    },
+    ["subAbsLightingControlSystem"] = {
+        ["parent_dir"] = "chapter_04/section_03/tikzpics",
     },
     ["subAbsMuxFour"] = {
         ["parent_dir"] = "tikzpics",
