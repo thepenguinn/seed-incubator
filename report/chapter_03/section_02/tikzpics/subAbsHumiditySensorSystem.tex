@@ -37,6 +37,40 @@
         ;
     }
 
+    %% annotation
+
+    \draw
+    (#1-esp-west) coordinate (#1-leftVert)
+    (#1-dhFirst-east) coordinate (#1-rightVert)
+    ;
+
+    \node at (#1-esp-center -| #1-leftVert) [
+        absCtkAnnotation,
+        anchor = east,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{ESP:} Esp32.
+        }
+    };
+
+    \node at (#1-dhFirst-center -| #1-rightVert) [
+        absCtkAnnotation,
+        anchor = west,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{DH22 - 0:} For sensing indoor Humidity of the Incubator.
+        }
+    };
+
+    \node at (#1-dhSecond-center -| #1-rightVert) [
+        absCtkAnnotation,
+        anchor = west,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{DH22 - 1:} For sensing outdoor Humidity of the Incubator.
+        }
+    };
+
 }
 
 \subtikzpictureactivate{subAbsHumiditySensorSystem}
