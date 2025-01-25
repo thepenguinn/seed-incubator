@@ -1,0 +1,13 @@
+\begin{tikzpicture} [
+        figureTikzPicStyle,
+        absInnerModule/.append style = {
+            inner sep = 0.5cm,
+            outer sep = 0.25cm,
+            text width = 2.25cm,
+        },
+    ]
+
+    \draw (0, 0) coordinate (origin) ;
+    \subAbsSubsystems {absSubsystems} {origin} {origin}
+
+\end{tikzpicture}

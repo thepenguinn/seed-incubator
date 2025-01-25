@@ -1,0 +1,54 @@
+\def\absSubsystemsPad{0.75}
+\subtikzpicturedef{subAbsSubsystems} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subFigBase {#1-figBase} {#1-origin} {origin}
+
+    \draw
+    (#1-origin)
+    node (#1-temp) [
+        absInnerModule,
+    ] {Thermal \\ System}
+    ;
+
+    \node (#1-hume) [
+        absInnerModule,
+        right = of #1-temp,
+    ] {Air Moisture \\ System}
+    ;
+
+    \node (#1-light) [
+        absInnerModule,
+        below = of #1-temp,
+    ] {Lighting \\ System}
+    ;
+
+    \node (#1-soil) [
+        absInnerModule,
+        right = of #1-light,
+    ] {Soil Moisture \\ and \\ Fertilizer System}
+    ;
+
+    \node (#1-reso) [
+        absInnerModule,
+        below = of #1-light,
+    ] {Reservoir \\ System}
+    ;
+
+    \node (#1-aux) [
+        absInnerModule,
+        right = of #1-reso,
+    ] {Auxiliary \\ System}
+    ;
+
+    \draw
+    (#1-temp.north west) ++(-\absSubsystemsPad, \absSubsystemsPad) coordinate (#1-topLeft)
+    (#1-soil.east |- #1-reso.south) ++(\absSubsystemsPad, -\absSubsystemsPad) coordinate (#1-bottomRight)
+    ;
+
+    \innerEnclosureNode {#1-enclosure} {#1-topLeft} {#1-bottomRight}
+
+}
+
+\subtikzpictureactivate{subAbsSubsystems}

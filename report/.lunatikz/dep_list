@@ -53,6 +53,9 @@ return {
     ["endAbsSoilMoistureSensorSystem"] = {
         ["parent_dir"] = "chapter_05/section_02/tikzpics",
     },
+    ["endAbsSubsystems"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
     ["endAbsTempHumeSensor"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -118,6 +121,9 @@ return {
     },
     ["subAbsSoilMoistureSensorSystem"] = {
         ["parent_dir"] = "chapter_05/section_02/tikzpics",
+    },
+    ["subAbsSubsystems"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
     },
     ["subAbsTempHumeSensor"] = {
         ["parent_dir"] = "tikzpics",
