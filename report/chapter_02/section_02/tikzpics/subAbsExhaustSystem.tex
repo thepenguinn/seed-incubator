@@ -66,7 +66,7 @@
     \subAbsOneBitRegister {#1-srDirPlt} {#1-srDirP3-l0 |- #1-plt-dir} {l0}
 
     \draw
-    (#1-plt-east) ++(1.5, 0) coordinate (#1-esp)
+    (#1-plt-east) ++(6.5, 0) coordinate (#1-esp)
     ;
 
     \subAbsESP {#1-esp} {#1-esp} {t0}
@@ -171,9 +171,96 @@
     \draw [absCtkInnerConnection]
     (#1-esp-l5)
     -- (#1-esp-l5 -| #1-leftVert)
-    -- (#1-srPwrF0-l0 -| #1-leftVert)
-    -- (#1-srPwrF0-l0)
+    -- (#1-srPwrPlt-l0 -| #1-leftVert)
+    -- (#1-srPwrPlt-l0)
     ;
+
+    %% annotation
+
+    \draw
+    (#1-leftVert) ++(0.25, 0) coordinate (#1-leftVert)
+    (#1-srDirF4-r0) ++(-0.75, 0) coordinate (#1-rightVert)
+    ;
+
+    \node at (#1-f2-center -| #1-leftVert) [
+        absCtkAnnotation,
+        anchor = east,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{FX:} Exhaust Fans.
+        \item \textbf{CTRL:} Control Circuit for Fans.
+        }
+    }
+    ;
+
+    \draw
+    ($(#1-p1-center)!0.50!(#1-p2-center)$) coordinate (#1-tmp)
+    node at (#1-tmp -| #1-leftVert) [
+        absCtkAnnotation,
+        anchor = east,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{PX:} Exhaust Panel Motors.
+        \item \textbf{CTRL:} Control Circuit for Motors.
+        }
+    }
+    ;
+
+    \node at (#1-srDirF0-r0 -| #1-rightVert) [
+        absCtkAnnotation,
+        anchor = west,
+    ] {
+        \absCtkAnnotationWrap{
+        \item Direction Controlling Shift Register.
+        }
+    }
+    ;
+
+    \node at (#1-srPwrF0-r0 -| #1-leftVert) [
+        absCtkAnnotation,
+        anchor = east,
+    ] {
+        \absCtkAnnotationWrap{
+        \item Power Controlling Shift Register.
+        }
+    }
+    ;
+
+    \node at (#1-esp-center -| #1-rightVert) [
+        absCtkAnnotation,
+        anchor = west,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{ESP:} Esp32.
+        \item \textbf{SVO:} Servo Controlled Exhaust Panel.
+        }
+    }
+    ;
+
+    \node at (#1-plt-center -| #1-leftVert) [
+        absCtkAnnotation,
+        anchor = east,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{PLT:} Peltier Module.
+        \item \textbf{CTRL:} Control Circuit Peltier.
+        }
+    }
+    ;
+
+    %\node at (#1-esp-south -| #1-leftVert) [
+    %    absCtkAnnotation,
+    %    anchor = east,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{ESP:} ESP32.
+    %    \item \textbf{PLT:} Peltier Module.
+    %    \item \textbf{SVO:} Servo controlled Exhaust Panel.
+    %    \item \textbf{FX:} Exhaust Fans.
+    %    \item \textbf{PX:} Exhaust Panels.
+    %    }
+    %}
+    %;
 
 }
 

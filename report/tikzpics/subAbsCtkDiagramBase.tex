@@ -1,27 +1,59 @@
+\def\absCtkCornerRadius{0.125cm}
+
 \tikzset{
     absCtkTikzPicStyle/.style = {
         transform shape,
-        scale = 0.75,
+        scale = 0.55,
     },
     absCtkModule/.style = {
         thick,
-        rounded corners = 0.175cm,
+        rounded corners = \absCtkCornerRadius,
     },
     absCtkAuxModule/.style = {
         thick,
         dashdotted,
         %colorShadowGray,
-        rounded corners = 0.175cm,
+        rounded corners = \absCtkCornerRadius,
     },
     absCtkInnerConnection/.style = {
         thick,
         colorShadowGray,
-        rounded corners = 0.175cm,
-        DUInterConnectFromOpenToOpen = 3pt,
+        rounded corners = \absCtkCornerRadius,
+        DUInterConnectFromOpenToOpen = 2pt,
+    },
+    absCtkAnnotation/.style = {
+        colorMerlinBlue,
+    },
+    absCtkAnnotationTo/.style = {
+        thick,
+        colorMerlinBlue,
+        rounded corners = \absCtkCornerRadius,
+        DUInterConnectFromFillToOpen = 3pt,
+    },
+    absCtkAnnotationFrom/.style = {
+        thick,
+        colorMerlinBlue,
+        rounded corners = \absCtkCornerRadius,
+        DUInterConnectFromOpenToFill = 3pt,
+    },
+    absCtkAnnotation/.style = {
+        inner sep = 0cm,
+        outer sep = 0cm,
     },
 }
 
 \def\absCtkPinPad{0.50}
+
+\newcommand\absCtkAnnotationWrap[1] {
+    \textcolor{colorMerlinBlue} {
+        \begin{minipage} {5cm}
+            \raggedright
+            \begin{itemize} [label=]
+                #1
+            \end{itemize}
+        \end{minipage}
+    }
+}
 
 \subtikzpicturedef{subAbsCtkDiagramBase} {
     origin%
