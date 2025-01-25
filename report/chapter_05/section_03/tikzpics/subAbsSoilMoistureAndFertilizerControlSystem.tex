@@ -101,6 +101,55 @@
         ;
     }
 
+    %% annotation
+
+    \draw
+    (#1-wv0-al0) coordinate (#1-rightVert) %% its rotated
+    (#1-cv0-al0) coordinate (#1-leftVert)
+    (#1-esp-t0) coordinate (#1-topHori)
+    ;
+
+    \node at (#1-esp-center -| #1-rightVert) [
+        absCtkAnnotation,
+        anchor = west,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{ESP:} Esp32.
+        }
+    };
+
+    \draw ($(#1-fv0-center)!0.50!(#1-wv0-center)$) coordinate (#1-tmp) ;
+    \node at (#1-tmp -| #1-rightVert) [
+        absCtkAnnotation,
+        anchor = west,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{WV0:} Water Valve.
+        \item \textbf{FV0:} Fertilizer Valve.
+        \item \textbf{CTRL:} Control circuits for these valves.
+        }
+    };
+
+    \draw ($(#1-cv0-center)!0.50!(#1-cv2-center)$) coordinate (#1-tmp) ;
+    \node at (#1-tmp -| #1-leftVert) [
+        absCtkAnnotation,
+        anchor = east,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{CVX:} Channel Valve.
+        \item \textbf{CTRL:} Control circuits for these valves.
+        }
+    };
+
+    \node at (#1-topHori -| #1-sr0-t0) [
+        absCtkAnnotation,
+        anchor = south,
+    ] {
+        \absCtkAnnotationWrap{
+        \item Enable Shift Register.
+        }
+    };
+
 }
 
 \subtikzpictureactivate{subAbsSoilMoistureAndFertilizerControlSystem}
