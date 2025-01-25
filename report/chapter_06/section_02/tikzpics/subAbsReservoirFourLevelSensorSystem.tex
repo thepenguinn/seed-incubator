@@ -105,6 +105,50 @@
     -- (#1-mux-r0)
     ;
 
+    %% annotation
+
+    \draw
+    (#1-leftVert) ++(-0.25, 0) coordinate (#1-leftVert)
+    ;
+
+    \node at (#1-esp-center -| #1-rightVert) [
+        absCtkAnnotation,
+        anchor = west,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{ESP:} Esp32.
+        }
+    };
+
+    \node at (#1-mux-center -| #1-rightVert) [
+        absCtkAnnotation,
+        anchor = west,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{MUX:} Analog Multiplexer, part of the Auxiliary System.
+        }
+    };
+
+    \draw ($(#1-s1-center)!0.50!(#1-s2-center)$) coordinate (#1-tmp);
+    \node at (#1-tmp -| #1-leftVert) [
+        absCtkAnnotation,
+        anchor = east,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{FSW:} Float Switches.
+        }
+    };
+
+    \node at (#1-b0-center -| #1-leftVert) [
+        absCtkAnnotation,
+        anchor = east,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{BUF:} Buffer or Enabling Circuit.
+        \item \textbf{0/1:} One Bit Register, part of the Auxiliary System.
+        }
+    };
+
 }
 
 \subtikzpictureactivate{subAbsReservoirFourLevelSensorSystem}
