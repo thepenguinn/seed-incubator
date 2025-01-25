@@ -53,130 +53,127 @@
     \subAbsActuatorModule {#1-p1} {#1-p2-cb0 -| #1-srPwrP1-b0} {ct0}
     \subAbsActuatorModule {#1-p0} {#1-p1-cb0 -| #1-srPwrP0-b0} {ct0}
 
-    %\subAbsActuatorModule {#1-p1} {#1-p1} {ct0}
-    %\subAbsActuatorModule {#1-p0} {#1-p1-cb0 -| #1-srPwr5-b0} {ct0}
+    \subAbsPeltier {#1-plt} {#1-p0-cb0 -| #1-srPwrPlt-b0} {pwr}
 
-    %\subAbsOneBitRegister {#1-srPwr3} {#1-srPwr3} {t0}
-    %\subAbsOneBitRegister {#1-srPwr2} {#1-srPwr3-t0 -| #1-f1-cb0} {t0}
-    %\subAbsOneBitRegister {#1-srPwr1} {#1-srPwr3-t0 -| #1-f0-cb0} {t0}
+    \draw
+    (#1-srDirF4-l0 |- #1-p3-cr1) coordinate (#1-srDirP3)
+    ;
 
-    %\draw
-    %(#1-srPwr3-b0) ++(0, -1) coordinate (#1-srPwr4)
-    %;
-    %
-    %\subAbsOneBitRegister {#1-srPwr4} {#1-srPwr4} {t0}
-    %\subAbsOneBitRegister {#1-srPwr5} {#1-srPwr4-t0 -| #1-srPwr2-b0} {t0}
-    %
-    %%% rest of srDir
-    %
-    %\draw
-    %(#1-srPwr4-b0) ++(0, -1) coordinate (#1-p1)
-    %;
-    %
-    %\subAbsActuatorModule {#1-p1} {#1-p1} {ct0}
-    %\subAbsActuatorModule {#1-p0} {#1-p1-cb0 -| #1-srPwr5-b0} {ct0}
-    %
-    %\draw
-    %(#1-srPwr1-l0)
-    %++($(#1-srPwr1-r0)-(#1-srPwr2-l0)$)
-    %coordinate (#1-srPwr0)
-    %;
-    %
-    %\subAbsOneBitRegister {#1-srPwr0} {#1-srPwr0} {r0}
-    %
-    %\draw
-    %(#1-srPwr0-t0)
-    %++(0, 1)
-    %coordinate (#1-ptc)
-    %;
-    %
-    %\subAbsPTC {#1-ptc} {#1-ptc} {b0}
-    %
-    %\draw
-    %(#1-srPwr0-b0)
-    %++(0, -1)
-    %coordinate (#1-esp)
-    %;
-    %
-    %\subAbsESP {#1-esp} {#1-esp} {t1}
-    %
-    %\draw
-    %(#1-esp-b1) ++(0, -1) coordinate (#1-servo)
-    %;
-    %
-    %\subAbsServo {#1-servo} {#1-servo} {t0}
-    %
-    %\subAbsOneBitRegister {#1-srDir3} {#1-srDir2-l0 |- #1-p1-cr0} {l0}
-    %\subAbsOneBitRegister {#1-srDir4} {#1-srDir2-l0 |- #1-p0-cr0} {l0}
-    %
-    %%% labelling
-    %
-    %\foreach \x in {0, 1, 2} {
-    %    \ovrAbsActuatorModuleDrawLabelName {#1-f\x} {F\x} {CTRL}
-    %}
-    %
-    %\foreach \x in {0, 1} {
-    %    \ovrAbsActuatorModuleDrawLabelName {#1-p\x} {P\x} {CTRL}
-    %}
-    %
-    %\ovrAbsESPDrawLabelName {#1-esp} {ESP}
-    %
-    %\ovrAbsServoDrawLabelName {#1-servo} {SVO}
-    %
-    %\ovrAbsPTCDrawLabelName {#1-ptc} {PTC}
-    %
-    %%% drawing connections
-    %
-    %\foreach \start/\stop in {
-    %    %% esp to shift reg power
-    %    #1-esp-t1/#1-srPwr0-b0,
-    %    %% servo
-    %    #1-esp-b1/#1-servo-t0,
-    %    %% ptc
-    %    #1-srPwr0-t0/#1-ptc-b0,
-    %    %% shift reg direction
-    %    #1-srDir0-b0/#1-srDir1-t0,
-    %    #1-srDir1-b0/#1-srDir2-t0,
-    %    #1-srDir2-b0/#1-srDir3-t0,
-    %    #1-srDir3-b0/#1-srDir4-t0,
-    %    %% shift reg power
-    %    #1-srPwr0-r0/#1-srPwr1-l0,
-    %    #1-srPwr1-r0/#1-srPwr2-l0,
-    %    #1-srPwr2-r0/#1-srPwr3-l0,
-    %    %%
-    %    #1-srPwr3-b0/#1-srPwr4-t0,
-    %    #1-srPwr4-l0/#1-srPwr5-r0,
-    %    %% panels
-    %    #1-p0-ct0/#1-srPwr5-b0,
-    %    #1-p1-ct0/#1-srPwr4-b0,
-    %    %%
-    %    #1-p0-cr0/#1-srDir4-l0,
-    %    #1-p1-cr0/#1-srDir3-l0,
-    %    %% fans
-    %    #1-f0-cb0/#1-srPwr1-t0,
-    %    #1-f1-cb0/#1-srPwr2-t0,
-    %    #1-f2-cb0/#1-srPwr3-t0,
-    %    %%
-    %    #1-f0-cr1/#1-srDir0-l0,
-    %    #1-f1-cr1/#1-srDir1-l0,
-    %    #1-f2-cr1/#1-srDir2-l0%
-    %} {
-    %    \draw [
-    %        absCtkInnerConnection,
-    %    ]
-    %    (\start) -- (\stop)
-    %    ;
-    %}
-    %
-    %%% drawing the connection from esp to direction shift reg
-    %
-    %\draw [absCtkInnerConnection]
-    %(#1-p0-cb0) ++(0, -0.5) coordinate (#1-tmp)
-    %(#1-esp-b5)
-    %-- (#1-esp-b5 |- #1-tmp)
-    %-- (#1-srDir4-b0 |- #1-tmp)
-    %-- (#1-srDir4-b0)
-    %;
+    \subAbsOneBitRegister {#1-srDirP3} {#1-srDirP3} {l0}
+    \subAbsOneBitRegister {#1-srDirP2} {#1-srDirP3-l0 |- #1-p2-cr1} {l0}
+    \subAbsOneBitRegister {#1-srDirP1} {#1-srDirP3-l0 |- #1-p1-cr1} {l0}
+    \subAbsOneBitRegister {#1-srDirP0} {#1-srDirP3-l0 |- #1-p0-cr1} {l0}
+    \subAbsOneBitRegister {#1-srDirPlt} {#1-srDirP3-l0 |- #1-plt-dir} {l0}
+
+    \draw
+    (#1-plt-east) ++(1.5, 0) coordinate (#1-esp)
+    ;
+
+    \subAbsESP {#1-esp} {#1-esp} {t0}
+
+    \draw
+    (#1-esp-r1) ++(1, 0) coordinate (#1-servo)
+    ;
+
+    \subAbsServo {#1-servo} {#1-servo} {l0}
+
+    %% labelling
+
+    \foreach \x in {0, 1, 2, 3, 4} {
+        \ovrAbsActuatorModuleDrawLabelName {#1-f\x} {F\x} {CTRL}
+    }
+
+    \foreach \x in {0, 1, 2, 3} {
+        \ovrAbsActuatorModuleDrawLabelName {#1-p\x} {P\x} {CTRL}
+    }
+
+    \ovrAbsESPDrawLabelName {#1-esp} {ESP}
+    \ovrAbsServoDrawLabelName {#1-servo} {SVO}
+    \ovrAbsPeltierDrawLabelName {#1-plt} {PLT} {CTRL}
+
+    %% drawing connections
+
+    \foreach \start/\stop in {
+        %% connecting power shift registers
+        #1-srPwrF0-r0/#1-srPwrF1-l0,
+        #1-srPwrF1-r0/#1-srPwrF2-l0,
+        #1-srPwrF2-r0/#1-srPwrF3-l0,
+        #1-srPwrF3-r0/#1-srPwrF4-l0,
+        %%
+        #1-srPwrF4-b0/#1-srPwrP3-t0,
+        %%
+        #1-srPwrPlt-r0/#1-srPwrP0-l0,
+        #1-srPwrP0-r0/#1-srPwrP1-l0,
+        #1-srPwrP1-r0/#1-srPwrP2-l0,
+        #1-srPwrP2-r0/#1-srPwrP3-l0,
+        %% connecting direction shift registers
+        #1-srDirF0-b0/#1-srDirF1-t0,
+        #1-srDirF1-b0/#1-srDirF2-t0,
+        #1-srDirF2-b0/#1-srDirF3-t0,
+        #1-srDirF3-b0/#1-srDirF4-t0,
+        %%
+        #1-srDirF4-b0/#1-srDirP3-t0,
+        #1-srDirP3-b0/#1-srDirP2-t0,
+        #1-srDirP2-b0/#1-srDirP1-t0,
+        #1-srDirP1-b0/#1-srDirP0-t0,
+        %%
+        #1-srDirP0-b0/#1-srDirPlt-t0,
+        %% connection to servor
+        #1-esp-r1/#1-servo-l0,
+        %% direction to peltier
+        #1-srDirPlt-l0/#1-plt-dir,
+        %% direction to panel
+        #1-srDirP0-l0/#1-p0-cr1,
+        #1-srDirP1-l0/#1-p1-cr1,
+        #1-srDirP2-l0/#1-p2-cr1,
+        #1-srDirP3-l0/#1-p3-cr1,
+        %% direction to fans
+        #1-srDirF0-l0/#1-f0-cr1,
+        #1-srDirF1-l0/#1-f1-cr1,
+        #1-srDirF2-l0/#1-f2-cr1,
+        #1-srDirF3-l0/#1-f3-cr1,
+        #1-srDirF4-l0/#1-f4-cr1,
+        %% power to peltier
+        #1-srPwrPlt-b0/#1-plt-pwr,
+        %% power to panel
+        #1-srPwrP0-b0/#1-p0-ct0,
+        #1-srPwrP1-b0/#1-p1-ct0,
+        #1-srPwrP2-b0/#1-p2-ct0,
+        #1-srPwrP3-b0/#1-p3-ct0,
+        %% power to fans
+        #1-srPwrF0-t0/#1-f0-cb0,
+        #1-srPwrF1-t0/#1-f1-cb0,
+        #1-srPwrF2-t0/#1-f2-cb0,
+        #1-srPwrF3-t0/#1-f3-cb0,
+        #1-srPwrF4-t0/#1-f4-cb0%
+    } {
+        \draw [
+            absCtkInnerConnection,
+        ]
+        (\start) -- (\stop)
+        ;
+    }
+
+    %% drawing the connection from esp to direction shift reg
+
+    \draw
+    (#1-plt-west) ++(-1, 0) coordinate (#1-leftVert)
+    ;
+
+    \draw [absCtkInnerConnection]
+    (#1-esp-r5)
+    -- (#1-esp-r5 -| #1-srDirPlt-b0)
+    -- (#1-srDirPlt-b0)
+    ;
+
+    %% drawing the connection from esp to power shift reg
+
+    \draw [absCtkInnerConnection]
+    (#1-esp-l5)
+    -- (#1-esp-l5 -| #1-leftVert)
+    -- (#1-srPwrF0-l0 -| #1-leftVert)
+    -- (#1-srPwrF0-l0)
+    ;
 
 }
 
