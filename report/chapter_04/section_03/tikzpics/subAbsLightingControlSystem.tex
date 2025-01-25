@@ -56,6 +56,46 @@
         (\start) -- (\stop)
         ;
     }
+
+    \draw
+    (#1-esp-l0) coordinate (#1-leftVert)
+    (#1-ul0-west) coordinate (#1-rightVert) %% west because it is rotated
+    (#1-sr0-t0) coordinate (#1-topHori)
+    ;
+
+    \node at (#1-esp-center -| #1-leftVert) [
+        absCtkAnnotation,
+        anchor = east,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{ESP:} Esp32.
+        }
+    };
+
+    \draw
+    ($(#1-ul0-center)!0.50!(#1-vl0-center)$) coordinate (#1-tmp)
+    ;
+
+    \node at (#1-tmp -| #1-rightVert) [
+        absCtkAnnotation,
+        anchor = west,
+    ] {
+        \absCtkAnnotationWrap{
+        \item \textbf{UL0:} Ultraviolet Light Array.
+        \item \textbf{VL0:} Visible Light Array.
+        \item \textbf{CTRL:} Control circuits for these Light Arrays.
+        }
+    };
+
+    \node at (#1-sr0-t0 |- #1-topHori) [
+        absCtkAnnotation,
+        anchor = south,
+    ] {
+        \absCtkAnnotationWrap{
+        \item Enable Shift Register.
+        }
+    };
+
 }
 
 \subtikzpictureactivate{subAbsLightingControlSystem}
