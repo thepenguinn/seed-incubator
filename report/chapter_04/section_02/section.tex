@@ -4,7 +4,17 @@
 
 \begin{document}
 
-\section{Light Sensing System} \label{sec:}
+\section{Light Monitoring System} \label{sec:}
+
+There's two ways to detect \emph{light intensity} inside the incubator. One is
+to use an array of LDR\footnote{Light Dependent Resistors.} or to use \emph{Esp
+Cam} module to capture a picture and process the image to estimate the light
+intensity. The former makes the hardware part a bit complicated and the latter
+method requires to \emph{post process} the image to estimate the light
+intensity. But latter method is preferable, because the cam can be used for
+other things, such as estimating the \emph{growth} of the seedling\footnote{Even
+though, it requires to train a model using TinyML, and would be hard to complete
+the implementation, given the time constrain.}.
 
 \begin{figure}
     \centering
@@ -14,9 +24,7 @@
         \IGXDefaultOptionalArgs,
     ] {tikzpics/endAbsLightSensingSystem.pdf}
     \captionof{figure} {}
-    \label{fig:}
+    \label{fig:absLightSensingSystem}
 \end{figure}
-
-
 
 \end{document}
