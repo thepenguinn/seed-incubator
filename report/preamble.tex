@@ -27,6 +27,8 @@
 \usepackage{etoolbox}
 \usepackage{fontawesome5}
 \usepackage[style = ieee]{biblatex} %Imports biblatex package
+\usepackage{fp}
+\usepackage{xifthen}
 
 \addbibresource{abstract.bib} %Import the bibliography file
 
@@ -55,6 +57,69 @@
 \usepackage{colorscheme}
 \usepackage{subtikzpicture}
 \usepackage{generalcommands}
+
+%% for BOM
+
+\FPeval{\BOMSystemTotal}{round(0, 2)}
+\FPeval{\BOMGrandTotal}{round(0, 2)}
+
+\newcounter{BOMSlNoCounter}
+
+%% name price quantity delivery shop url
+\newcommand\BOMAddItem[6] {
+    \stepcounter{BOMSlNoCounter} \theBOMSlNoCounter &
+    #1 &
+    \ifthenelse{\isempty{#2}}
+    {-}
+    {#2}
+    &
+    \ifthenelse{\isempty{#3}}
+    {-}
+    {#3}
+    &
+    \ifthenelse{\isempty{#4}}
+    {-}
+    {#4}
+    &
+    \ifthenelse{\isempty{#5}}
+    {-}
+    {\href{#6}{#5}}
+    &
+    \ifthenelse{\isempty{#2}}
+    {-}
+    {\ifthenelse{\isempty{#4}}
+    {\FPeval{\BOMSystemTotal}{round(\BOMSystemTotal + (#2 * #3), 0)} \BOMSystemTotal}
+    {\FPeval{\BOMSystemTotal}{round(\BOMSystemTotal + (#2 * #3) + #4, 0)} \BOMSystemTotal}}
+    \\
+}
+
+\newcounter{BOMShiftRegisterCount}
+%% count
+\newcommand\BOMAddShiftRegister[1] {
+    \setcounter{BOMShiftRegisterCount}{\theBOMShiftRegisterCount + #1}
+    \BOMAddItem{Shift Register}{100}{#1}{}{Amazon}{https://www.w3schools.com/html/html_links.asp}
+}
+
+\newcounter{BOMTwoAmpBJTCount}
+%% count
+\newcommand\BOMAddTwoAmpBJT[1] {
+    \setcounter{BOMTwoAmpBJTCount}{\theBOMTwoAmpBJTCount + #1}
+    \BOMAddItem{Shift Register}{100}{#1}{}{Amazon}{https://www.w3schools.com/html/html_links.asp}
+}
+
+\newcounter{BOMMOSFETCount}
+%% count
+\newcommand\BOMAddMOSFET[1] {
+    \setcounter{BOMMOSFETCount}{\theBOMMOSFETCount + #1}
+    \BOMAddItem{Shift Register}{100}{#1}{}{Amazon}{https://www.w3schools.com/html/html_links.asp}
+}
+
+\newcounter{BOMMotorCount}
+%% count
+\newcommand\BOMAddMotor[1] {
+    \setcounter{BOMMotorCount}{\theBOMMotorCount + #1}
+    \BOMAddItem{Shift Register}{100}{#1}{}{Amazon}{https://www.w3schools.com/html/html_links.asp}
+}
 
 %% for paragraphs
 \setlength{\parskip}{0.5\baselineskip}
