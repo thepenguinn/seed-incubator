@@ -27,7 +27,7 @@
 \usepackage{etoolbox}
 \usepackage{fontawesome5}
 \usepackage[style = ieee]{biblatex} %Imports biblatex package
-\usepackage{fp}
+\usepackage{xfp}
 \usepackage{xifthen}
 
 \addbibresource{abstract.bib} %Import the bibliography file
@@ -60,8 +60,13 @@
 
 %% for BOM
 
-\FPeval{\BOMSystemTotal}{round(0, 2)}
-\FPeval{\BOMGrandTotal}{round(0, 2)}
+%\FPeval{\BOMCurrentTotal}{round(0, 2)}
+%\FPeval{\BOMSystemTotal}{round(0, 2)}
+%\FPeval{\BOMGrandTotal}{round(0, 2)}
+
+\def\BOMCurrentTotal{0}
+\newcounter{BOMSystemTotal}
+\newcounter{BOMGrandTotal}
 
 \newcounter{BOMSlNoCounter}
 
@@ -88,8 +93,11 @@
     \ifthenelse{\isempty{#2}}
     {-}
     {\ifthenelse{\isempty{#4}}
-    {\FPeval{\BOMSystemTotal}{round(\BOMSystemTotal + (#2 * #3), 0)} \BOMSystemTotal}
-    {\FPeval{\BOMSystemTotal}{round(\BOMSystemTotal + (#2 * #3) + #4, 0)} \BOMSystemTotal}}
+    {\gdef\BOMCurrentTotal{\fpeval{round((#2 * #3), 2)}}}
+    {\gdef\BOMCurrentTotal{\fpeval{round((#2 * #3) + #4, 2)}}}
+    \setcounter{BOMSystemTotal}{\theBOMSystemTotal + \BOMCurrentTotal}
+    \BOMCurrentTotal
+    }
     \\
 }
 
