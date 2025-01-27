@@ -1,0 +1,49 @@
+\documentclass[../../main]{subfiles}
+
+\input{section_header.tex}
+
+\begin{document}
+
+\section{Lighting System} \label{sec:}
+
+\setcounter{BOMSystemTotal}{0}
+
+\setcounter{BOMSlNoCounter}{0}
+\begin{center}
+    %% max 0.85\linewidth
+    \begin{tabularx} {\linewidth} {
+            *{1}{>{\centering\arraybackslash}m{0.05\linewidth}} %% slno.
+            *{1}{>{\raggedright\arraybackslash}m{0.33\linewidth}} %% item
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% price of a single unit
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% quantity
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% delivery charge
+            *{1}{>{\centering\arraybackslash}m{0.09\linewidth}} %% shop
+            *{1}{>{\centering\arraybackslash}m{0.09\linewidth}} %% total
+        }
+
+        \toprule
+        SL. No. & Component Name & Price & Quantity & Delivery & Shop & Total \\
+        \midrule
+
+        \BOMAddItem{Light Dependent Resistor (LDR) Sensor Module}{29}{4}{}{Tomson}{https://www.tomsonelectronics.com/products/ldr-sensor-module}
+
+        \BOMAddTwoAmpBJT{1}
+
+        \BOMAddItem{Pro Light 1W Warm White (PM22E-3LVE-R8)}{35}{3}{}{Tomson}{https://www.tomsonelectronics.com/products/pro-light-1w-warm-white-pm22e-3lve-r8}
+
+        \BOMAddItem{Pro Light 1W Cool White (PM22E-3LVE-R8)}{35}{3}{}{Tomson}{https://www.tomsonelectronics.com/products/pro-light-1w-cool-white-pm22e-3lve-r8}
+
+        \BOMAddItem{UV Light LED}{}{}{}{}{}
+
+        \BOMAddMOSFET{2}
+
+        \midrule
+        \multicolumn{6}{l}{Total} & \theBOMSystemTotal \\
+        \bottomrule
+
+    \end{tabularx}
+\end{center}
+
+\setcounter{BOMGrandTotal}{\theBOMGrandTotal + \theBOMSystemTotal}
+
+\end{document}
