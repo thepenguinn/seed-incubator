@@ -9,8 +9,15 @@
 %%Introduction%
 %\subfile{section_01/section.tex}
 
-%%Main System%
-%\subfile{section_02/section.tex}
+\def\BOMCurrentTotal{0}
+
+\def\BOMDUSystemTotal{0}
+\def\BOMGrandTotal{0}
+\def\BOMTmp{0}
+\def\BOMTest{0}
+
+%Main System%
+\subfile{section_02/section.tex}
 
 %%Thermal System%
 %\subfile{section_03/section.tex}
@@ -41,12 +48,12 @@
 %            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% price of a single unit
 %            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% quantity
 %            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% delivery charge
-%            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% url
+%            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% shop
 %            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% total
 %        }
 %
 %        \toprule
-%        first & second \\
+%        SL. No. & Component Name & Price & Quantity & Delivery & Shop & Total \\
 %        \midrule
 %        \stepcounter{BOMSlNoCounter} \theBOMSlNoCounter & Esp 32 & 550 & 2 & 50 & Amazon & 10000 \\
 %        \stepcounter{BOMSlNoCounter} \theBOMSlNoCounter & Esp cam & 650 & 1 & - & Tomson & 599 \\ \setcounter{BOMSlNoCounter}{0}
