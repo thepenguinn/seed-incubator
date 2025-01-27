@@ -129,6 +129,13 @@
     \BOMAddItem{5-9V Motor}{9}{#1}{}{Tomson}{https://www.tomsonelectronics.com/products/buy-5-9-v-toy-motor-india}
 }
 
+\newcounter{BOMInvCount}
+%% count
+\newcommand\BOMAddInv[1] {
+    \setcounter{BOMInvCount}{\theBOMInvCount + #1}
+    \BOMAddItem{74 LS 03 - quad 2-input NAND gate with open collector outputs}{8}{#1}{}{Tomson}{https://www.tomsonelectronics.com/products/74-ls-03-quad-2-input-nand-gate-with-open-collector-outputs}
+}
+
 %% for paragraphs
 \setlength{\parskip}{0.5\baselineskip}
 
