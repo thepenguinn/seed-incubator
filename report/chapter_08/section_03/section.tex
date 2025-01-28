@@ -9,7 +9,7 @@
 \setcounter{BOMSystemTotal}{0}
 
 \setcounter{BOMSlNoCounter}{0}
-\begin{center}
+%% REMOVED BEGIN CENTER
     %% max 0.85\linewidth
     \begin{tabularx} {\linewidth} {
             *{1}{>{\centering\arraybackslash}m{0.05\linewidth}} %% slno.
@@ -45,6 +45,8 @@
 
         \BOMAddMOSFET{2}
 
+        \BOMAddInv{3}
+
         \BOMAddItem{SG90 9G Micro Motor Servo}{91}{1}{}{Tomson}{https://www.tomsonelectronics.com/products/buy-sg90-9g-micro-motor-servo-india}
 
         \midrule
@@ -52,7 +54,7 @@
         \bottomrule
 
     \end{tabularx}
-\end{center}
+%% REMOVED END CENTER
 
 \setcounter{BOMGrandTotal}{\theBOMGrandTotal + \theBOMSystemTotal}
 
