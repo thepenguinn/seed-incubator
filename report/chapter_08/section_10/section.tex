@@ -1,0 +1,42 @@
+\documentclass[../../main]{subfiles}
+
+\input{section_header.tex}
+
+\begin{document}
+
+\section{Enclosure} \label{sec:}
+
+\setcounter{BOMSystemTotal}{0}
+
+\setcounter{BOMSlNoCounter}{0}
+%% REMOVED BEGIN CENTER
+    %% max 0.85\linewidth
+    \begin{tabularx} {\linewidth} {
+            *{1}{>{\centering\arraybackslash}m{0.05\linewidth}} %% slno.
+            *{1}{>{\raggedright\arraybackslash}m{0.33\linewidth}} %% item
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% price of a single unit
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% quantity
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% delivery charge
+            *{1}{>{\centering\arraybackslash}m{0.09\linewidth}} %% shop
+            *{1}{>{\centering\arraybackslash}m{0.09\linewidth}} %% total
+        }
+
+        \toprule
+        SL. No. & Component Name & Price & Quantity & Delivery & Shop & Total \\
+        \midrule
+
+        \BOMAddItem{Non-Elastic Transparent White Nylon Plastic Chord (0.5mm)}{149}{1}{}{Amazon}{https://amzn.in/d/dZhMFzy}
+
+        %\BOMAddItem{LM2596 DC-DC Buck Converter Module}{55}{3}{}{Tomson}{https://www.tomsonelectronics.com/products/lm-2596-dc-dc-buck-converter}
+
+        %\BOMAddItem{LEDOLUX 12V 15A 180W Power Supply}{899}{1}{}{Amazon}{https://amzn.in/d/0qyJ1ec}
+
+        \midrule
+        \multicolumn{6}{l}{Total} & \theBOMSystemTotal \\
+        \bottomrule
+
+    \end{tabularx}
+%% REMOVED END CENTER
+
+
+\end{document}
