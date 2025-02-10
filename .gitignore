@@ -10,5 +10,8 @@
 *.run.xml
 */**/icon/*.png
 */**/icon/*.svg
+emcu/build/*
+emcu/sdkconfig.old
+emcu/sdkconfig.ci.esp32c2_xtal26m
 misc
 report/sig
