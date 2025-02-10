@@ -1,0 +1,13 @@
+\begin{tikzpicture} [
+        leafBaseTikzPicStyle,
+    ]
+
+    \draw (0, 0) coordinate (origin) ;
+
+    \subPrimaryLeafCut {primaryLeafCut} {origin} {origin}
+
+    \fill [leafBaseStyle]
+    \ovrConnectPrimaryLeafCut {primaryLeafCut}
+    ;
+
+\end{tikzpicture}

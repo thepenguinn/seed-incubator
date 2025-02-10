@@ -1,0 +1,210 @@
+\def\seedMarkPad{8pt}
+
+\subtikzpicturedef{subSeedClipMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedClip {#1-seedClip} {#1-origin} {origin}
+
+    \fill [seedBaseStyle, even odd rule]
+    \ovrConnectSeedClip {#1-seedClip}
+    \ovrConnectSeedBase {#1-seedClip-seedBase}
+    ;
+
+    %\draw [seedOuterMarkStyle, rounded corners = \seedBaseCornerRadiusInCm]
+    %\ovrConnectSeedBase {#1-seedClip-seedBase}
+    %;
+
+    %% large slant line thickness
+
+    \draw [seedOuterMarkStyle]
+    (#1-seedClip-seedBase-leftMostCorner)
+    ++({-90 -\seedBaseSmallAngle}:\seedMarkPad)
+    coordinate (#1-tmp1)
+
+    (#1-seedClip-seedBase-leftBottomCorner)
+    ++({-90 -\seedBaseSmallAngle}:\seedMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-seedBase-leftMostCorner--#1-seedClip-seedBase-leftTopCorner)
+    coordinate (#1-largeSlantThickDimFirst)
+    node [ocirc] {}
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-innerLeftMostCorner--#1-seedClip-innerLeftTopCorner)
+    coordinate (#1-largeSlantThickDimFourth)
+    node [ocirc] {}
+
+    %%
+
+    (#1-seedClip-seedBase-leftBottomCorner)
+    ++({-90 -\seedBaseLargeAngle}:1)
+    coordinate (#1-tmp2)
+
+    (#1-tmp2)
+    ++({90 + \seedBaseLargeAngle}:0.1)
+    coordinate (#1-tmp1)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-seedBase-leftMostCorner--#1-seedClip-seedBase-leftTopCorner)
+    coordinate (#1-largeSlantThickDimSecond)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-innerLeftMostCorner--#1-seedClip-innerLeftTopCorner)
+    coordinate (#1-largeSlantThickDimThird)
+
+    %% drawing line
+
+    (#1-largeSlantThickDimFirst)
+    node [ocirc] {}
+    -- (#1-largeSlantThickDimSecond)
+    -- (#1-largeSlantThickDimThird)
+    -- (#1-largeSlantThickDimFourth)
+    node [ocirc] {}
+
+    ;
+
+    %% label
+
+    \path [seedOuterMarkStyle]
+    (#1-largeSlantThickDimSecond) -- (#1-largeSlantThickDimThird)
+    node [seedColorLine, midway, below = 4pt, sloped] {\seedLineSmallThickness}
+    ;
+
+    %%
+    %% small slant line thickness
+    %%
+
+    \draw [seedOuterMarkStyle]
+    (#1-seedClip-seedBase-leftTopCorner)
+    ++(0, \seedMarkPad)
+    coordinate (#1-tmp1)
+    (#1-seedClip-seedBase-rightTopCorner)
+    ++(0, \seedMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-innerRightTopCorner--#1-seedClip-innerRightMostCorner)
+    coordinate (#1-smallSlantThickDimFirst)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-seedBase-rightTopCorner--#1-seedClip-seedBase-rightMostCorner)
+    coordinate (#1-smallSlantThickDimFourth)
+
+    (intersection of
+        #1-seedClip-seedBase-leftTopCorner--#1-seedClip-seedBase-rightTopCorner
+        and
+        #1-seedClip-innerRightTopCorner--#1-seedClip-innerRightMostCorner)
+    coordinate (#1-tmp1)
+
+    (#1-tmp1)
+    ++(180 - \seedBaseSmallAngle:1)
+    coordinate (#1-smallSlantThickDimSecond)
+    coordinate (#1-tmp1)
+
+    (#1-smallSlantThickDimSecond)
+    ++({90 - \seedBaseSmallAngle}:0.1)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-seedBase-rightTopCorner--#1-seedClip-seedBase-rightMostCorner)
+    coordinate (#1-smallSlantThickDimThird)
+    %node [ocirc = 4pt] {}
+
+
+    (#1-smallSlantThickDimFirst)
+    node [ocirc] {}
+    -- (#1-smallSlantThickDimSecond)
+    -- (#1-smallSlantThickDimThird)
+    -- (#1-smallSlantThickDimFourth)
+    node [ocirc] {}
+
+    ;
+
+    %% label
+
+    \path [seedOuterMarkStyle]
+    (#1-smallSlantThickDimSecond) -- (#1-smallSlantThickDimThird)
+    node [seedColorLine, midway, above = 4pt, sloped] {\seedLineLargeThickness}
+    ;
+
+    %% horizontal line thickness
+
+    \draw [seedOuterMarkStyle]
+    (#1-seedClip-seedBase-rightBottomCorner)
+    ++(\seedBaseLargeAngle - 90:\seedMarkPad)
+    coordinate (#1-tmp1)
+    (#1-seedClip-seedBase-rightMostCorner)
+    ++(\seedBaseLargeAngle - 90:\seedMarkPad)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-seedBase-rightBottomCorner--#1-seedClip-seedBase-leftBottomCorner)
+    coordinate (#1-horiThickDimFirst)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-innerRightBottomCorner--#1-seedClip-innerLeftBottomCorner)
+    coordinate (#1-horiThickDimFourth)
+
+    (#1-horiThickDimFourth)
+    ++(1, 0)
+    coordinate (#1-horiThickDimThird)
+    coordinate (#1-tmp1)
+    ++(0, -0.1)
+    coordinate (#1-tmp2)
+
+    (intersection of
+        #1-tmp1--#1-tmp2
+        and
+        #1-seedClip-seedBase-rightBottomCorner--#1-seedClip-seedBase-leftBottomCorner)
+    coordinate (#1-horiThickDimSecond)
+
+    (#1-horiThickDimFirst)
+    node [ocirc] {}
+    -- (#1-horiThickDimSecond)
+    -- (#1-horiThickDimThird)
+    -- (#1-horiThickDimFourth)
+    node [ocirc] {}
+
+    ;
+
+    %% label
+
+    \path [seedOuterMarkStyle]
+    (#1-horiThickDimSecond) -- (#1-horiThickDimThird)
+    node [seedColorLine, midway, above = 4pt, sloped] {\seedLineSmallThickness}
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedClip-north)} {(#1-seedClip-south)}
+    {(#1-seedClip-west)} {(#1-seedClip-east)}
+    ;
+
+}
+
+
+\subtikzpictureactivate{subSeedClipMarked}

@@ -1,0 +1,20 @@
+\begin{tikzpicture} [
+        transform shape,
+        scale = 0.5,
+        rounded corners = 0.3cm,
+        every path/.style = {thick, > = latex},
+    ]
+
+    \draw
+    (0, 0) coordinate (origin)
+    ;
+
+    \subRoughtSketch {rough} {origin} {origin}
+
+    \draw
+    %(rough-seedMid) circle (0.5cm)
+    %(rough-primaryLeafMid) circle (0.5cm)
+    %(rough-secondaryLeafMid) circle (0.5cm)
+    ;
+
+\end{tikzpicture}

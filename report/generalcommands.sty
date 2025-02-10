@@ -1,0 +1,74 @@
+%\tikzset{
+%    o/.style={
+%        shorten >=#1,
+%        decoration={
+%            markings,
+%            mark={
+%                at position 1
+%                with {
+%                    \draw circle [radius=#1];
+%                }
+%            }
+%        },
+%        postaction=decorate
+%    },
+%    o/.default=2pt
+%}
+
+\newcommand\getmagnitude[2] {
+    let \p{#1-tmpcoord} = #2,
+    \n{#1-magtmp} = {veclen(\x{#1-tmpcoord}, \y{#1-tmpcoord})}
+    in
+}
+
+%% classname topmost bottommost leftmost rightmost points
+\newcommand\markgeocoordinate[5] {
+    #2 coordinate (#1-geocoordtmptop)
+    #3 coordinate (#1-geocoordtmpbot)
+    #4 coordinate (#1-geocoordtmpleft)
+    #5 coordinate (#1-geocoordtmpright)
+
+    ($(#1-geocoordtmptop)!0.50!(#1-geocoordtmptop|-#1-geocoordtmpbot)$)
+    coordinate (#1-geocoordtmp)
+    (#1-geocoordtmp-|#1-geocoordtmpleft)
+    coordinate (#1-west)
+    (#1-geocoordtmp-|#1-geocoordtmpright)
+    coordinate (#1-east)
+
+    ($(#1-geocoordtmpleft)!0.50!(#1-geocoordtmpleft-|#1-geocoordtmpright)$)
+    coordinate (#1-geocoordtmp)
+    (#1-geocoordtmp|-#1-geocoordtmptop)
+    coordinate (#1-north)
+    (#1-geocoordtmp|-#1-geocoordtmpbot)
+    coordinate (#1-south)
+
+    (#1-north-|#1-east) coordinate (#1-northeast)
+    (#1-south-|#1-east) coordinate (#1-southeast)
+    (#1-north-|#1-west) coordinate (#1-northwest)
+    (#1-south-|#1-west) coordinate (#1-southwest)
+
+    (#1-north|-#1-east) coordinate (#1-center)
+
+}
+
+\newcommand\markglvlgeocoordinate[1] {
+    coordinate (#1-origin)
+    ++(\glvllogicgatewidth,0)
+    coordinate (#1-rightvrt)
+    (#1-origin)
+    ++(0,\glvllogicgateheight)
+    coordinate (#1-topheight)
+    %%
+    %% We are marking geo coords early.
+    %% Because we can use them
+    %%
+    \markgeocoordinate {#1}
+    {(#1-topheight)} {(#1-origin)}
+    {(#1-origin)} {(#1-rightvrt)}
+    (#1-west)
+    ++(-\leftrightgatepadding,0)
+    coordinate (#1-leftpadding)
+    (#1-east)
+    ++(\leftrightgatepadding,0)
+    coordinate (#1-rightpadding)
+}

@@ -1,0 +1,15 @@
+\begin{tikzpicture} [
+        seedBaseTikzPicStyle,
+    ]
+
+    \draw
+    (0,0) coordinate (origin)
+    ;
+
+    \subSeedBase {seedBase} {origin} {center}
+
+    \filldraw [seedBaseStyle]
+    \ovrConnectSeedBase {seedBase}
+    ;
+
+\end{tikzpicture}

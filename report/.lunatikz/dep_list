@@ -1,0 +1,11 @@
+return {
+    ["endIncOverview"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subFigBase"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subIncOverview"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+}

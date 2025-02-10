@@ -1,0 +1,25 @@
+\tikzset{
+    sapTikzPicStyle/.style = {
+        scale = 0.5,
+    },
+    sapMonoSeedStyle/.style = {
+        sapColorBase,
+        rounded corners = \seedBaseCornerRadiusInCm,
+    },
+    sapMonoLeavesStyle/.style = {
+        sapColorBase,
+        rounded corners = \leafBaseCornerRadiusInCm,
+    },
+    sapOuterMarkStyle/.style = {
+        sapColorLine,
+        very thin,
+    },
+}
+
+\subtikzpicturedef{subSapBase} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+}
+
+\subtikzpictureactivate{subSapBase}

@@ -1,0 +1,85 @@
+\subtikzpicturedef{subSecondaryLeafBaseMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSecondaryLeafBase {#1-secondaryLeafBase} {#1-origin} {origin}
+
+    \fill [leafBaseStyle]
+    \ovrConnectSecondaryLeafBase {#1-secondaryLeafBase}
+    ;
+
+    %% length, angle
+
+    \draw [leafOuterMarkStyle]
+    (#1-secondaryLeafBase-outerRightTopCorner)
+    ++({\leafBaseAngle - 90}:\leafMarkPad)
+    coordinate (#1-lineMarkFirst)
+
+    (#1-secondaryLeafBase-outerRightTopCorner)
+    ++({\leafBaseAngle - 90}:1)
+    coordinate (#1-lineMarkSecond)
+
+    (#1-secondaryLeafBase-outerRightMostCorner)
+    ++({\leafBaseAngle - 90}:\leafMarkPad)
+    coordinate (#1-lineMarkFourth)
+
+    (#1-secondaryLeafBase-outerRightMostCorner)
+    ++({\leafBaseAngle - 90}:1)
+    coordinate (#1-lineMarkThird)
+
+    (#1-lineMarkFirst)
+    node [ocirc] {}
+    -- (#1-lineMarkSecond)
+    -- (#1-lineMarkThird)
+    -- (#1-lineMarkFourth)
+    node [ocirc] {}
+
+    ;
+
+    \path [leafOuterMarkStyle]
+    (#1-lineMarkSecond)
+    -- (#1-lineMarkThird)
+    node [midway, above = 4pt, sloped] {\leafBaseSecondaryEdgeLength}
+    ;
+
+    %% angle
+
+    \draw [leafInnerMarkStyle]
+    (#1-secondaryLeafBase-outerRightBottomCorner)
+    arc (0:\leafBaseAngle:\leafBaseThickness)
+
+    (#1-secondaryLeafBase-outerLeftBottomCorner)
+    ++({\leafBaseAngle / 2}:\leafBaseThickness)
+    -- ++(0, 2)
+    node [ocirc] {}
+    node [above = 4pt] {\leafBaseAngle$^\circ$}
+    ;
+
+    %% corner radius
+
+    \draw [leafInnerMarkStyle]
+    (#1-secondaryLeafBase-outerLeftMostCorner)
+    ++({2 * \leafBaseCornerRadiusInCm}, 0)
+    coordinate (#1-cornerCenter)
+
+    (#1-cornerCenter)
+    circle ({2 * \leafBaseCornerRadiusInCm})
+    (#1-cornerCenter)
+    -- ++(2, 0)
+    node [ocirc] {}
+    node [right = 4pt] {\leafBaseCornerRadius}
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-secondaryLeafBase-north)} {(#1-secondaryLeafBase-south)}
+    {(#1-secondaryLeafBase-west)} {(#1-secondaryLeafBase-east)}
+    ;
+
+}
+
+\subtikzpictureactivate{subSecondaryLeafBaseMarked}

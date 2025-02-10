@@ -1,0 +1,99 @@
+\def\leafColorPrimaryName{Sage}
+\def\leafColorPrimaryRGB{138, 184, 114}
+\def\leafColorPrimaryHex{\#8AB872}
+\definecolor{leafColorPrimary} {RGB} {\leafColorPrimaryRGB}
+%%
+\def\leafColorSecondaryName{Cactus Spike}
+\def\leafColorSecondaryRGB{204, 224, 153}
+\def\leafColorSecondaryHex{\#CCE099}
+\definecolor{leafColorSecondary} {RGB} {\leafColorSecondaryRGB}
+
+\subtikzpicturedef{subLeavesColor} {
+    primaryLeaf-center,
+    secondaryLeaf-center,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    primaryLeaf-innerBottomCorner,
+    primaryLeaf-innerLeftCorner,
+    primaryLeaf-innerTopCorner,
+    primaryLeaf-innerRightCorner,
+    primaryLeaf-innerCutTop,
+    primaryLeaf-innerCutBottom,
+    primaryLeaf-outerCutTop,
+    primaryLeaf-outerCutBottom,
+    primaryLeaf-outerLeftBottomCorner,
+    primaryLeaf-outerLeftMostCorner,
+    primaryLeaf-outerLeftTopCorner,
+    primaryLeaf-outerRightTopCorner,
+    primaryLeaf-outerRightMostCorner,
+    primaryLeaf-outerRightBottomCorner,
+    secondaryLeaf-outerLeftBottomCorner,
+    secondaryLeaf-outerLeftMostCorner,
+    secondaryLeaf-outerLeftTopCorner,
+    secondaryLeaf-outerRightTopCorner,
+    secondaryLeaf-outerRightMostCorner,
+    secondaryLeaf-outerRightBottomCorner,
+    secondaryLeaf-innerBottomCorner,
+    secondaryLeaf-innerLeftCorner,
+    secondaryLeaf-innerTopCorner,
+    secondaryLeaf-innerRightCorner,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subLeavesBase {#1-leavesBase} {#1-origin} {origin}
+
+    \draw
+    (#1-leavesBase-primaryLeaf-innerBottomCorner) coordinate (#1-primaryLeaf-innerBottomCorner)
+    (#1-leavesBase-primaryLeaf-innerLeftCorner) coordinate (#1-primaryLeaf-innerLeftCorner)
+    (#1-leavesBase-primaryLeaf-innerTopCorner) coordinate (#1-primaryLeaf-innerTopCorner)
+    (#1-leavesBase-primaryLeaf-innerRightCorner) coordinate (#1-primaryLeaf-innerRightCorner)
+    (#1-leavesBase-primaryLeaf-innerCutTop) coordinate (#1-primaryLeaf-innerCutTop)
+    (#1-leavesBase-primaryLeaf-innerCutBottom) coordinate (#1-primaryLeaf-innerCutBottom)
+    (#1-leavesBase-primaryLeaf-outerCutTop) coordinate (#1-primaryLeaf-outerCutTop)
+    (#1-leavesBase-primaryLeaf-outerCutBottom) coordinate (#1-primaryLeaf-outerCutBottom)
+    (#1-leavesBase-primaryLeaf-outerLeftBottomCorner) coordinate (#1-primaryLeaf-outerLeftBottomCorner)
+    (#1-leavesBase-primaryLeaf-outerLeftMostCorner) coordinate (#1-primaryLeaf-outerLeftMostCorner)
+    (#1-leavesBase-primaryLeaf-outerLeftTopCorner) coordinate (#1-primaryLeaf-outerLeftTopCorner)
+    (#1-leavesBase-primaryLeaf-outerRightTopCorner) coordinate (#1-primaryLeaf-outerRightTopCorner)
+    (#1-leavesBase-primaryLeaf-outerRightMostCorner) coordinate (#1-primaryLeaf-outerRightMostCorner)
+    (#1-leavesBase-primaryLeaf-outerRightBottomCorner) coordinate (#1-primaryLeaf-outerRightBottomCorner)
+    (#1-leavesBase-secondaryLeaf-outerLeftBottomCorner) coordinate (#1-secondaryLeaf-outerLeftBottomCorner)
+    (#1-leavesBase-secondaryLeaf-outerLeftMostCorner) coordinate (#1-secondaryLeaf-outerLeftMostCorner)
+    (#1-leavesBase-secondaryLeaf-outerLeftTopCorner) coordinate (#1-secondaryLeaf-outerLeftTopCorner)
+    (#1-leavesBase-secondaryLeaf-outerRightTopCorner) coordinate (#1-secondaryLeaf-outerRightTopCorner)
+    (#1-leavesBase-secondaryLeaf-outerRightMostCorner) coordinate (#1-secondaryLeaf-outerRightMostCorner)
+    (#1-leavesBase-secondaryLeaf-outerRightBottomCorner) coordinate (#1-secondaryLeaf-outerRightBottomCorner)
+    (#1-leavesBase-secondaryLeaf-innerBottomCorner) coordinate (#1-secondaryLeaf-innerBottomCorner)
+    (#1-leavesBase-secondaryLeaf-innerLeftCorner) coordinate (#1-secondaryLeaf-innerLeftCorner)
+    (#1-leavesBase-secondaryLeaf-innerTopCorner) coordinate (#1-secondaryLeaf-innerTopCorner)
+    (#1-leavesBase-secondaryLeaf-innerRightCorner) coordinate (#1-secondaryLeaf-innerRightCorner)
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-leavesBase-north)} {(#1-leavesBase-south)}
+    {(#1-leavesBase-west)} {(#1-leavesBase-east)}
+    ;
+
+    \draw
+    (#1-leavesBase-primaryLeafCut-center) coordinate (#1-primaryLeaf-center)
+    (#1-leavesBase-secondaryLeafClip-center) coordinate (#1-secondaryLeaf-center)
+    ;
+
+}
+
+\subtikzpictureactivate{subLeavesColor}
+
+\newcommand\ovrDrawPrimaryLeafColored[1] {
+    \fill [leafBaseStyle, leafColorPrimary, opacity = 1]
+    \ovrConnectPrimaryLeafCut {#1-leavesBase-primaryLeafCut}
+    ;
+}
+
+\newcommand\ovrDrawSecondaryLeafColored[1] {
+    \fill [leafBaseStyle, leafColorSecondary, opacity = 1, even odd rule]
+    \ovrConnectSecondaryLeafBase {#1-leavesBase-secondaryLeafClip-secondaryLeafBase}
+    \ovrConnectSecondaryLeafClip {#1-leavesBase-secondaryLeafClip}
+    ;
+}

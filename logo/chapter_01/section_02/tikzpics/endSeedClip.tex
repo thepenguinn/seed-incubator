@@ -1,0 +1,15 @@
+\begin{tikzpicture} [
+        seedBaseTikzPicStyle,
+    ]
+
+    \draw
+    (0,0) coordinate (origin)
+    ;
+
+    \subSeedClip {clip} {origin} {origin}
+
+    \filldraw [seedBaseStyle, even odd rule]
+    \ovrConnectSeedClip {clip}
+    ;
+
+\end{tikzpicture}

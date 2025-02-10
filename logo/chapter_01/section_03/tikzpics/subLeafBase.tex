@@ -1,0 +1,58 @@
+\def\leafBaseAngle{120}
+\def\leafBaseThickness{0.45}
+\def\leafBaseEdgeLength{7.00}
+
+\def\leafBaseCutThickness{0.40}
+
+\def\leafBaseSecondaryXOffset{2.00}
+\def\leafBaseSecondaryYOffset{0.40}
+
+\def\leafBaseSecondaryEdgeLength{6.00}
+
+\def\leafMarkPad{8pt}
+
+\def\leafConnectPad{1.5cm}
+\def\leafColorMarkStartRadius{0.2cm}
+\def\leafColorMarkEndRadius{0.7cm}
+
+\def\leafBaseCornerRadius{0.05}
+\def\leafBaseCornerRadiusInCm{\leafBaseCornerRadius cm}
+
+\tikzset{
+    leafBaseStyle/.style = {
+        leafColorBase,
+        rounded corners = \leafBaseCornerRadiusInCm,
+    },
+    leafOuterMarkStyle/.style = {
+        leafColorLine,
+        very thin,
+    },
+    leafInnerMarkStyle/.style = {
+        bgcol,
+        thin,
+    },
+    leafInterConnectStyle/.style = {
+        leafColorLine,
+        thick,
+        rounded corners = 0.1cm,
+    },
+    leafInterConnectEndStyle/.style = {
+        leafColorLine,
+        thick,
+        fill = bgcol,
+    },
+    leafBaseTikzPicStyle/.style = {
+        transform shape,
+        scale = 0.5,
+        %rounded corners = 0.3cm,
+        every path/.style = {thick, > = latex},
+    },
+}
+
+\subtikzpicturedef{subLeafBase} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+}
+
+\subtikzpictureactivate{subLeafBase}

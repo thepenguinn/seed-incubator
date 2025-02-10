@@ -1,0 +1,14 @@
+\begin{tikzpicture} [
+        leafBaseTikzPicStyle,
+    ]
+
+    \draw (0, 0) coordinate (origin) ;
+
+    \subSecondaryLeafClip {secondaryLeafClip} {origin} {origin}
+
+    \fill [leafBaseStyle, even odd rule]
+    \ovrConnectSecondaryLeafClip {secondaryLeafClip}
+    \ovrConnectSecondaryLeafBase {secondaryLeafClip-secondaryLeafBase}
+    ;
+
+\end{tikzpicture}

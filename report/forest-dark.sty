@@ -1,0 +1,32 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{forest-dark}[2025/01/14 Forest Dark Theme]
+\RequirePackage{xcolor}
+
+%% umm, copied catppuccin-mocha, didn't change every
+%% color though, just changed the background color
+
+%% underworld
+\definecolor{forestbg}      {RGB} {31, 30, 24}
+
+%\definecolor{catppuccinbg}      {RGB} {30, 30, 46}
+%\definecolor{catppuccinbg}      {RGB} {24, 24, 37}
+\definecolor{forestcl}      {RGB} {69, 71, 90}
+\definecolor{forestfg}      {RGB} {205, 214, 244}
+\definecolor{forestcomment} {RGB} {147, 153, 178}
+\definecolor{forestcyan}    {RGB} {137, 220, 235}
+\definecolor{forestgreen}   {RGB} {166, 227, 161}
+\definecolor{forestorange}  {RGB} {250, 179, 135}
+\definecolor{forestpink}    {RGB} {245, 194, 231}
+\definecolor{forestpurple}  {RGB} {203, 166, 247}
+\definecolor{forestred}     {RGB} {243, 139, 168}
+\definecolor{forestyellow}  {RGB} {249, 226, 175}
+
+\pagecolor{forestbg}
+\color{forestfg}
+
+\colorlet{bgcol}{forestbg}
+\colorlet{fgcol}{forestfg}
+
+\colorlet{colorBaseRough} {bgcol!50!fgcol}
+
+%\usemintedstyle{catppuccin-mocha}

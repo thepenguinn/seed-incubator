@@ -1,0 +1,200 @@
+return {
+    ["endLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endLeavesBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endLeavesBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endLeavesColor"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endLeavesColorMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endLeavesFinal"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endPrimaryLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endPrimaryLeafBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endPrimaryLeafClip"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endPrimaryLeafClipMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endPrimaryLeafCut"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endRoughSketch"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["endRoughSketchMarked"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["endSapBase"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["endSapBoth"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["endSapColor"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["endSapIcon"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["endSapIconLine"] = {
+        ["parent_dir"] = "chapter_01/icon/tikzpics",
+    },
+    ["endSapMono"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["endSecondaryLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endSecondaryLeafBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endSecondaryLeafClip"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endSecondaryLeafClipMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["endSeedBase"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedClip"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedClipMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedColor"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedColorMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedFinal"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedLine"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedSlice"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endSeedSliceMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subLeavesBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subLeavesBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subLeavesColor"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subLeavesColorMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subLeavesFinal"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subPrimaryLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subPrimaryLeafBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subPrimaryLeafClip"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subPrimaryLeafClipMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subPrimaryLeafCut"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subRoughSketchMarked"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subRoughtSketch"] = {
+        ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subSapBase"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["subSapBoth"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["subSapColor"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["subSapIcon"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["subSapIconLine"] = {
+        ["parent_dir"] = "chapter_01/icon/tikzpics",
+    },
+    ["subSapMono"] = {
+        ["parent_dir"] = "chapter_01/section_04/tikzpics",
+    },
+    ["subSecondaryLeafBase"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subSecondaryLeafBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subSecondaryLeafClip"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subSecondaryLeafClipMarked"] = {
+        ["parent_dir"] = "chapter_01/section_03/tikzpics",
+    },
+    ["subSeedBase"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedBaseMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedClip"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedClipMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedColor"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedColorMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedFinal"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedLine"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedSlice"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subSeedSliceMarked"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+}

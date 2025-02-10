@@ -1,0 +1,16 @@
+\begin{tikzpicture} [
+        seedBaseTikzPicStyle,
+    ]
+
+    \draw
+    (0,0) coordinate (origin)
+    ;
+
+    \subSeedSlice {seedSlice} {origin} {origin}
+
+    \filldraw [seedBaseStyle]
+    \ovrConnectSeedLeftSlice {seedSlice}
+    \ovrConnectSeedRightSlice {seedSlice}
+    ;
+
+\end{tikzpicture}

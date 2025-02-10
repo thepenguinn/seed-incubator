@@ -1,0 +1,120 @@
+\subtikzpicturedef{subLeavesColorMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subLeavesColor {#1-leavesColor} {#1-origin} {origin}
+
+    \ovrDrawPrimaryLeafColored {#1-leavesColor}
+    \ovrDrawSecondaryLeafColored {#1-leavesColor}
+
+    \draw [leafInterConnectStyle]
+    ($(#1-leavesColor-primaryLeaf-outerRightTopCorner)!0.085!(#1-leavesColor-primaryLeaf-outerRightMostCorner)$)
+    ++(\leafConnectPad, 0)
+    coordinate (#1-primaryLineFirst)
+    ++(1, 1)
+    coordinate (#1-primaryLineSecond)
+    ++(6, 0)
+    coordinate (#1-primaryLineThird)
+    ++(1.5, -1.5)
+    coordinate (#1-primaryLineFourth)
+
+    (#1-primaryLineFirst)
+    -- (#1-primaryLineSecond)
+    -- (#1-primaryLineThird)
+    -- (#1-primaryLineFourth)
+
+    ;
+
+    \draw [leafInterConnectEndStyle, fill = leafColorPrimary]
+    (#1-primaryLineFourth)
+    circle (\leafColorMarkEndRadius)
+    ;
+
+    \draw
+    (#1-primaryLineFourth)
+    node (#1-primaryLineNode) [below = 1.5cm, anchor = north] {
+        \begin{minipage} {6cm}
+            \Large
+            \raggedright
+            {\huge\textsc{\leafColorPrimaryName}}
+            \scshape
+            \vspace{1pt}
+            \begin{center}
+                \rule {\textwidth} {1pt}
+            \end{center}
+            \vspace{1pt}
+            \begin{itemize} [label=, leftmargin=*]
+                \raggedleft
+                \item {RGB: \hfill \leafColorPrimaryRGB}
+                \item {HEX: \hfill \leafColorPrimaryHex}
+            \end{itemize}
+        \end{minipage}
+    }
+    ;
+
+    %% secondary
+
+    \draw [leafInterConnectStyle]
+    ($(#1-leavesColor-secondaryLeaf-outerRightBottomCorner)!0.10!(#1-leavesColor-secondaryLeaf-outerRightMostCorner)$)
+    ++(\leafConnectPad, 0)
+    coordinate (#1-secondaryLineFirst)
+    ++(1, -1)
+    coordinate (#1-secondaryLineSecond)
+    ++(14, 0)
+    coordinate (#1-secondaryLineThird)
+    ++(1.5, 1.5)
+    coordinate (#1-secondaryLineFourth)
+
+    (#1-secondaryLineFirst)
+    -- (#1-secondaryLineSecond)
+    -- (#1-secondaryLineThird)
+    -- (#1-secondaryLineFourth)
+
+    ;
+
+    \draw [leafInterConnectEndStyle, fill = leafColorSecondary]
+    (#1-secondaryLineFourth)
+    circle (\leafColorMarkEndRadius)
+    ;
+
+    \draw
+    (#1-secondaryLineFourth)
+    node (#1-secondaryLineNode) [above = 1.5cm, anchor = south] {
+        \begin{minipage} {6cm}
+            \Large
+            \raggedleft
+            {\huge\textsc{\leafColorSecondaryName}}
+            \scshape
+            \vspace{1pt}
+            \begin{center}
+                \rule {\textwidth} {1pt}
+            \end{center}
+            \vspace{1pt}
+            \begin{itemize} [label=, leftmargin=*]
+                \raggedleft
+                \item {RGB: \hfill \leafColorSecondaryRGB}
+                \item {HEX: \hfill \leafColorSecondaryHex}
+            \end{itemize}
+        \end{minipage}
+    }
+    ;
+
+    \draw [leafInterConnectEndStyle]
+    (#1-primaryLineFirst)
+    circle (\leafColorMarkStartRadius)
+    (#1-secondaryLineFirst)
+    circle (\leafColorMarkStartRadius)
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-leavesColor-north)} {(#1-leavesColor-south)}
+    {(#1-leavesColor-west)} {(#1-leavesColor-east)}
+    ;
+}
+
+\subtikzpictureactivate{subLeavesColorMarked}

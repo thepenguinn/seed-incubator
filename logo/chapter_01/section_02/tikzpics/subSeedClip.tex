@@ -1,0 +1,83 @@
+\def\seedLineSmallThickness{0.45}
+\def\seedLineLargeThickness{0.70}
+
+\subtikzpicturedef{subSeedClip} {
+    origin,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    innerLeftMostCorner,
+    innerLeftTopCorner,
+    innerLeftBottomCorner,
+    innerRightMostCorner,
+    innerRightBottomCorner,
+    innerRightTopCorner%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedBase {#1-seedBase} {#1-origin} {origin}
+
+    \draw
+    %% marking line parallel to left large slant edge
+    (#1-seedBase-leftTopCorner)
+    ++({-90 + \seedBaseLargeAngle}:\seedLineSmallThickness)
+    coordinate (#1-largeTop)
+    (#1-seedBase-leftMostCorner)
+    ++({-90 + \seedBaseLargeAngle}:\seedLineSmallThickness)
+    coordinate (#1-largeBottom)
+    %% marking line parallel to left small slant edge
+    (#1-seedBase-leftMostCorner)
+    ++({90 - \seedBaseLargeAngle}:\seedLineLargeThickness)
+    coordinate (#1-smallTop)
+    (#1-seedBase-leftBottomCorner)
+    ++({90 - \seedBaseLargeAngle}:\seedLineLargeThickness)
+    coordinate (#1-smallBottom)
+    %% marking line parallel to top edge
+    (#1-seedBase-leftTopCorner) ++(0, -\seedLineSmallThickness)
+    coordinate (#1-topLeft)
+    (#1-seedBase-rightTopCorner) ++(0, -\seedLineSmallThickness)
+    coordinate (#1-topRight)
+    %% marking line parallel to bottom edge
+    (#1-seedBase-leftBottomCorner) ++(0, \seedLineSmallThickness)
+    coordinate (#1-bottomLeft)
+    (#1-seedBase-rightBottomCorner) ++(0, \seedLineSmallThickness)
+    coordinate (#1-bottomRight)
+    ;
+
+    \draw
+    %% marking inner left corners
+    (intersection of #1-largeTop--#1-largeBottom and #1-smallTop--#1-smallBottom)
+    coordinate (#1-innerLeftMostCorner)
+    (intersection of #1-largeTop--#1-largeBottom and #1-topLeft--#1-topRight)
+    coordinate (#1-innerLeftTopCorner)
+    (intersection of #1-smallTop--#1-smallBottom and #1-bottomLeft--#1-bottomRight)
+    coordinate (#1-innerLeftBottomCorner)
+    %% copying it to the right side
+    (#1-seedBase-rightMostCorner)
+    ++($(#1-seedBase-leftMostCorner)-(#1-innerLeftMostCorner)$)
+    coordinate (#1-innerRightMostCorner)
+    (#1-seedBase-rightBottomCorner)
+    ++($(#1-seedBase-leftTopCorner)-(#1-innerLeftTopCorner)$)
+    coordinate (#1-innerRightBottomCorner)
+    (#1-seedBase-rightTopCorner)
+    ++($(#1-seedBase-leftBottomCorner)-(#1-innerLeftBottomCorner)$)
+    coordinate (#1-innerRightTopCorner)
+    ;
+
+    %% geocoords
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedBase-north)} {(#1-seedBase-south)}
+    {(#1-seedBase-west)} {(#1-seedBase-east)}
+    ;
+
+}
+
+\subtikzpictureactivate{subSeedClip}
+
+\newcommand\ovrConnectSeedClip[1] {
+    (#1-innerLeftTopCorner) -- (#1-innerLeftMostCorner) -- (#1-innerLeftBottomCorner)
+    -- (#1-innerRightBottomCorner) -- (#1-innerRightMostCorner) -- (#1-innerRightTopCorner)
+    -- cycle
+}

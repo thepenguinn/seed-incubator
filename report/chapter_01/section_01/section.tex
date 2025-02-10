@@ -1,0 +1,68 @@
+\documentclass[../../main]{subfiles}
+
+\input{section_header.tex}
+
+\begin{document}
+
+\section{Introduction} \label{sec:}
+
+Seed Incubation Plant aims to automate the incubation process of a seed in
+hope of minimizing the labour cost and improving the yield. The entire
+system can be divided into two main sub-systems
+
+\begin{itemize}
+    \item \textbf{EMCU}: Environment Monitoring and Control Unit.
+    \item \textbf{SINC}: Seed IncDroid (An Android Application).
+\end{itemize}
+
+%% PIC: An overview of the entire incubator
+
+\begin{figure}
+    \centering
+    \includegraphics[
+    ] {tikzpics/endIncOverview.pdf}
+    \captionof{figure} {An overview of the entire incubator}
+    \label{fig:incOverView}
+\end{figure}
+
+\subsection{EMCU}
+
+The Environment Monitoring and Control Unit handles the \emph{incubation} process
+and the \emph{well-being} of the seed. As the name suggests, it \emph{monitors} and
+\emph{collects} the real time data from the incubator enclosure and its environment.
+And \emph{controls} these factors to ensure the \emph{optimal} growth of the seedling.
+EMCU tries to monitor and control\footnote{except in the case of fertilizer}
+five different aspects that governs the well-being of the sapling. They include:
+
+\begin{itemize}
+    \item Temperature.
+    \item Humidity.
+    \item Lighting.
+    \item Soil Moisture.
+    \item Fertilizer.
+\end{itemize}
+
+Despite taking care of the seedlings, the EMCU performs another major task,
+generating \textsc{alerts}. These \textsc{alerts} are generated when the
+EMCU encounters some scenarios which requires manual interventions, as:
+
+\begin{itemize}
+    \item The sapling becomes ready to be harvested.
+    \item The water or fertilizer reservoir has been depleted.
+    \item Some of the controlling parameters fails to be regulated.
+    \item The EMCU encounters some unrecoverable errors.
+\end{itemize}
+
+\subsection{SINC}
+
+SINC is an Android App that tries to bridge the gap between the user and the
+Incubator. It enables the user to configure the Incubator easily and monitor
+the collected data. The App consists of two main sub-systems:
+
+\begin{itemize}
+    \item The UI of the App that visualizes the collected data.
+    \item The system that enables the communication between the App and the
+        Incubator.
+\end{itemize}
+
+\end{document}

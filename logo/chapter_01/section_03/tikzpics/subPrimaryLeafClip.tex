@@ -1,0 +1,98 @@
+\subtikzpicturedef{subPrimaryLeafClip} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    innerBottomCorner,
+    innerLeftCorner,
+    innerTopCorner,
+    innerRightCorner,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subPrimaryLeafBase {#1-primaryLeafBase} {#1-origin} {origin}
+
+    \draw
+
+    %% top right
+
+    (#1-primaryLeafBase-outerRightTopCorner)
+    ++({90 + \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromTopRightUp)
+
+    (#1-primaryLeafBase-outerRightMostCorner)
+    ++({90 + \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromTopRightDown)
+
+    %% top left
+
+    (#1-primaryLeafBase-outerLeftTopCorner)
+    ++({90 - \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromTopLeftUp)
+
+    (#1-primaryLeafBase-outerLeftMostCorner)
+    ++({90 - \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromTopLeftDown)
+
+    %% bottom right
+
+    (#1-primaryLeafBase-outerRightBottomCorner)
+    ++({270 - \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromBottomRightDown)
+
+    (#1-primaryLeafBase-outerRightMostCorner)
+    ++({270 - \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromBottomRightUp)
+
+    %% bottom left
+
+    (#1-primaryLeafBase-outerLeftBottomCorner)
+    ++({\leafBaseAngle - 90}:\leafBaseThickness)
+    coordinate (#1-tmpFromBottomLeftDown)
+
+    (#1-primaryLeafBase-outerLeftMostCorner)
+    ++({\leafBaseAngle - 90}:\leafBaseThickness)
+    coordinate (#1-tmpFromBottomLeftUp)
+
+    (intersection of
+        #1-tmpFromTopRightUp--#1-tmpFromTopRightDown
+        and
+        #1-tmpFromTopLeftUp--#1-tmpFromTopLeftDown)
+    coordinate (#1-innerTopCorner)
+
+    (intersection of
+        #1-tmpFromTopRightUp--#1-tmpFromTopRightDown
+        and
+        #1-tmpFromBottomRightUp--#1-tmpFromBottomRightDown)
+    coordinate (#1-innerRightCorner)
+
+    (intersection of
+        #1-tmpFromBottomLeftUp--#1-tmpFromBottomLeftDown
+        and
+        #1-tmpFromBottomRightUp--#1-tmpFromBottomRightDown)
+    coordinate (#1-innerBottomCorner)
+
+    (intersection of
+        #1-tmpFromBottomLeftUp--#1-tmpFromBottomLeftDown
+        and
+        #1-tmpFromTopLeftUp--#1-tmpFromTopLeftDown)
+    coordinate (#1-innerLeftCorner)
+
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-primaryLeafBase-north)} {(#1-primaryLeafBase-south)}
+    {(#1-primaryLeafBase-west)} {(#1-primaryLeafBase-east)}
+    ;
+
+}
+
+\subtikzpictureactivate{subPrimaryLeafClip}
+
+\newcommand\ovrConnectPrimaryLeafClip[1] {
+    (#1-innerBottomCorner)
+    -- (#1-innerLeftCorner)
+    -- (#1-innerTopCorner)
+    -- (#1-innerRightCorner)
+    -- cycle
+}

@@ -1,0 +1,84 @@
+\def\seedColorPrimaryName{Grand Sunset}
+\def\seedColorPrimaryRGB{198, 140, 136}
+\def\seedColorPrimaryHex{\#C68C88}
+\definecolor{seedColorPrimary} {RGB} {\seedColorPrimaryRGB}
+%%
+\def\seedColorSecondaryName{Peach Dunes}
+\def\seedColorSecondaryRGB{180, 104, 98}
+\def\seedColorSecondaryHex{\#B46862}
+\definecolor{seedColorSecondary} {RGB} {\seedColorSecondaryRGB}
+
+\subtikzpicturedef{subSeedColor} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    leftTopCorner,
+    leftMostCorner,
+    leftBottomCorner,
+    rightBottomCorner,
+    rightMostCorner,
+    rightTopCorner,
+    innerLeftMostCorner,
+    innerLeftTopCorner,
+    innerLeftBottomCorner,
+    innerRightMostCorner,
+    innerRightBottomCorner,
+    innerRightTopCorner,
+    outerRightBottomSliceCorner,
+    innerRightBottomSliceCorner,
+    innerRightTopSliceCorner,
+    outerRightTopSliceCorner,
+    outerLeftBottomSliceCorner,
+    innerLeftBottomSliceCorner,
+    innerLeftTopSliceCorner,
+    outerLeftTopSliceCorner,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedSlice {#1-seedSlice} {#1-origin} {origin}
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedSlice-north)} {(#1-seedSlice-south)}
+    {(#1-seedSlice-west)} {(#1-seedSlice-east)}
+    ;
+
+    \draw
+    (#1-seedSlice-leftTopCorner) coordinate (#1-leftTopCorner)
+    (#1-seedSlice-leftMostCorner) coordinate (#1-leftMostCorner)
+    (#1-seedSlice-leftBottomCorner) coordinate (#1-leftBottomCorner)
+    (#1-seedSlice-rightBottomCorner) coordinate (#1-rightBottomCorner)
+    (#1-seedSlice-rightMostCorner) coordinate (#1-rightMostCorner)
+    (#1-seedSlice-rightTopCorner) coordinate (#1-rightTopCorner)
+    (#1-seedSlice-innerLeftMostCorner) coordinate (#1-innerLeftMostCorner)
+    (#1-seedSlice-innerLeftTopCorner) coordinate (#1-innerLeftTopCorner)
+    (#1-seedSlice-innerLeftBottomCorner) coordinate (#1-innerLeftBottomCorner)
+    (#1-seedSlice-innerRightMostCorner) coordinate (#1-innerRightMostCorner)
+    (#1-seedSlice-innerRightBottomCorner) coordinate (#1-innerRightBottomCorner)
+    (#1-seedSlice-innerRightTopCorner) coordinate (#1-innerRightTopCorner)
+    (#1-seedSlice-outerRightBottomSliceCorner) coordinate (#1-outerRightBottomSliceCorner)
+    (#1-seedSlice-innerRightBottomSliceCorner) coordinate (#1-innerRightBottomSliceCorner)
+    (#1-seedSlice-innerRightTopSliceCorner) coordinate (#1-innerRightTopSliceCorner)
+    (#1-seedSlice-outerRightTopSliceCorner) coordinate (#1-outerRightTopSliceCorner)
+    (#1-seedSlice-outerLeftBottomSliceCorner) coordinate (#1-outerLeftBottomSliceCorner)
+    (#1-seedSlice-innerLeftBottomSliceCorner) coordinate (#1-innerLeftBottomSliceCorner)
+    (#1-seedSlice-innerLeftTopSliceCorner) coordinate (#1-innerLeftTopSliceCorner)
+    (#1-seedSlice-outerLeftTopSliceCorner) coordinate (#1-outerLeftTopSliceCorner)
+    ;
+
+}
+
+\subtikzpictureactivate{subSeedColor}
+
+\newcommand\ovrDrawSeedLeftSlice[1] {
+    \fill [seedBaseStyle, fill = seedColorPrimary, opacity = 1]
+    \ovrConnectSeedLeftSlice {#1-seedSlice}
+    ;
+}
+
+\newcommand\ovrDrawSeedRightSlice[1] {
+    \fill [seedBaseStyle, fill = seedColorSecondary, opacity = 1]
+    \ovrConnectSeedRightSlice {#1-seedSlice}
+    ;
+}

@@ -1,0 +1,88 @@
+\def\seedBaseTotalWidth{6.50}
+
+\def\seedBaseSmallBendLength{0.80}
+\def\seedBaseLargeBendLength{1.90}
+
+%% 0 to 90
+%% acute angle making with the corresponding bend and the
+%% horizontal line to right.
+\def\seedBaseSmallAngle{60}
+\def\seedBaseLargeAngle{55}
+
+\def\seedBaseCornerRadius{0.05}
+\def\seedBaseCornerRadiusInCm{\seedBaseCornerRadius cm}
+
+\def\seedMarkPad{8pt}
+
+\def\seedLineMarkPad{2.0}
+\def\seedLineColorMarkPad{1.5}
+
+\tikzset{
+    seedBaseStyle/.style = {
+        seedColorBase,
+        rounded corners = \seedBaseCornerRadiusInCm,
+    },
+    seedOuterMarkStyle/.style = {
+        seedColorLine,
+        very thin,
+    },
+    seedInnerMarkStyle/.style = {
+        bgcol,
+        thin,
+    },
+    seedBaseTikzPicStyle/.style = {
+        transform shape,
+        scale = 0.5,
+        %rounded corners = 0.3cm,
+        every path/.style = {thick, > = latex},
+    },
+}
+
+\subtikzpicturedef{subSeedBase} {
+    origin,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    leftTopCorner,
+    leftMostCorner,
+    leftBottomCorner,
+    rightBottomCorner,
+    rightMostCorner,
+    rightTopCorner%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    %%
+    \draw
+    %% marking coordinates
+    (#1-origin) coordinate (#1-leftMostCorner)
+    let \p{#1-tmp1} = (\seedBaseSmallAngle:\seedBaseSmallBendLength),
+    \p{#1-tmp2} = (\seedBaseLargeAngle:\seedBaseLargeBendLength)
+    in
+    (#1-leftMostCorner) ++(\seedBaseTotalWidth, {\y{#1-tmp2} - \y{#1-tmp1}})
+    coordinate (#1-rightMostCorner)
+    %% left corners
+    (#1-leftMostCorner) ++(-\seedBaseSmallAngle:\seedBaseSmallBendLength)
+    coordinate (#1-leftBottomCorner)
+    (#1-leftMostCorner) ++(\seedBaseLargeAngle:\seedBaseLargeBendLength)
+    coordinate (#1-leftTopCorner)
+    %% right corners
+    (#1-rightMostCorner) ++(180 + \seedBaseLargeAngle:\seedBaseLargeBendLength)
+    coordinate (#1-rightBottomCorner)
+    (#1-rightMostCorner) ++(180 - \seedBaseSmallAngle:\seedBaseSmallBendLength)
+    coordinate (#1-rightTopCorner)
+    ;
+    %%
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-leftTopCorner)} {(#1-leftBottomCorner)}
+    {(#1-leftMostCorner)} {(#1-rightMostCorner)}
+    ;
+}
+
+\subtikzpictureactivate{subSeedBase}
+
+\newcommand\ovrConnectSeedBase[1] {
+    (#1-leftTopCorner) -- (#1-leftMostCorner) -- (#1-leftBottomCorner)
+    -- (#1-rightBottomCorner) -- (#1-rightMostCorner) -- (#1-rightTopCorner)
+    -- cycle
+}

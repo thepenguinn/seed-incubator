@@ -1,0 +1,99 @@
+\subtikzpicturedef{subLeavesFinal} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subLeafBase {base} {#1-origin} {origin}
+
+    \draw
+    (#1-origin)
+    coordinate (#1-primaryLeafBase)
+    ++(-9, 0)
+    coordinate (#1-primaryLeafClip)
+
+    ($(#1-primaryLeafBase)!0.50!(#1-primaryLeafClip)$)
+    ++(0, -9)
+    coordinate (#1-secondaryLeafBase)
+
+    (#1-primaryLeafBase)
+    ++(9, 0)
+    coordinate (#1-tmp)
+    ($(#1-primaryLeafBase)!0.50!(#1-tmp)$)
+    ++(0, -9)
+    coordinate (#1-secondaryLeafClip)
+
+    (#1-secondaryLeafClip)
+    ++(6, -10)
+    coordinate (#1-leavesBase)
+
+    (#1-primaryLeafClip)
+    ++(0, -30)
+    coordinate (#1-leavesColor)
+
+    ;
+
+    \subPrimaryLeafBaseMarked {#1-primaryLeafBase} {#1-origin} {center}
+    \subPrimaryLeafClipMarked {#1-primaryLeafClip} {#1-primaryLeafClip} {center}
+    \subSecondaryLeafBaseMarked {#1-secondaryLeafBase} {#1-secondaryLeafBase} {center}
+    \subSecondaryLeafClipMarked {#1-secondaryLeafClip} {#1-secondaryLeafClip} {center}
+    \subLeavesBaseMarked {#1-leavesBase} {#1-leavesBase} {center}
+    \subLeavesColorMarked {#1-leavesColor} {#1-leavesColor} {center}
+
+    %% first line
+
+    \draw [leafInterConnectStyle]
+    (#1-primaryLeafBase-north)
+    ++(0,\leafConnectPad)
+    coordinate (#1-firstLineNodeFirst)
+    ++(-1,1)
+    coordinate (#1-firstLineNodeSecond)
+
+    (#1-primaryLeafClip-north)
+    ++(0,\leafConnectPad)
+    coordinate (#1-firstLineNodeFourth)
+    ++(1,1)
+    coordinate (#1-firstLineNodeThird)
+
+    (#1-firstLineNodeFirst)
+    -- (#1-firstLineNodeSecond)
+    -- (#1-firstLineNodeThird)
+    -- (#1-firstLineNodeFourth)
+
+    ;
+
+    %% second line
+    \draw [leafInterConnectStyle]
+    (#1-secondaryLeafBase-south)
+    ++(0, -\leafConnectPad)
+    coordinate (#1-secondLineNodeFirst)
+    ++(1, -1)
+    coordinate (#1-secondLineNodeSecond)
+
+    (#1-secondaryLeafClip-south)
+    ++(0, -\leafConnectPad)
+    coordinate (#1-secondLineNodeFourth)
+    ++(-1, -1)
+    coordinate (#1-secondLineNodeThird)
+
+    (#1-secondLineNodeFirst)
+    -- (#1-secondLineNodeSecond)
+    -- (#1-secondLineNodeThird)
+    -- (#1-secondLineNodeFourth)
+
+    ;
+
+    \draw [leafInterConnectEndStyle]
+    (#1-firstLineNodeFirst)
+    circle (0.2cm)
+    (#1-firstLineNodeFourth)
+    circle (0.2cm)
+
+    (#1-secondLineNodeFirst)
+    circle (0.2cm)
+    (#1-secondLineNodeFourth)
+    circle (0.2cm)
+
+    ;
+
+}
+
+\subtikzpictureactivate{subLeavesFinal}

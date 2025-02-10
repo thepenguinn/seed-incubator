@@ -1,0 +1,24 @@
+\subtikzpicturedef{subSeedLine} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedClip {#1-seedClip} {#1-origin} {origin}
+
+    \fill [seedBaseStyle, even odd rule]
+    \ovrConnectSeedBase {#1-seedClip-seedBase}
+    \ovrConnectSeedClip {#1-seedClip}
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedClip-north)} {(#1-seedClip-south)}
+    {(#1-seedClip-west)} {(#1-seedClip-east)}
+    ;
+
+}
+
+\subtikzpictureactivate{subSeedLine}

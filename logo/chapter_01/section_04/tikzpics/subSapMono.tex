@@ -1,0 +1,37 @@
+\subtikzpicturedef{subSapMono} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \begin{scope} [transform shape, scale = 0.6]
+        \subSapBase {#1-sapBase} {#1-origin} {origin}
+
+        \subSeedSlice {#1-seedSlice} {#1-origin} {origin}
+
+        \fill [sapMonoSeedStyle]
+        \ovrConnectSeedLeftSlice {#1-seedSlice}
+        ;
+
+        \subLeavesBase {#1-leavesBase} {#1-seedSlice-innerRightBottomSliceCorner} {primaryLeaf-outerLeftBottomCorner}
+
+        \fill [sapMonoLeavesStyle]
+        \ovrConnectPrimaryLeafCut {#1-leavesBase-primaryLeafCut}
+        ;
+
+        \fill [sapMonoLeavesStyle, even odd rule]
+        \ovrConnectSecondaryLeafBase {#1-leavesBase-secondaryLeafClip-secondaryLeafBase}
+        \ovrConnectSecondaryLeafClip {#1-leavesBase-secondaryLeafClip}
+        ;
+    \end{scope}
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-leavesBase-north)} {(#1-leavesBase-south)}
+    {(#1-seedSlice-west)} {(#1-leavesBase-east)}
+    ;
+
+}
+
+\subtikzpictureactivate{subSapMono}

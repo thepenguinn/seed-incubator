@@ -1,0 +1,114 @@
+\subtikzpicturedef{subSecondaryLeafClip} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    outerLeftBottomCorner,
+    outerLeftMostCorner,
+    outerLeftTopCorner,
+    outerRightTopCorner,
+    outerRightMostCorner,
+    outerRightBottomCorner,
+    innerBottomCorner,
+    innerLeftCorner,
+    innerTopCorner,
+    innerRightCorner,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSecondaryLeafBase {#1-secondaryLeafBase} {#1-origin} {origin}
+
+    \draw
+
+    %% top right
+
+    (#1-secondaryLeafBase-outerRightTopCorner)
+    ++({90 + \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromTopRightUp)
+
+    (#1-secondaryLeafBase-outerRightMostCorner)
+    ++({90 + \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromTopRightDown)
+
+    %% top left
+
+    (#1-secondaryLeafBase-outerLeftTopCorner)
+    ++({90 - \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromTopLeftUp)
+
+    (#1-secondaryLeafBase-outerLeftMostCorner)
+    ++({90 - \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromTopLeftDown)
+
+    %% bottom right
+
+    (#1-secondaryLeafBase-outerRightBottomCorner)
+    ++({270 - \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromBottomRightDown)
+
+    (#1-secondaryLeafBase-outerRightMostCorner)
+    ++({270 - \leafBaseAngle}:\leafBaseThickness)
+    coordinate (#1-tmpFromBottomRightUp)
+
+    %% bottom left
+
+    (#1-secondaryLeafBase-outerLeftBottomCorner)
+    ++({\leafBaseAngle - 90}:\leafBaseThickness)
+    coordinate (#1-tmpFromBottomLeftDown)
+
+    (#1-secondaryLeafBase-outerLeftMostCorner)
+    ++({\leafBaseAngle - 90}:\leafBaseThickness)
+    coordinate (#1-tmpFromBottomLeftUp)
+
+    (intersection of
+        #1-tmpFromTopRightUp--#1-tmpFromTopRightDown
+        and
+        #1-tmpFromTopLeftUp--#1-tmpFromTopLeftDown)
+    coordinate (#1-innerTopCorner)
+
+    (intersection of
+        #1-tmpFromTopRightUp--#1-tmpFromTopRightDown
+        and
+        #1-tmpFromBottomRightUp--#1-tmpFromBottomRightDown)
+    coordinate (#1-innerRightCorner)
+
+    (intersection of
+        #1-tmpFromBottomLeftUp--#1-tmpFromBottomLeftDown
+        and
+        #1-tmpFromBottomRightUp--#1-tmpFromBottomRightDown)
+    coordinate (#1-innerBottomCorner)
+
+    (intersection of
+        #1-tmpFromBottomLeftUp--#1-tmpFromBottomLeftDown
+        and
+        #1-tmpFromTopLeftUp--#1-tmpFromTopLeftDown)
+    coordinate (#1-innerLeftCorner)
+
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-secondaryLeafBase-north)} {(#1-secondaryLeafBase-south)}
+    {(#1-secondaryLeafBase-west)} {(#1-secondaryLeafBase-east)}
+    ;
+
+    \draw
+    (#1-secondaryLeafBase-outerLeftBottomCorner) coordinate (#1-outerLeftBottomCorner)
+    (#1-secondaryLeafBase-outerLeftMostCorner) coordinate (#1-outerLeftMostCorner)
+    (#1-secondaryLeafBase-outerLeftTopCorner) coordinate (#1-outerLeftTopCorner)
+    (#1-secondaryLeafBase-outerRightTopCorner) coordinate (#1-outerRightTopCorner)
+    (#1-secondaryLeafBase-outerRightMostCorner) coordinate (#1-outerRightMostCorner)
+    (#1-secondaryLeafBase-outerRightBottomCorner) coordinate (#1-outerRightBottomCorner)
+    ;
+
+}
+
+\subtikzpictureactivate{subSecondaryLeafClip}
+
+\newcommand\ovrConnectSecondaryLeafClip[1] {
+    (#1-innerBottomCorner)
+    -- (#1-innerLeftCorner)
+    -- (#1-innerTopCorner)
+    -- (#1-innerRightCorner)
+    -- cycle
+}

@@ -1,0 +1,169 @@
+\def\seedSliceAngle{120}
+
+
+\def\seedSliceThickness{0.45}
+\def\seedSliceDisFromLeft{1.30}
+
+\subtikzpicturedef{subSeedSlice} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin,
+    leftTopCorner,
+    leftMostCorner,
+    leftBottomCorner,
+    rightBottomCorner,
+    rightMostCorner,
+    rightTopCorner,
+    innerLeftMostCorner,
+    innerLeftTopCorner,
+    innerLeftBottomCorner,
+    innerRightMostCorner,
+    innerRightBottomCorner,
+    innerRightTopCorner,
+    outerRightBottomSliceCorner,
+    innerRightBottomSliceCorner,
+    innerRightTopSliceCorner,
+    outerRightTopSliceCorner,
+    outerLeftBottomSliceCorner,
+    innerLeftBottomSliceCorner,
+    innerLeftTopSliceCorner,
+    outerLeftTopSliceCorner%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedBase {#1-seedBase} {#1-origin} {origin}
+    \subSeedClip {#1-seedClip} {#1-seedBase-center} {center}
+
+    %% marking
+
+    \draw
+
+    %% right slice
+
+    %($(#1-seedBase-leftBottomCorner)!0.95!(#1-seedBase-rightBottomCorner)$)
+    (#1-seedBase-rightBottomCorner -| #1-seedBase-rightMostCorner)
+    ++(-\seedSliceDisFromLeft, 0)
+    coordinate (#1-outerRightBottomSliceCorner)
+
+    (#1-outerRightBottomSliceCorner)
+    ++(\seedSliceAngle:0.1) coordinate
+    (#1-tmp)
+
+    (#1-outerRightBottomSliceCorner)
+
+    (intersection of
+        #1-outerRightBottomSliceCorner--#1-tmp
+        and
+        #1-seedClip-innerLeftBottomCorner--#1-seedClip-innerRightBottomCorner)
+    coordinate (#1-innerRightBottomSliceCorner)
+
+    (intersection of
+        #1-outerRightBottomSliceCorner--#1-tmp
+        and
+        #1-seedClip-innerLeftTopCorner--#1-seedClip-innerRightTopCorner)
+    coordinate (#1-innerRightTopSliceCorner)
+
+    (intersection of
+        #1-outerRightBottomSliceCorner--#1-tmp
+        and
+        #1-seedBase-leftTopCorner--#1-seedBase-rightTopCorner)
+    coordinate (#1-outerRightTopSliceCorner)
+
+    %% left slice
+
+    (#1-outerRightBottomSliceCorner)
+    ++(\seedSliceAngle:0.5)
+    ++({90 + \seedSliceAngle}:\seedSliceThickness)
+    coordinate (#1-perpFromRightSlice)
+
+    (#1-perpFromRightSlice)
+    ++(\seedSliceAngle:0.1) coordinate
+    (#1-tmp)
+
+    (intersection of
+        #1-perpFromRightSlice--#1-tmp
+        and
+        #1-seedBase-leftBottomCorner--#1-seedBase-rightBottomCorner)
+    coordinate (#1-outerLeftBottomSliceCorner)
+
+    (intersection of
+        #1-perpFromRightSlice--#1-tmp
+        and
+        #1-seedClip-innerLeftBottomCorner--#1-seedClip-innerRightBottomCorner)
+    coordinate (#1-innerLeftBottomSliceCorner)
+
+    (intersection of
+        #1-perpFromRightSlice--#1-tmp
+        and
+        #1-seedClip-innerLeftTopCorner--#1-seedClip-innerRightTopCorner)
+    coordinate (#1-innerLeftTopSliceCorner)
+
+    (intersection of
+        #1-perpFromRightSlice--#1-tmp
+        and
+        #1-seedBase-leftTopCorner--#1-seedBase-rightTopCorner)
+    coordinate (#1-outerLeftTopSliceCorner)
+
+    ;
+
+    %% mark geocoords
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedBase-north)} {(#1-seedBase-south)}
+    {(#1-seedBase-west)} {(#1-seedBase-east)}
+    ;
+
+    %% seedBase
+
+    \draw
+    (#1-seedBase-leftTopCorner) coordinate (#1-leftTopCorner)
+    (#1-seedBase-leftMostCorner) coordinate (#1-leftMostCorner)
+    (#1-seedBase-leftBottomCorner) coordinate (#1-leftBottomCorner)
+    (#1-seedBase-rightBottomCorner) coordinate (#1-rightBottomCorner)
+    (#1-seedBase-rightMostCorner) coordinate (#1-rightMostCorner)
+    (#1-seedBase-rightTopCorner) coordinate (#1-rightTopCorner)
+    ;
+
+    %% seedClip
+
+    \draw
+    (#1-seedClip-innerLeftMostCorner) coordinate (#1-innerLeftMostCorner)
+    (#1-seedClip-innerLeftTopCorner) coordinate (#1-innerLeftTopCorner)
+    (#1-seedClip-innerLeftBottomCorner) coordinate (#1-innerLeftBottomCorner)
+    (#1-seedClip-innerRightMostCorner) coordinate (#1-innerRightMostCorner)
+    (#1-seedClip-innerRightBottomCorner) coordinate (#1-innerRightBottomCorner)
+    (#1-seedClip-innerRightTopCorner) coordinate (#1-innerRightTopCorner)
+    ;
+
+}
+
+\subtikzpictureactivate{subSeedSlice}
+
+\newcommand\ovrConnectSeedLeftSlice[1] {
+    (#1-outerLeftTopSliceCorner)
+    -- (#1-seedBase-leftTopCorner)
+    -- (#1-seedBase-leftMostCorner)
+    -- (#1-seedBase-leftBottomCorner)
+    -- (#1-outerLeftBottomSliceCorner)
+    -- (#1-innerLeftBottomSliceCorner)
+    -- (#1-seedClip-innerLeftBottomCorner)
+    -- (#1-seedClip-innerLeftMostCorner)
+    -- (#1-seedClip-innerLeftTopCorner)
+    -- (#1-innerLeftTopSliceCorner)
+    -- cycle
+}
+
+\newcommand\ovrConnectSeedRightSlice[1] {
+    (#1-outerRightTopSliceCorner)
+    -- (#1-seedBase-rightTopCorner)
+    -- (#1-seedBase-rightMostCorner)
+    -- (#1-seedBase-rightBottomCorner)
+    -- (#1-outerRightBottomSliceCorner)
+    -- (#1-innerRightBottomSliceCorner)
+    -- (#1-seedClip-innerRightBottomCorner)
+    -- (#1-seedClip-innerRightMostCorner)
+    -- (#1-seedClip-innerRightTopCorner)
+    -- (#1-innerRightTopSliceCorner)
+    -- cycle
+}

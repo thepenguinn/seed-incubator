@@ -1,0 +1,130 @@
+\def\seedColorMarkStartRadius{0.2cm}
+
+\subtikzpicturedef{subSeedColorMarked} {
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subSeedColor {#1-seedColor} {#1-origin} {origin}
+
+    \ovrDrawSeedLeftSlice {#1-seedColor}
+    \ovrDrawSeedRightSlice {#1-seedColor}
+
+    \draw [seedColorLine, rounded corners = 0.15cm]
+    (#1-seedColor-seedSlice-rightMostCorner)
+    ++(\seedLineColorMarkPad, 0)
+    coordinate (#1-rightLineStart)
+
+    (#1-rightLineStart)
+    ++(11, 0)
+    coordinate (#1-rightLineFirst)
+    ++(2, -2)
+    coordinate (#1-rightLineSecond)
+    ++(0, -4)
+    coordinate (#1-rightLineEnd)
+
+    (#1-seedColor-seedSlice-leftMostCorner)
+    ++(-\seedLineColorMarkPad, 0)
+    coordinate (#1-leftLineStart)
+
+    (#1-leftLineStart)
+    ++(-1, -1)
+    coordinate (#1-leftLineFirst)
+    ++(0, -5)
+    coordinate (#1-leftLineEnd)
+
+    (#1-rightLineEnd |- #1-leftLineEnd)
+    coordinate (#1-rightLineEnd)
+
+    %% drawing
+
+    (#1-rightLineStart)
+    -- (#1-rightLineFirst)
+    -- (#1-rightLineSecond)
+    -- (#1-rightLineEnd)
+
+    (#1-leftLineStart)
+    -- (#1-leftLineFirst)
+    -- (#1-leftLineEnd)
+    ;
+
+    % secondary
+
+    \draw [seedColorLine, fill = bgcol]
+    (#1-rightLineStart)
+    circle (\seedColorMarkStartRadius)
+    ;
+
+    \draw [seedColorLine, thick, fill = seedColorSecondary]
+    (#1-rightLineEnd)
+    circle (0.7cm)
+    ;
+
+    % primary
+
+    \draw [seedColorLine, fill = bgcol]
+    (#1-leftLineStart)
+    circle (\seedColorMarkStartRadius)
+    ;
+
+    \draw [seedColorLine, thick, fill = seedColorPrimary]
+    (#1-leftLineEnd)
+    circle (0.7cm)
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-seedColor-north)} {(#1-seedColor-south)}
+    {(#1-seedColor-west)} {(#1-seedColor-east)}
+    ;
+
+    \draw
+    (#1-rightLineEnd)
+    node (#1-rightLineNode) [left = 1.5cm, anchor = east] {
+        \begin{minipage} {6cm}
+            \Large
+            \raggedleft
+            {\huge\textsc{\seedColorSecondaryName}}
+            \scshape
+            \vspace{1pt}
+            \begin{center}
+                \rule {\textwidth} {1pt}
+            \end{center}
+            \vspace{1pt}
+            \begin{itemize} [label=, leftmargin=*]
+                \raggedleft
+                \item {RGB: \hfill \seedColorSecondaryRGB}
+                \item {HEX: \hfill \seedColorSecondaryHex}
+            \end{itemize}
+        \end{minipage}
+    }
+    ;
+
+    \draw
+    (#1-leftLineEnd)
+    node (#1-leftLineNode) [right = 1.5cm, anchor = west] {
+        \begin{minipage} {6cm}
+            \Large
+            \raggedright
+            {\huge\textsc{\seedColorPrimaryName}}
+            \scshape
+            \vspace{1pt}
+            \begin{center}
+                \rule {\textwidth} {1pt}
+            \end{center}
+            \vspace{1pt}
+            \begin{itemize} [label=, leftmargin=*]
+                \raggedright
+                \item {RGB: \hfill \seedColorPrimaryRGB}
+                \item {HEX: \hfill \seedColorPrimaryHex}
+            \end{itemize}
+        \end{minipage}
+    }
+    ;
+
+}
+
+\subtikzpictureactivate{subSeedColorMarked}

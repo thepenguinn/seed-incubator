@@ -1,0 +1,217 @@
+\documentclass[main]{subfiles}
+
+\begin{document}
+
+\def\author{
+    1. Anjana Roy \\
+    \vspace{3pt}
+    2. Aswatheertha T T \\
+    \vspace{3pt}
+    3. Athira Madhusoodanan \\
+    \vspace{3pt}
+    4. Daniel V Mathew \\
+}
+
+\def\supervisor{
+    Prof. Raseena Yousuf
+}
+
+\def\ptitle{Seed Incubation Plant with Environment Monitoring and Control \\}
+
+\renewcommand\arraystretch{1.40}
+
+\pagenumbering{gobble}
+
+\begin{center}
+
+    \def\title{ECD334 - Mini Project S6 ECE \textbf{(2022 Admission)}}
+    \def\subtitle{\textbf{Mini Project Plan Even Semester December 2024 – March 2025}}
+    \def\subsubtitle{\textbf{(AY: 2024\_2025)}}
+
+    \begin{center}
+        \huge \title
+    \end{center}
+
+    \begin{center}
+        \vspace{-4pt}
+        \Large \subtitle
+    \end{center}
+
+    \begin{center}
+        \vspace{-4pt}
+        \Large \subsubtitle
+    \end{center}
+
+    \begin{center}
+        \vspace{-4pt}
+        \Large \ptitle
+    \end{center}
+
+    \begin{tabular} {
+            | >{\centering\arraybackslash}p{1.5cm}
+            | >{\centering\arraybackslash}m{4.6cm}
+            | >{\centering\arraybackslash}m{8.5cm} |
+        }
+        \hline
+        \textbf{Sl. No:} &
+        \textbf{Week Number} &
+        \textbf{Miniproject PLAN} \\ \hline
+
+        1 & 3\textsuperscript{rd} week of DECEMBER 2024 &
+        Met Prof. Raseena Yousuf and discussed various
+        project ideas.
+        \\ \hline
+
+        2 & 1\textsuperscript{st} week of JANUARY 2025 &
+        Consulted various research papers for choosing the
+        topic and prepared a draft Abstract.
+        \\ \hline
+
+        3 & 2\textsuperscript{nd} week of JANUARY 2025 &
+        \textbf {
+            Guide Approved Abstract \& Project Plan
+            Submission on or before 10/01/2025 (Friday) before
+            2:00 PM
+        }
+        \\ \hline
+
+        4 & 3\textsuperscript{rd} and 4\textsuperscript{th} week of JANUARY 2025 &
+        Block diagram design, Components search, Datasheet
+        analysis of components, Design and Implementation
+        of App UI (Android application).
+        \\ \hline
+
+        %%%%
+
+        5 & 1\textsuperscript{st} week of FEBRUARY 2025 &
+        Setup of Greenhouse Enclosure, begins
+        the actualisation of circuits, Design of the Protocol
+        between App and Incubator.
+        \\ \hline
+
+        6 & 2\textsuperscript{nd} week of FEBRUARY 2025 &
+        \textbf {
+            First Review on 12/02/2025 (Wednesday) \&
+            13/02/2025 (Thursday) during the Miniproject
+            hours.
+        }
+        \\ \hline
+
+        7 & 3\textsuperscript{rd} and 4\textsuperscript{th} week of FEBRUARY 2025 &
+        Setup of hardware and other components, completion
+        of incubator system, testing of subsystems against their
+        specifications, completion of App.
+        \\ \hline
+
+        %%%%
+
+        8 & 1\textsuperscript{st} week of MARCH 2025 &
+        Report Writing and final modifications in the output,
+        testing of setup by planting seeds.
+        \\ \hline
+
+        9 & 2\textsuperscript{nd} week of MARCH 2025 &
+        \textbf {
+            Second Review on 12/03/2025 (Wednesday) \&
+            13/03/2025 (Thursday) during the Miniproject
+            hours.
+        }
+        \\ \hline
+
+        10 & 3\textsuperscript{rd} week of MARCH 2025 &
+        Final Miniproject report to be sent to the Guide for
+        approval, submission of collected telemetry, App and
+        incubator demonstration.
+        \\ \hline
+
+        11 & 4\textsuperscript{th} week of MARCH 2025 &
+        \textbf {
+            Hard copy of the Miniproject Report signed by the
+            Guide is to be submitted on or before 27/03/2025
+            (Thursday) before 2:00 PM
+        }
+        \\ \hline
+
+    \end{tabular}
+
+\end{center}
+
+\vspace{-6pt}
+
+\begin{center}
+
+    \begin{tikzpicture} []
+
+        \node (sigNode) [inner sep = 0pt, anchor = center] {
+            \begin{minipage}[b] {\textwidth}
+                \noindent
+                \textit{Student Name \& signature}
+                \hfill
+                \textit{Guide Name \& signature}
+
+                \vspace{8pt}
+
+                \noindent
+                {\begin{minipage}[b] {0.5\textwidth}
+                    \vfill
+                    \raggedright
+                    {\linespread{1.2} \itshape \bfseries \author}
+                \end{minipage}
+                \hfill
+                \begin{minipage}[b] {0.5\textwidth}
+                    \vfill
+                    \raggedleft
+                    {\linespread{1.2} \itshape \bfseries \supervisor}
+                \end{minipage}}
+
+            \end{minipage}
+
+        };
+
+        \draw
+        (sigNode.center)
+        ++(-1.75,-1.3)
+        node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+            \includegraphics[width = 1.3cm] {sig/dnl.png}
+        }
+        ;
+
+        \draw
+        (sigNode.center)
+        ++(-1.8,-0.8)
+        node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+            \includegraphics[width = 1.2cm] {sig/ata.png}
+        }
+        ;
+
+        \draw
+        (sigNode.center)
+        ++(-1.75,0)
+        node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+            \includegraphics[width = 1.05cm] {sig/ast.png}
+        }
+        ;
+
+        \draw
+        (sigNode.center)
+        ++(-1.8,0.75)
+        node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+            \includegraphics[width = 1.1cm] {sig/ajn.png}
+        }
+        ;
+
+        \draw
+        (sigNode.center)
+        ++(6,0)
+        node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+            \includegraphics[width = 1.5cm] {sig/guide.png}
+        }
+        ;
+
+    \end{tikzpicture}
+
+\end{center}
+
+
+
+\end{document}

@@ -1,0 +1,41 @@
+\definecolor{ColorBg} {RGB} {31, 30, 24}
+
+\subtikzpicturedef{subSapIcon} {
+    primaryLeaf-center,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subSapBase {#1-sapBase} {#1-origin} {origin}
+    \draw (#1-origin) coordinate (#1-seed) ;
+
+    \subSeedColor {#1-seed} {#1-seed} {center}
+
+    \subLeavesColor {#1-leaves} {#1-seed-innerRightBottomSliceCorner} {primaryLeaf-outerLeftBottomCorner}
+
+    \fill [fill = ColorBg]
+    (#1-leaves-primaryLeaf-center)
+    ++(0,-0.5)
+    circle (10.5cm)
+    ;
+
+    \ovrDrawSeedLeftSlice {#1-seed}
+
+    \ovrDrawPrimaryLeafColored {#1-leaves}
+    \ovrDrawSecondaryLeafColored {#1-leaves}
+
+    \draw
+    (#1-leaves-primaryLeaf-center) coordinate (#1-primaryLeaf-center)
+    ;
+
+    \draw
+    \markgeocoordinate {#1}
+    {(#1-leaves-north)} {(#1-leaves-south)}
+    {(#1-seed-west)} {(#1-leaves-east)}
+    ;
+
+}
+
+\subtikzpictureactivate{subSapIcon}
