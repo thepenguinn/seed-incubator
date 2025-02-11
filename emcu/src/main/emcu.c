@@ -19,78 +19,63 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
-#define WIFI_SSID      "Daniel's Galaxy A50s"
-#define WIFI_PASS      "thisisbaad"
-
-#define EXAMPLE_ESP_MAXIMUM_RETRY  CONFIG_ESP_MAXIMUM_RETRY
-
-#if CONFIG_ESP_WPA3_SAE_PWE_HUNT_AND_PECK
-#define ESP_WIFI_SAE_MODE WPA3_SAE_PWE_HUNT_AND_PECK
-#define EXAMPLE_H2E_IDENTIFIER ""
-#elif CONFIG_ESP_WPA3_SAE_PWE_HASH_TO_ELEMENT
-#define ESP_WIFI_SAE_MODE WPA3_SAE_PWE_HASH_TO_ELEMENT
-#define EXAMPLE_H2E_IDENTIFIER CONFIG_ESP_WIFI_PW_ID
-#elif CONFIG_ESP_WPA3_SAE_PWE_BOTH
-#define ESP_WIFI_SAE_MODE WPA3_SAE_PWE_BOTH
-#define EXAMPLE_H2E_IDENTIFIER CONFIG_ESP_WIFI_PW_ID
-#endif
-#if CONFIG_ESP_WIFI_AUTH_OPEN
-#define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_OPEN
-#elif CONFIG_ESP_WIFI_AUTH_WEP
-#define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WEP
-#elif CONFIG_ESP_WIFI_AUTH_WPA_PSK
-#define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA_PSK
-#elif CONFIG_ESP_WIFI_AUTH_WPA2_PSK
-#define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA2_PSK
-#elif CONFIG_ESP_WIFI_AUTH_WPA_WPA2_PSK
-#define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA_WPA2_PSK
-#elif CONFIG_ESP_WIFI_AUTH_WPA3_PSK
-#define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA3_PSK
-#elif CONFIG_ESP_WIFI_AUTH_WPA2_WPA3_PSK
-#define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WPA2_WPA3_PSK
-#elif CONFIG_ESP_WIFI_AUTH_WAPI_PSK
-#define ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD WIFI_AUTH_WAPI_PSK
-#endif
+#include "emcu.h"
 
 /* FreeRTOS event group to signal when we are connected*/
-static EventGroupHandle_t s_wifi_event_group;
+static EventGroupHandle_t wifi_event_group;
 
-/* The event group allows multiple bits for each event, but we only care about two events:
- * - we are connected to the AP with an IP
- * - we failed to connect after the maximum amount of retries */
-#define WIFI_CONNECTED_BIT BIT0
-#define WIFI_FAIL_BIT      BIT1
+/*static SemaphoreHandle_t reserv_mutex;*/
+/*static SemaphoreHandle_t temp_hume_mutex;*/
+/*static SemaphoreHandle_t light_mutex;*/
+/*static SemaphoreHandle_t soil_moist_mutex;*/
+/**/
+/*static float temp_value = 0;*/
+/*static float hume_value = 0;*/
+/**/
+/*static float light_value = 0;*/
+/*static float soil_moist_value = 0;*/
+/*static float reserv_value = 0;*/
 
-static const char *TAG = "wifi station";
+esp_event_handler_instance_t instance_any_id;
+esp_event_handler_instance_t instance_got_ip;
+
+static const char *WIFI_TAG = "wifi task";
+static const char *TCP_TAG = "tcp server";
 
 static int s_retry_num = 0;
 
+static void event_handler(void* arg, esp_event_base_t event_base,
+                                int32_t event_id, void* event_data);
+
+void tcp_server_task(void *pvParameters);
+
+void wifi_init_sta(void);
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data) {
 
+    ESP_LOGI(WIFI_EVENT, "Got into event_handler");
+
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-        if (s_retry_num < EXAMPLE_ESP_MAXIMUM_RETRY) {
+        if (s_retry_num < WIFI_ESP_MAXIMUM_RETRY) {
             esp_wifi_connect();
             s_retry_num++;
-            ESP_LOGI(TAG, "retry to connect to the AP");
-        } else {
-            xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
+            ESP_LOGI(WIFI_TAG, "retry to connect to the AP");
         }
-        ESP_LOGI(TAG,"connect to the AP fail");
+        ESP_LOGI(WIFI_TAG, "connect to the AP failed");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
-        ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+        ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
-        xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+        xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
     }
 }
 
-void wifi_init_sta(void)
-{
-    s_wifi_event_group = xEventGroupCreate();
+void wifi_init_sta(void) {
+
+    wifi_event_group = xEventGroupCreate();
 
     ESP_ERROR_CHECK(esp_netif_init());
 
@@ -100,8 +85,12 @@ void wifi_init_sta(void)
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
 
-    esp_event_handler_instance_t instance_any_id;
-    esp_event_handler_instance_t instance_got_ip;
+    /*
+     * starting tcp task
+     * */
+
+    xTaskCreate(tcp_server_task, "tcp server", 4096, NULL, 5, NULL);
+
     ESP_ERROR_CHECK(
         esp_event_handler_instance_register(
             WIFI_EVENT,
@@ -109,6 +98,7 @@ void wifi_init_sta(void)
             &event_handler,
             NULL,
             &instance_any_id));
+
     ESP_ERROR_CHECK(
         esp_event_handler_instance_register(
             IP_EVENT,
@@ -130,27 +120,34 @@ void wifi_init_sta(void)
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start() );
 
-    ESP_LOGI(TAG, "wifi_init_sta finished.");
+    ESP_LOGI(WIFI_TAG, "wifi_init_sta finished.");
 
-    /* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or connection failed for the maximum
-     * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
-    EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
-            WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
-            pdFALSE,
+}
+
+void tcp_server_task(void *pvParameters) {
+
+    EventBits_t bits;
+
+    do {
+
+        ESP_LOGI(TCP_TAG, "Waiting for wifi to connect");
+        bits = xEventGroupWaitBits(
+            wifi_event_group,
+            WIFI_CONNECTED_BIT,
+            pdTRUE,
             pdFALSE,
             portMAX_DELAY);
 
-    /* xEventGroupWaitBits() returns the bits before the call returned, hence we can test which event actually
-     * happened. */
-    if (bits & WIFI_CONNECTED_BIT) {
-        ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
-                 WIFI_SSID, WIFI_PASS);
-    } else if (bits & WIFI_FAIL_BIT) {
-        ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
-                 WIFI_SSID, WIFI_PASS);
-    } else {
-        ESP_LOGE(TAG, "UNEXPECTED EVENT");
-    }
+        if (!(bits & WIFI_CONNECTED_BIT)) {
+            ESP_LOGE(TCP_TAG, "UNEXPECTED EVENT");
+            continue;
+        }
+
+        ESP_LOGI(TCP_TAG, "Starting tcp server");
+
+    } while (1);
+
+
 }
 
 void app_main(void) {
@@ -162,7 +159,7 @@ void app_main(void) {
     }
     ESP_ERROR_CHECK(ret);
 
-    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+    ESP_LOGI(WIFI_TAG, "ESP_WIFI_MODE_STA");
 
     wifi_init_sta();
 }
