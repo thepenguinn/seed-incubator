@@ -2,7 +2,7 @@
 #
 
 run: build
-	./emcu_test_server
+	./emcu
 
 build: emcu emcu_test_server
 

@@ -8,6 +8,9 @@
 *.bbl
 *.blg
 *.run.xml
+*.o
+emcu/test/emcu
+emcu/test/emcu_test_server
 */**/icon/*.png
 */**/icon/*.svg
 emcu/src/build/*
