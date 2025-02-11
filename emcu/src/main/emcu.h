@@ -36,4 +36,9 @@
  * - we failed to connect after the maximum amount of retries */
 #define WIFI_CONNECTED_BIT BIT0
 
+#define PORT                 10898
+#define KEEPALIVE_IDLE           5
+#define KEEPALIVE_INTERVAL       5
+#define KEEPALIVE_COUNT          3
+
 /*#define TCP_KILLED_BIT     BIT0*/

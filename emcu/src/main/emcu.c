@@ -18,6 +18,9 @@
 
 #include "lwip/err.h"
 #include "lwip/sys.h"
+#include "lwip/sockets.h"
+#include "lwip/inet.h"
+#include <lwip/netdb.h>
 
 #include "emcu.h"
 
@@ -38,6 +41,8 @@ static EventGroupHandle_t wifi_event_group;
 
 esp_event_handler_instance_t instance_any_id;
 esp_event_handler_instance_t instance_got_ip;
+
+static char ip_addr[128];
 
 static const char *WIFI_TAG = "wifi task";
 static const char *TCP_TAG = "tcp server";
@@ -67,6 +72,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
         ESP_LOGI(WIFI_TAG, "connect to the AP failed");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
+        sprintf(ip_addr, IPSTR, IP2STR(&event->ip_info.ip));
         ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
         xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
@@ -127,6 +133,11 @@ void wifi_init_sta(void) {
 void tcp_server_task(void *pvParameters) {
 
     EventBits_t bits;
+    int keepAlive = 1;
+    int keepIdle = KEEPALIVE_IDLE;
+    int keepInterval = KEEPALIVE_INTERVAL;
+    int keepCount = KEEPALIVE_COUNT;
+    struct sockaddr_in server_addr;
 
     do {
 
@@ -144,6 +155,61 @@ void tcp_server_task(void *pvParameters) {
         }
 
         ESP_LOGI(TCP_TAG, "Starting tcp server");
+
+        bzero(&server_addr, sizeof(server_addr));
+
+        server_addr.sin_addr.s_addr = inet_addr(ip_addr); // address from event handler
+        /*server_addr.sin_addr.s_addr = htonl(INADDR_ANY);*/
+        server_addr.sin_family = AF_INET;
+        server_addr.sin_port = htons(PORT);
+
+        int listen_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+        if (listen_sock < 0) {
+            ESP_LOGE(TCP_TAG, "Unable to create socket: errno %d", errno);
+            continue;
+        }
+        int opt = 1;
+        setsockopt(listen_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+        ESP_LOGI(TCP_TAG, "Socket created");
+
+        int err = bind(listen_sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
+        if (err != 0) {
+            ESP_LOGE(TCP_TAG, "Socket unable to bind: errno %d", errno);
+            goto CLEAN_UP;
+        }
+        ESP_LOGI(TCP_TAG, "Socket bound, port %d", PORT);
+
+        err = listen(listen_sock, 1);
+        if (err != 0) {
+            ESP_LOGE(TCP_TAG, "Error occurred during listen: errno %d", errno);
+            goto CLEAN_UP;
+        }
+
+        ESP_LOGI(TCP_TAG, "Socket listening");
+
+        /*
+         * waiting for android
+         * */
+
+        struct sockaddr_in client_addr;
+        socklen_t addr_len = sizeof(client_addr);
+        int client_sock = accept(listen_sock, (struct sockaddr *)&client_addr, &addr_len);
+        if (client_sock < 0) {
+            ESP_LOGE(TCP_TAG, "Unable to accept connection: errno %d", errno);
+            break;
+        }
+
+        // Set tcp keepalive option
+        setsockopt(client_sock, SOL_SOCKET, SO_KEEPALIVE, &keepAlive, sizeof(int));
+        setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPIDLE, &keepIdle, sizeof(int));
+        setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPINTVL, &keepInterval, sizeof(int));
+        setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPCNT, &keepCount, sizeof(int));
+
+        ESP_LOGI(TCP_TAG, "GOT ANDROID CONNECTION.");
+
+    CLEAN_UP:
+        close(listen_sock);
 
     } while (1);
 
