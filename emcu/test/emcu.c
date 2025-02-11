@@ -2,14 +2,15 @@
 #include <string.h>
 #include <strings.h>
 #include <sys/socket.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
 #include "emcu.h"
 
-#define IP_ADDR "127.0.0.1"
-#define PORT    10898
+#define MAC_ADDR "e4:65:b8:25:3c:54"
+#define PORT     10898
 
 static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_UNKNOWN] = "unknown",
@@ -20,11 +21,14 @@ static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_PELTIER] = "peltier",
 };
 
+static char ip_addr[128];
+
 static int serverfd;
 
-int emcu (int command, int state);
-int parse_args (int argc, char *argv[], int *enable);
-int print_help (void);
+int emcu(int command, int state);
+int parse_args(int argc, char *argv[], int *enable);
+int print_help(void);
+int get_ip_addr(void);
 
 int emcu_exhaust(int mode);
 int emcu_monitor();
@@ -47,7 +51,7 @@ int connect_to_server() {
     bzero(&server_addr, sizeof(server_addr));
 
     server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = inet_addr(IP_ADDR);
+    server_addr.sin_addr.s_addr = inet_addr(ip_addr);
     server_addr.sin_port = (uint16_t) htons(PORT);
 
     if (connect(sockfd, (struct sockaddr *) &server_addr, sizeof(server_addr)) == -1) {
@@ -157,9 +161,55 @@ int print_help (void) {
 
 }
 
+int get_ip_addr(void) {
+
+    int pid;
+    int pipe_out[2];
+
+    // um work around
+
+    char *cmd[] = {
+        "./get_emcu_ip.sh",
+        MAC_ADDR,
+        NULL,
+    };
+
+    pipe(pipe_out);
+
+    pid = fork();
+
+    if (pid < 0) {
+        printf("fork() failed.\n");
+        return 1;
+    }
+
+    if (pid == 0) {
+        dup2(pipe_out[1], STDOUT_FILENO);
+        execvp(cmd[0], cmd);
+        _exit(0);
+    }
+
+    int len = read(pipe_out[0], ip_addr, sizeof(ip_addr));
+
+    if (len == 1) {
+        return 1;
+    }
+
+    ip_addr[len - 1] = '\0';
+
+    wait(NULL);
+
+    return 0;
+}
+
 int main (int argc, char *argv[]) {
 
-    printf("hello world\n");
+    if (get_ip_addr()) {
+        printf("Seems like emcu is not connected, exiting.\n");
+        return 1;
+    }
+
+    return 0;
 
     int sockfd = connect_to_server();
     if (sockfd < 0) {
@@ -167,6 +217,21 @@ int main (int argc, char *argv[]) {
     } else {
         serverfd = sockfd;
     }
+
+    // testing esp
+
+    char msg = (char) SUB_CMD_MONITOR;
+    char buf[2] = "p";
+    send(serverfd, &msg, 1, 0);
+    recv(serverfd, buf, 1, 0);
+    printf("%s\n", buf);
+
+    msg = (char) SUB_CMD_UNKNOWN;
+    send(serverfd, &msg, 1, 0);
+    recv(serverfd, buf, 1, 0);
+    printf("%s\n", buf);
+
+    return 0;
 
     int enable = 0;
     int subcommand = parse_args(argc, argv, &enable);
