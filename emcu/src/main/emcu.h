@@ -42,3 +42,13 @@
 #define KEEPALIVE_COUNT          3
 
 /*#define TCP_KILLED_BIT     BIT0*/
+
+enum SubCmd {
+    SUB_CMD_UNKNOWN = 0,
+    SUB_CMD_HMODE,
+    SUB_CMD_CMODE,
+    SUB_CMD_MONITOR,
+    SUB_CMD_FANS,
+    SUB_CMD_PELTIER,
+    SUB_CMD_END,
+};

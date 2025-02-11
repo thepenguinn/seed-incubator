@@ -39,6 +39,9 @@ static EventGroupHandle_t wifi_event_group;
 /*static float soil_moist_value = 0;*/
 /*static float reserv_value = 0;*/
 
+static SemaphoreHandle_t wifi_conn_mutex;
+static int wifi_connected = pdFALSE;
+
 esp_event_handler_instance_t instance_any_id;
 esp_event_handler_instance_t instance_got_ip;
 
@@ -51,6 +54,8 @@ static int s_retry_num = 0;
 
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data);
+
+static int serve_client(int client_sock);
 
 void tcp_server_task(void *pvParameters);
 
@@ -69,12 +74,22 @@ static void event_handler(void* arg, esp_event_base_t event_base,
             s_retry_num++;
             ESP_LOGI(WIFI_TAG, "retry to connect to the AP");
         }
+
+        xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
+        wifi_connected = pdFALSE;
+        xSemaphoreGive(wifi_conn_mutex);
+
         ESP_LOGI(WIFI_TAG, "connect to the AP failed");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         sprintf(ip_addr, IPSTR, IP2STR(&event->ip_info.ip));
         ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
+
+        xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
+        wifi_connected = pdTRUE;
+        xSemaphoreGive(wifi_conn_mutex);
+
         xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
     }
 }
@@ -82,6 +97,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
 void wifi_init_sta(void) {
 
     wifi_event_group = xEventGroupCreate();
+    wifi_conn_mutex = xSemaphoreCreateMutex();
 
     ESP_ERROR_CHECK(esp_netif_init());
 
@@ -127,6 +143,40 @@ void wifi_init_sta(void) {
     ESP_ERROR_CHECK(esp_wifi_start() );
 
     ESP_LOGI(WIFI_TAG, "wifi_init_sta finished.");
+
+}
+
+static int serve_client(int client_sock) {
+
+    /*
+     * every command will be two bytes, response will be differently sized.
+     * monitor
+     * */
+
+    char buf[2];
+    int len;
+    char msgy[] = "y";
+    char msgn[] = "n";
+
+    while (1) {
+        len = recv(client_sock, buf, sizeof(buf) - 1, 0);
+
+        if (len < 0) {
+            ESP_LOGE(TCP_TAG, "Error occurred during receiving: errno %d", errno);
+            break;
+        } else if (len == 0) {
+            ESP_LOGW(TCP_TAG, "Connection closed");
+            break;
+        } else {
+            if ((int) buf[0] == SUB_CMD_MONITOR) {
+                send(client_sock, msgy, sizeof(msgy) - 1, 0);
+            } else {
+                send(client_sock, msgn, sizeof(msgn) - 1, 0);
+            }
+        }
+    }
+
+    return 0;
 
 }
 
@@ -194,19 +244,37 @@ void tcp_server_task(void *pvParameters) {
 
         struct sockaddr_in client_addr;
         socklen_t addr_len = sizeof(client_addr);
-        int client_sock = accept(listen_sock, (struct sockaddr *)&client_addr, &addr_len);
-        if (client_sock < 0) {
-            ESP_LOGE(TCP_TAG, "Unable to accept connection: errno %d", errno);
-            break;
+        int client_sock;
+
+        for ( ;; ) {
+
+            client_sock = accept(listen_sock, (struct sockaddr *)&client_addr, &addr_len);
+            if (client_sock < 0) {
+                ESP_LOGE(TCP_TAG, "Unable to accept connection: errno %d", errno);
+                break;
+            }
+
+            // Set tcp keepalive option
+            setsockopt(client_sock, SOL_SOCKET, SO_KEEPALIVE, &keepAlive, sizeof(int));
+            setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPIDLE, &keepIdle, sizeof(int));
+            setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPINTVL, &keepInterval, sizeof(int));
+            setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPCNT, &keepCount, sizeof(int));
+
+            ESP_LOGI(TCP_TAG, "GOT ANDROID CONNECTION.");
+
+            serve_client(client_sock);
+
+            xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
+            if (wifi_connected == pdFALSE) {
+                // connection to wifi lost, breaking from this loop
+                ESP_LOGW(TCP_TAG, "Seems like wifi has disconnected");
+                xSemaphoreGive(wifi_conn_mutex);
+                break;
+            }
+            ESP_LOGW(TCP_TAG, "Connection to android ended, waiting for next");
+            xSemaphoreGive(wifi_conn_mutex);
+
         }
-
-        // Set tcp keepalive option
-        setsockopt(client_sock, SOL_SOCKET, SO_KEEPALIVE, &keepAlive, sizeof(int));
-        setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPIDLE, &keepIdle, sizeof(int));
-        setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPINTVL, &keepInterval, sizeof(int));
-        setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPCNT, &keepCount, sizeof(int));
-
-        ESP_LOGI(TCP_TAG, "GOT ANDROID CONNECTION.");
 
     CLEAN_UP:
         close(listen_sock);
