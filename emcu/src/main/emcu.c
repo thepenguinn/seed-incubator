@@ -102,16 +102,20 @@ void wifi_init_sta(void)
 
     esp_event_handler_instance_t instance_any_id;
     esp_event_handler_instance_t instance_got_ip;
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
-                                                        ESP_EVENT_ANY_ID,
-                                                        &event_handler,
-                                                        NULL,
-                                                        &instance_any_id));
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT,
-                                                        IP_EVENT_STA_GOT_IP,
-                                                        &event_handler,
-                                                        NULL,
-                                                        &instance_got_ip));
+    ESP_ERROR_CHECK(
+        esp_event_handler_instance_register(
+            WIFI_EVENT,
+            ESP_EVENT_ANY_ID,
+            &event_handler,
+            NULL,
+            &instance_any_id));
+    ESP_ERROR_CHECK(
+        esp_event_handler_instance_register(
+            IP_EVENT,
+            IP_EVENT_STA_GOT_IP,
+            &event_handler,
+            NULL,
+            &instance_got_ip));
 
     wifi_config_t wifi_config = {
         .sta = {
@@ -149,24 +153,6 @@ void wifi_init_sta(void)
     }
 }
 
-void aTask(void *pvParameters) {
-
-    for ( ;; ) {
-        printf("task\n");
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-
-}
-
-void aTaskTwo(void *pvParameters) {
-
-    for ( ;; ) {
-        printf("task 2\n");
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-
-}
-
 void app_main(void) {
     //Initialize NVS
     esp_err_t ret = nvs_flash_init();
@@ -177,9 +163,6 @@ void app_main(void) {
     ESP_ERROR_CHECK(ret);
 
     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
-
-    xTaskCreate(aTask, "aTask", 1000, NULL, 10, NULL);
-    xTaskCreate(aTaskTwo, "aTaskTwo", 1000, NULL, 10, NULL);
 
     wifi_init_sta();
 }
