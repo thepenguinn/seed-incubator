@@ -22,19 +22,23 @@
 #include "lwip/inet.h"
 #include <lwip/netdb.h>
 
+#include "driver/gpio.h"
+
 #include "emcu.h"
+#include "DHT.h"
 
 /* FreeRTOS event group to signal when we are connected*/
 static EventGroupHandle_t wifi_event_group;
 
+static SemaphoreHandle_t temp_hume_mutex;
+
 /*static SemaphoreHandle_t reserv_mutex;*/
-/*static SemaphoreHandle_t temp_hume_mutex;*/
 /*static SemaphoreHandle_t light_mutex;*/
 /*static SemaphoreHandle_t soil_moist_mutex;*/
-/**/
-/*static float temp_value = 0;*/
-/*static float hume_value = 0;*/
-/**/
+
+static char temp_value[6];
+static char hume_value[6];
+
 /*static float light_value = 0;*/
 /*static float soil_moist_value = 0;*/
 /*static float reserv_value = 0;*/
@@ -49,6 +53,7 @@ static char ip_addr[128];
 
 static const char *WIFI_TAG = "wifi task";
 static const char *TCP_TAG = "tcp server";
+static const char *DHT_TAG = "dht task";
 
 static int s_retry_num = 0;
 
@@ -56,6 +61,8 @@ static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data);
 
 static int serve_client(int client_sock);
+
+void temp_hume_task(void *pvParameters);
 
 void tcp_server_task(void *pvParameters);
 
@@ -146,6 +153,25 @@ void wifi_init_sta(void) {
 
 }
 
+static int send_all(int client_sock, char *data, size_t len) {
+
+    int ret;
+
+    while (len > 0) {
+        ret = send(client_sock, data, 1, 0);
+        if (ret < 0) {
+            ESP_LOGE(TCP_TAG, "Error occurred during receiving: errno %d", errno);
+            return 1;
+        } else if (ret == 0) {
+            ESP_LOGW(TCP_TAG, "Connection closed");
+            return 1;
+        }
+        data++;
+        len--;
+    }
+    return 0;
+}
+
 static int serve_client(int client_sock) {
 
     /*
@@ -155,11 +181,17 @@ static int serve_client(int client_sock) {
 
     char buf[2];
     int len;
-    char msgy[] = "y";
-    char msgn[] = "n";
 
     while (1) {
         len = recv(client_sock, buf, sizeof(buf) - 1, 0);
+        if (len < 0) {
+            ESP_LOGE(TCP_TAG, "Error occurred during receiving: errno %d", errno);
+            break;
+        } else if (len == 0) {
+            ESP_LOGW(TCP_TAG, "Connection closed");
+            break;
+        }
+        recv(client_sock, buf + 1, sizeof(buf) - 1, 0);
 
         if (len < 0) {
             ESP_LOGE(TCP_TAG, "Error occurred during receiving: errno %d", errno);
@@ -169,9 +201,14 @@ static int serve_client(int client_sock) {
             break;
         } else {
             if ((int) buf[0] == SUB_CMD_MONITOR) {
-                send(client_sock, msgy, sizeof(msgy) - 1, 0);
-            } else {
-                send(client_sock, msgn, sizeof(msgn) - 1, 0);
+                xSemaphoreTake(temp_hume_mutex, portMAX_DELAY);
+                if (send_all(client_sock, temp_value, sizeof(temp_value))) {
+                    break;
+                }
+                if (send_all(client_sock, hume_value, sizeof(hume_value))) {
+                    break;
+                }
+                xSemaphoreGive(temp_hume_mutex);
             }
         }
     }
@@ -281,6 +318,30 @@ void tcp_server_task(void *pvParameters) {
 
     } while (1);
 
+}
+
+void temp_hume_task(void *pvParameters) {
+
+    setDHTgpio(GPIO_NUM_4);
+    ESP_LOGI(DHT_TAG, "Starting DHT Task\n\n");
+
+    for ( ;; ) {
+
+        ESP_LOGI(DHT_TAG, "=== Reading DHT ===\n");
+        int ret = readDHT();
+
+        errorHandler(ret);
+
+        ESP_LOGI(DHT_TAG, "Hum: %.1f Tmp: %.1f\n", getHumidity(), getTemperature());
+
+        xSemaphoreTake(temp_hume_mutex, portMAX_DELAY);
+        snprintf(temp_value, sizeof(temp_value) - 1, "%.1f", getTemperature());
+        snprintf(hume_value, sizeof(hume_value) - 1, "%.1f", getHumidity());
+        xSemaphoreGive(temp_hume_mutex);
+
+        vTaskDelay(3000 / portTICK_PERIOD_MS);
+
+    }
 
 }
 
@@ -296,4 +357,11 @@ void app_main(void) {
     ESP_LOGI(WIFI_TAG, "ESP_WIFI_MODE_STA");
 
     wifi_init_sta();
+
+    esp_rom_gpio_pad_select_gpio(GPIO_NUM_4);
+
+    temp_hume_mutex = xSemaphoreCreateMutex();
+
+    xTaskCreate(temp_hume_task, "temp_hume_task", 4096, NULL, 5, NULL);
+
 }
