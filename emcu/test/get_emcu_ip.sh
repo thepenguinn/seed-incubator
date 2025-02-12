@@ -2,10 +2,10 @@
 
 mac="$1"
 
-ip=$(ip neigh | grep ${mac} | cut -d' ' -f 1 | grep -v :)
+ip=$(ip neigh | grep -v FAIL | grep ${mac} | cut -d' ' -f 1 | grep -v :)
 
 if [[ -z $ip ]]; then
     echo
 else
-    printf "$ip"
+    printf "$ip\n"
 fi
