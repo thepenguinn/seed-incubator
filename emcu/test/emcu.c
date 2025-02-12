@@ -2,11 +2,11 @@
 #include <string.h>
 #include <strings.h>
 #include <sys/socket.h>
-#include <sys/wait.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
+#include "utils.h"
 #include "emcu.h"
 
 #define MAC_ADDR "1c:69:20:94:53:0c"
@@ -192,53 +192,14 @@ int print_help (void) {
 
 }
 
-int get_ip_addr(void) {
-
-    int pid;
-    int pipe_out[2];
-
-    // um work around
-
-    char *cmd[] = {
-        "./get_emcu_ip.sh",
-        MAC_ADDR,
-        NULL,
-    };
-
-    pipe(pipe_out);
-
-    pid = fork();
-
-    if (pid < 0) {
-        printf("fork() failed.\n");
-        return 1;
-    }
-
-    if (pid == 0) {
-        dup2(pipe_out[1], STDOUT_FILENO);
-        execvp(cmd[0], cmd);
-        _exit(0);
-    }
-
-    int len = read(pipe_out[0], ip_addr, sizeof(ip_addr));
-
-    if (len == 1) {
-        return 1;
-    }
-
-    ip_addr[len - 1] = '\0';
-
-    wait(NULL);
-
-    return 0;
-}
-
 int main (int argc, char *argv[]) {
 
-    if (get_ip_addr()) {
+    if (utils_get_emcu_ip(MAC_ADDR, ip_addr)) {
         printf("Seems like emcu is not connected, exiting.\n");
         return 1;
     }
+
+    return 0;
 
     int sockfd = connect_to_server();
     if (sockfd < 0) {
