@@ -33,13 +33,14 @@
 static EventGroupHandle_t wifi_event_group;
 
 static SemaphoreHandle_t temp_hume_mutex;
+static SemaphoreHandle_t light_mutex;
 
 /*static SemaphoreHandle_t reserv_mutex;*/
-/*static SemaphoreHandle_t light_mutex;*/
 /*static SemaphoreHandle_t soil_moist_mutex;*/
 
 static char temp_value[6];
 static char hume_value[6];
+static char light_value[6];
 
 /*static float light_value = 0;*/
 /*static float soil_moist_value = 0;*/
@@ -56,6 +57,7 @@ static char ip_addr[128];
 static const char *WIFI_TAG = "wifi task";
 static const char *TCP_TAG = "tcp server";
 static const char *DHT_TAG = "dht task";
+static const char *LIT_TAG = "lit task";
 
 static int s_retry_num = 0;
 
@@ -241,6 +243,12 @@ static int serve_client(int client_sock) {
                     break;
                 }
                 xSemaphoreGive(temp_hume_mutex);
+
+                xSemaphoreTake(light_mutex, portMAX_DELAY);
+                if (send_all(client_sock, light_value, sizeof(light_value))) {
+                    break;
+                }
+                xSemaphoreGive(light_mutex);
             }
         }
     }
@@ -396,6 +404,9 @@ void light_task(void *pvParameters) {
         //Convert adc_reading to voltage in mV
         uint32_t voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars);
         printf("Raw: %ld\tVoltage: %ldmV\n", adc_reading, voltage);
+        xSemaphoreTake(light_mutex, portMAX_DELAY);
+        snprintf(light_value, sizeof(light_value) - 1, "%ld", voltage);
+        xSemaphoreGive(light_mutex);
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
@@ -436,6 +447,7 @@ void app_main(void) {
     esp_rom_gpio_pad_select_gpio(GPIO_NUM_4);
 
     temp_hume_mutex = xSemaphoreCreateMutex();
+    light_mutex = xSemaphoreCreateMutex();
 
     xTaskCreate(temp_hume_task, "temp_hume_task", 4096, NULL, 5, NULL);
 
