@@ -1,6 +1,141 @@
 return {
+    ["endAbsActuatorModule"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["endAbsBuffer"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["endAbsESP"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["endAbsExhaustSystem"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
+    ["endAbsHumidifierSystem"] = {
+        ["parent_dir"] = "chapter_03/section_01/tikzpics",
+    },
+    ["endAbsHumiditySensorSystem"] = {
+        ["parent_dir"] = "chapter_03/section_02/tikzpics",
+    },
+    ["endAbsLightSensingSystem"] = {
+        ["parent_dir"] = "chapter_04/section_02/tikzpics",
+    },
+    ["endAbsLightingControlSystem"] = {
+        ["parent_dir"] = "chapter_04/section_03/tikzpics",
+    },
+    ["endAbsMuxFour"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["endAbsMuxTwo"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["endAbsOneBitRegister"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["endAbsPTC"] = {
+        ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["endAbsPeltier"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
+    ["endAbsReservoirFourLevelSensorSystem"] = {
+        ["parent_dir"] = "chapter_06/section_02/tikzpics",
+    },
+    ["endAbsReservoirTwoLevelSensorSystem"] = {
+        ["parent_dir"] = "chapter_06/section_03/tikzpics",
+    },
+    ["endAbsSensorModule"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["endAbsServo"] = {
+        ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["endAbsSoilMoistureAndFertilizerControlSystem"] = {
+        ["parent_dir"] = "chapter_05/section_03/tikzpics",
+    },
+    ["endAbsSoilMoistureSensorSystem"] = {
+        ["parent_dir"] = "chapter_05/section_02/tikzpics",
+    },
+    ["endAbsSubsystems"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["endAbsTempHumeSensor"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["endAbsThermalSensorSystem"] = {
+        ["parent_dir"] = "chapter_02/section_03/tikzpics",
+    },
     ["endIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subAbsActuatorModule"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsBuffer"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsCtkDiagramBase"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsESP"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsExhaustSystem"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
+    ["subAbsHumidifierSystem"] = {
+        ["parent_dir"] = "chapter_03/section_01/tikzpics",
+    },
+    ["subAbsHumiditySensorSystem"] = {
+        ["parent_dir"] = "chapter_03/section_02/tikzpics",
+    },
+    ["subAbsLightSensingSystem"] = {
+        ["parent_dir"] = "chapter_04/section_02/tikzpics",
+    },
+    ["subAbsLightingControlSystem"] = {
+        ["parent_dir"] = "chapter_04/section_03/tikzpics",
+    },
+    ["subAbsMuxFour"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsMuxTwo"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsOneBitRegister"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsPTC"] = {
+        ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["subAbsPeltier"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
+    ["subAbsReservoirFourLevelSensorSystem"] = {
+        ["parent_dir"] = "chapter_06/section_02/tikzpics",
+    },
+    ["subAbsReservoirTwoLevelSensorSystem"] = {
+        ["parent_dir"] = "chapter_06/section_03/tikzpics",
+    },
+    ["subAbsSensorModule"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsServo"] = {
+        ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["subAbsSoilMoistureAndFertilizerControlSystem"] = {
+        ["parent_dir"] = "chapter_05/section_03/tikzpics",
+    },
+    ["subAbsSoilMoistureSensorSystem"] = {
+        ["parent_dir"] = "chapter_05/section_02/tikzpics",
+    },
+    ["subAbsSubsystems"] = {
+        ["parent_dir"] = "chapter_01/section_02/tikzpics",
+    },
+    ["subAbsTempHumeSensor"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsThermalSensorSystem"] = {
+        ["parent_dir"] = "chapter_02/section_03/tikzpics",
     },
     ["subFigBase"] = {
         ["parent_dir"] = "tikzpics",

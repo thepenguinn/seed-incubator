@@ -1,0 +1,41 @@
+\documentclass[../../main]{subfiles}
+
+\input{section_header.tex}
+
+\begin{document}
+
+\section{Air Moisture System} \label{sec:}
+
+\setcounter{BOMSystemTotal}{0}
+
+\setcounter{BOMSlNoCounter}{0}
+%% REMOVED BEGIN CENTER
+    %% max 0.85\linewidth
+    \begin{tabularx} {\linewidth} {
+            *{1}{>{\centering\arraybackslash}m{0.05\linewidth}} %% slno.
+            *{1}{>{\raggedright\arraybackslash}m{0.33\linewidth}} %% item
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% price of a single unit
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% quantity
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% delivery charge
+            *{1}{>{\centering\arraybackslash}m{0.09\linewidth}} %% shop
+            *{1}{>{\centering\arraybackslash}m{0.09\linewidth}} %% total
+        }
+
+        \toprule
+        SL. No. & Component Name & Price & Quantity & Delivery & Shop & Total \\
+        \midrule
+
+        \BOMAddItem{20mm 1.7mhz piezoelectric humidifier}{50}{2}{}{Robu}{https://robu.in/product/ultrasonic-piezoelectric-humidifier-moisture-film-humidification-20mm/}
+
+        \BOMAddTwoAmpBJT{2}
+
+        \midrule
+        \multicolumn{6}{l}{Total} & \theBOMSystemTotal \\
+        \bottomrule
+
+    \end{tabularx}
+%% REMOVED END CENTER
+
+\setcounter{BOMGrandTotal}{\theBOMGrandTotal + \theBOMSystemTotal}
+
+\end{document}

@@ -1,0 +1,61 @@
+\documentclass[../../main]{subfiles}
+
+\input{section_header.tex}
+
+\begin{document}
+
+\section{Thermal System} \label{sec:}
+
+\setcounter{BOMSystemTotal}{0}
+
+\setcounter{BOMSlNoCounter}{0}
+%% REMOVED BEGIN CENTER
+    %% max 0.85\linewidth
+    \begin{tabularx} {\linewidth} {
+            *{1}{>{\centering\arraybackslash}m{0.05\linewidth}} %% slno.
+            *{1}{>{\raggedright\arraybackslash}m{0.33\linewidth}} %% item
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% price of a single unit
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% quantity
+            *{1}{>{\centering\arraybackslash}m{0.08\linewidth}} %% delivery charge
+            *{1}{>{\centering\arraybackslash}m{0.09\linewidth}} %% shop
+            *{1}{>{\centering\arraybackslash}m{0.09\linewidth}} %% total
+        }
+
+        \toprule
+        SL. No. & Component Name & Price & Quantity & Delivery & Shop & Total \\
+        \midrule
+
+        \BOMAddItem{DHT22/AM2302 Digital Temperature and Humidity Sensor}{115}{2}{}{Robu}{https://robu.in/product/dht22-am2302-digital-temperature-humidity-sensor/}
+
+        \BOMAddItem{TEC1-12703 40x40mm Peltier Module}{241}{1}{}{Robu}{https://robu.in/product/pro-range-tec1-12703-40x40mm-industrial-grade-semiconductor-refrigeration-sheet-15-8v3-5a-cooling-capacity-31w/}
+
+        \BOMAddItem{Heat Sink for Peltier (For Hot Side)}{}{}{}{}{}
+
+        \BOMAddItem{Heat Sink for Peltier (For Cold Side)}{}{}{}{}{}
+
+        \BOMAddItem{Thermal Paste}{}{}{}{}{}
+
+        \BOMAddItem{3inch 12V DC 0.22A Brushless Cooling Fan}{65}{4}{}{Tomson}{https://www.tomsonelectronics.com/products/cooling-fan-3}
+
+        \BOMAddItem{2inch 5V DC 0.12A Brushless Cooling Fan C5010M05S}{85}{2}{}{Tomson}{https://www.tomsonelectronics.com/products/cooling-fan-2-inch-dc-5v}
+
+        \BOMAddMotor{8}
+
+        \BOMAddTwoAmpBJT{43}
+
+        \BOMAddMOSFET{2}
+
+        \BOMAddInv{3}
+
+        \BOMAddItem{SG90 9G Micro Motor Servo}{91}{1}{}{Tomson}{https://www.tomsonelectronics.com/products/buy-sg90-9g-micro-motor-servo-india}
+
+        \midrule
+        \multicolumn{6}{l}{Total} & \theBOMSystemTotal \\
+        \bottomrule
+
+    \end{tabularx}
+%% REMOVED END CENTER
+
+\setcounter{BOMGrandTotal}{\theBOMGrandTotal + \theBOMSystemTotal}
+
+\end{document}

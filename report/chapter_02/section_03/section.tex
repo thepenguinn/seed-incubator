@@ -1,0 +1,28 @@
+\documentclass[../../main]{subfiles}
+
+\input{section_header.tex}
+
+\begin{document}
+
+\section{Temperature Monitoring System} \label{sec:tempMonitoringsystem}
+
+For effectively controlling the indoor temperature of the Incubator, a \emph{paired} temperature
+sensor would be essential. One will monitors the \emph{outdoor} temperature, as the other monitors
+the \emph{indoor} temperature. From the output of each of these sensors, a \emph{relative} temperature
+can be estimated and the \emph{heating and cooling system} can be tweaked accordingly.
+
+\begin{figure}
+    \centering
+    \includegraphics [
+        max width = \IGXMaxWidth,
+        max height = \IGXMaxHeight,
+        \IGXDefaultOptionalArgs,
+    ] {tikzpics/endAbsThermalSensorSystem.pdf}
+    \captionof{figure} {}
+    \label{fig:}
+\end{figure}
+
+A DH22 sensor would be ideal as it can measure both the \emph{relative humidity} and \emph{temperature}.
+The temperature can be in a range from $-40^\circ$C to $80^\circ$C, with $\pm 0.5^\circ$C tolerance.
+
+\end{document}

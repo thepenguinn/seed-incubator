@@ -1,0 +1,104 @@
+\def\absTempHumeSensorWidth{4}
+\def\absTempHumeSensorHeight{1.75}
+
+\def\absTempHumeSensorSlantWidth{0.50}
+\def\absTempHumeSensorSlantHeight{0.3}
+
+\subtikzpicturedef{subAbsTempHumeSensor} {
+    l0, r0,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw [absCtkModule]
+    (#1-origin) coordinate (#1-bottomLeftCorner)
+    ++(\absTempHumeSensorWidth, \absTempHumeSensorHeight)
+    coordinate (#1-topRightCorner)
+
+    \markgeocoordinate {#1}
+    {(#1-topRightCorner)} {(#1-bottomLeftCorner)}
+    {(#1-bottomLeftCorner)} {(#1-topRightCorner)}
+
+    %% slant corners
+
+    (#1-northwest)
+    ++(\absTempHumeSensorSlantWidth, 0)
+    coordinate (#1-topLeftSlantCorner)
+
+    (#1-northwest)
+    ++(0, -\absTempHumeSensorSlantWidth)
+    coordinate (#1-leftTopSlantCorner)
+
+    %%
+
+    (#1-northeast)
+    ++(-\absTempHumeSensorSlantWidth, 0)
+    coordinate (#1-topRightSlantCorner)
+
+    (#1-northeast)
+    ++(0, -\absTempHumeSensorSlantWidth)
+    coordinate (#1-rightTopSlantCorner)
+
+    %%
+
+    (#1-southwest)
+    ++(\absTempHumeSensorSlantWidth, 0)
+    coordinate (#1-bottomLeftSlantCorner)
+
+    (#1-southwest)
+    ++(0, \absTempHumeSensorSlantWidth)
+    coordinate (#1-leftBottomSlantCorner)
+
+    %%
+
+    (#1-southeast)
+    ++(-\absTempHumeSensorSlantWidth, 0)
+    coordinate (#1-bottomRightSlantCorner)
+
+    (#1-southeast)
+    ++(0, \absTempHumeSensorSlantWidth)
+    coordinate (#1-rightBottomSlantCorner)
+
+    %%
+    (#1-bottomLeftSlantCorner)
+    -- (#1-leftBottomSlantCorner)
+    -- (#1-leftTopSlantCorner)
+    -- (#1-topLeftSlantCorner)
+    -- (#1-topRightSlantCorner)
+    -- (#1-rightTopSlantCorner)
+    -- (#1-rightBottomSlantCorner)
+    -- (#1-bottomRightSlantCorner)
+    -- cycle
+
+    (#1-east)
+    ++(\absCtkPinPad, 0)
+    coordinate (#1-r0)
+
+    (#1-west)
+    ++(-\absCtkPinPad, 0)
+    coordinate (#1-l0)
+
+    \markgeocoordinate {#1}
+    {(#1-north)} {(#1-south)}
+    {(#1-l0)} {(#1-r0)}
+
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsTempHumeSensor}
+
+%% subtikzname sensorname
+\newcommand\ovrAbsTempHumeSensorDrawLabelName[2] {
+    \draw [absCtkModule]
+    (#1-center)
+    node [
+        inner sep = 0pt,
+        anchor = center,
+    ] {#2}
+    ;
+}

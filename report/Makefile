@@ -6,8 +6,7 @@ VIEWER = viewpdf
 CHAPTERS := $(wildcard chapter_*/chapter.tex)
 WORKS := $(wildcard work_*/work.tex)
 
-SECTIONS := $(wildcard chapter_*/section_*/section.tex)
-SECTIONS := $(wildcard work_*/section_*/section.tex)
+SECTIONS := $(wildcard chapter_*/section_*/section.tex) $(wildcard work_*/section_*/section.tex)
 
 TIKZPICS := $(wildcard */tikzpics/*.tex)
 
@@ -16,6 +15,11 @@ ABSTRACT := abstract_template.tex abstract.tex abstract.bib
 PRJPLAN := prjplan.tex
 
 build: main.pdf view
+
+fast:
+	lunatikz build main.tex
+	pdflatex -shell-escape -halt-on-error main.tex
+	$(VIEWER) main.pdf
 
 force:
 	lunatikz build main.tex
@@ -58,4 +62,4 @@ view:
 send:
 	$(SENDER) main.pdf
 
-.PHONY: view build force view_abstract abstract prjplan abt_plan
+.PHONY: view build fast force view_abstract abstract prjplan abt_plan

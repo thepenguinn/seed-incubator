@@ -1,0 +1,38 @@
+\documentclass[../../main]{subfiles}
+
+\input{section_header.tex}
+
+\begin{document}
+
+\section{Thermal Control and Exhaust System} \label{sec:thermalControlAndExhaustSystem}
+
+The \emph{thermals} of the Incubator can be controlled using a \emph{peltier} module, which is
+\emph{semi-conductor} based \emph{heat engine}. The COP\footnote{Coefficient of Performance.} is
+much less than a typical \emph{compressor} based \emph{heat engines} and is \emph{variable} depending
+on the current passing through it. But the compactness of the \emph{peltier} cooler makes it preferable
+to this design. One another disadvantage to this type of cooling is that it requires a proper \emph{exhaust}
+system. The \emph{peltier} cooler only decrease the temperature of its \emph{cold} side to relative to its
+\emph{hot} side\footnote{The \emph{cold} side will be $30 - 40^\circ$C colder than its \emph{hot} side.}.
+The \emph{peltier} module is thin, that means the \emph{hot} and \emph{cold} are closer. So it is
+\emph{crucial} to properly pull away the heat from its \emph{cold} side as fast as possible.
+
+\vfill
+
+\begin{figure}
+    \centering
+    \includegraphics [
+        max width = \textwidth,
+        max height = \textheight,
+        \IGXDefaultOptionalArgs,
+    ] {tikzpics/endAbsExhaustSystem.pdf}
+    \captionof{figure} {}
+    \label{fig:absThermalControlAndExhaustSystem}
+\end{figure}
+
+\vfill
+
+Figure \ref{fig:absThermalControlAndExhaustSystem} depicts an abstracted diagram of the entire control
+system. As we can see that's quiet a lot of actuators to deal with. Using GPIO pins of the \esp directly won't
+be feasible. Hence a \emph{shift register} is used in the intermediate control of the actuators.
+
+\end{document}

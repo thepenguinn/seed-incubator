@@ -1,0 +1,108 @@
+\def\absPeltierWidth{1.5}
+\def\absPeltierHeight{3}
+
+\def\absPeltierCtrlWidth{\absPeltierWidth}
+\def\absPeltierCtrlHeight{1.75}
+
+\def\absPeltierGap{0.25}
+
+\subtikzpicturedef{subAbsPeltier} {
+    pwr, dir,
+    ct0, cr0,
+    north, south, east, west,
+    northeast, northwest, southeast, southwest,
+    center,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw [absCtkModule]
+    %% marking
+    (#1-origin) coordinate (#1-bottomLeftCorner)
+    (#1-bottomLeftCorner) ++(\absPeltierCtrlWidth, \absPeltierCtrlHeight)
+    coordinate (#1-topRightCorner)
+
+    \markgeocoordinate {#1}
+    {(#1-topRightCorner)} {(#1-bottomLeftCorner)}
+    {(#1-bottomLeftCorner)} {(#1-topRightCorner)}
+
+    (#1-center) coordinate (#1-ctrlCenter)
+
+    (#1-northwest)
+    ++(0.5, \absCtkPinPad)
+    coordinate (#1-ct0)
+
+    (#1-southeast) ++(\absCtkPinPad, 0.5) coordinate (#1-cr0)
+
+    (#1-northwest) coordinate (#1-topLeftCorner)
+    (#1-southeast) coordinate (#1-bottomRightCorner)
+
+    %% drawing control
+
+    (#1-bottomLeftCorner)
+    -- (#1-topLeftCorner)
+    -- (#1-topRightCorner)
+    -- (#1-bottomRightCorner)
+
+    (#1-bottomLeftCorner)
+    -- (#1-bottomRightCorner)
+
+    %% marking peltier
+
+    (#1-bottomLeftCorner)
+    ++(0, -\absPeltierGap)
+    coordinate (#1-topLeftCorner)
+
+    (#1-topLeftCorner)
+    ++(\absPeltierWidth, -\absPeltierHeight)
+    coordinate (#1-bottomRightCorner)
+
+    \markgeocoordinate {#1}
+    {(#1-topLeftCorner)} {(#1-bottomRightCorner)}
+    {(#1-topLeftCorner)} {(#1-bottomRightCorner)}
+
+    (#1-northeast) coordinate (#1-topRightCorner)
+    (#1-southwest) coordinate (#1-bottomLeftCorner)
+
+    %% drawing peltier
+
+    (#1-topLeftCorner)
+    -- (#1-bottomLeftCorner)
+    -- (#1-bottomRightCorner)
+    -- (#1-topRightCorner)
+
+    (#1-topLeftCorner)
+    -- (#1-topRightCorner)
+
+    (#1-center) coordinate (#1-pltCenter)
+
+    \markgeocoordinate {#1}
+    {(#1-ct0)} {(#1-south)}
+    {(#1-west)} {(#1-cr0)}
+
+    (#1-ct0) coordinate (#1-pwr)
+    (#1-cr0) coordinate (#1-dir)
+
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsPeltier}
+
+% subtikzname pltname ctrlname
+\newcommand\ovrAbsPeltierDrawLabelName[3] {
+    \draw [absCtkModule]
+    (#1-pltCenter)
+    node [
+        inner sep = 0pt,
+        anchor = center,
+    ] {#2}
+
+    (#1-ctrlCenter)
+    node [
+        inner sep = 0pt,
+        anchor = center,
+    ] {#3}
+    ;
+}
