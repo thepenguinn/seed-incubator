@@ -7,7 +7,7 @@ build: src/main/emcu.c
 
 build_test:
 
-flash: build
+flash:
 	cd src/build && python -m esptool --chip esp32 -b 115200 --before no_reset --after no_reset --port $(ESP_PORT) write_flash "@flash_args"
 
 monitor:

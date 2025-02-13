@@ -2,14 +2,14 @@
 #include <string.h>
 #include <strings.h>
 #include <sys/socket.h>
-#include <sys/wait.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
+#include "utils.h"
 #include "emcu.h"
 
-#define MAC_ADDR "e4:65:b8:25:3c:54"
+#define MAC_ADDR "1c:69:20:94:53:0c"
 #define PORT     10898
 
 static const char *sub_cmd_str[SUB_CMD_END] = {
@@ -41,6 +41,8 @@ int connect_to_server() {
 
     int sockfd;
 
+    printf("%s\n", ip_addr);
+
     struct sockaddr_in server_addr;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
@@ -69,6 +71,35 @@ int emcu_exhaust(int mode) {
 }
 
 int emcu_monitor() {
+
+    char msg = (char) SUB_CMD_MONITOR;
+    int i = 0;
+    char buf[7];
+
+    while (1) {
+        send(serverfd, &msg, 1, 0);
+        send(serverfd, &msg, 1, 0);
+
+        for (i = 0; i < 6; i++) {
+            recv(serverfd, buf + i, 1, 0);
+        }
+        buf[6] = '\0';
+        printf("Temp: %s ", buf);
+
+        for (i = 0; i < 6; i++) {
+            recv(serverfd, buf + i, 1, 0);
+        }
+        buf[6] = '\0';
+        printf("Hume: %s ", buf);
+
+        for (i = 0; i < 6; i++) {
+            recv(serverfd, buf + i, 1, 0);
+        }
+        buf[6] = '\0';
+        printf("Voltage: %smV\n", buf);
+        usleep(500);
+    }
+
     return 0;
 }
 
@@ -161,50 +192,9 @@ int print_help (void) {
 
 }
 
-int get_ip_addr(void) {
-
-    int pid;
-    int pipe_out[2];
-
-    // um work around
-
-    char *cmd[] = {
-        "./get_emcu_ip.sh",
-        MAC_ADDR,
-        NULL,
-    };
-
-    pipe(pipe_out);
-
-    pid = fork();
-
-    if (pid < 0) {
-        printf("fork() failed.\n");
-        return 1;
-    }
-
-    if (pid == 0) {
-        dup2(pipe_out[1], STDOUT_FILENO);
-        execvp(cmd[0], cmd);
-        _exit(0);
-    }
-
-    int len = read(pipe_out[0], ip_addr, sizeof(ip_addr));
-
-    if (len == 1) {
-        return 1;
-    }
-
-    ip_addr[len - 1] = '\0';
-
-    wait(NULL);
-
-    return 0;
-}
-
 int main (int argc, char *argv[]) {
 
-    if (get_ip_addr()) {
+    if (utils_get_emcu_ip(MAC_ADDR, ip_addr)) {
         printf("Seems like emcu is not connected, exiting.\n");
         return 1;
     }
@@ -220,19 +210,6 @@ int main (int argc, char *argv[]) {
 
     // testing esp
 
-    char msg = (char) SUB_CMD_MONITOR;
-    char buf[2] = "p";
-    send(serverfd, &msg, 1, 0);
-    recv(serverfd, buf, 1, 0);
-    printf("%s\n", buf);
-
-    msg = (char) SUB_CMD_UNKNOWN;
-    send(serverfd, &msg, 1, 0);
-    recv(serverfd, buf, 1, 0);
-    printf("%s\n", buf);
-
-    return 0;
-
     int enable = 0;
     int subcommand = parse_args(argc, argv, &enable);
 
@@ -240,7 +217,10 @@ int main (int argc, char *argv[]) {
         print_help();
         return 1;
     }
-
-    return emcu(subcommand, enable);
+    emcu_monitor();
+    /*subcommand = SUB_CMD_MONITOR;*/
+    /**/
+    /**/
+    /*return emcu(subcommand, enable);*/
 
 }
