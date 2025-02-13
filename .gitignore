@@ -10,6 +10,7 @@
 *.run.xml
 */**/icon/*.png
 */**/icon/*.svg
+*.stl
 misc
 report/sig
 *_standalone_*.tex
