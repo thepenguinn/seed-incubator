@@ -105,7 +105,9 @@ static void print_char_val_type(esp_adc_cal_value_t val_type)
 static void event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data) {
 
-    ESP_LOGI(WIFI_EVENT, "Got into event_handler");
+    ESP_LOGI(WIFI_TAG, "ev base: %s, ev id: %d", event_base, (int)event_id);
+    ESP_LOGI(WIFI_TAG, "Got into event_handler");
+
 
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
@@ -237,15 +239,18 @@ static int serve_client(int client_sock) {
             if ((int) buf[0] == SUB_CMD_MONITOR) {
                 xSemaphoreTake(temp_hume_mutex, portMAX_DELAY);
                 if (send_all(client_sock, temp_value, sizeof(temp_value))) {
+                    xSemaphoreGive(temp_hume_mutex);
                     break;
                 }
                 if (send_all(client_sock, hume_value, sizeof(hume_value))) {
+                    xSemaphoreGive(temp_hume_mutex);
                     break;
                 }
                 xSemaphoreGive(temp_hume_mutex);
 
                 xSemaphoreTake(light_mutex, portMAX_DELAY);
                 if (send_all(client_sock, light_value, sizeof(light_value))) {
+                    xSemaphoreGive(light_mutex);
                     break;
                 }
                 xSemaphoreGive(light_mutex);
@@ -264,6 +269,7 @@ void tcp_server_task(void *pvParameters) {
     int keepIdle = KEEPALIVE_IDLE;
     int keepInterval = KEEPALIVE_INTERVAL;
     int keepCount = KEEPALIVE_COUNT;
+    int err;
     struct sockaddr_in server_addr;
 
     do {
@@ -298,9 +304,17 @@ void tcp_server_task(void *pvParameters) {
         int opt = 1;
         setsockopt(listen_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
+        int flags = fcntl(listen_sock, F_GETFL, 0);
+        flags = flags | O_NONBLOCK;
+        err = fcntl(listen_sock, F_SETFL, flags);
+        if (err == -1) {
+            ESP_LOGE(TCP_TAG, "Failed to set listening socket to NON BLOCKING, errno: %d", errno);
+            goto CLEAN_UP;
+        }
+
         ESP_LOGI(TCP_TAG, "Socket created");
 
-        int err = bind(listen_sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
+        err = bind(listen_sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
         if (err != 0) {
             ESP_LOGE(TCP_TAG, "Socket unable to bind: errno %d", errno);
             goto CLEAN_UP;
@@ -325,10 +339,30 @@ void tcp_server_task(void *pvParameters) {
 
         for ( ;; ) {
 
-            client_sock = accept(listen_sock, (struct sockaddr *)&client_addr, &addr_len);
+            // keep polling
+            for ( ;; ) {
+                xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
+                if (wifi_connected == pdFALSE) {
+                    // connection to wifi lost, goto CLEAN_UP and wait for wifi to connect
+                    ESP_LOGW(TCP_TAG, "Seems like wifi has disconnected");
+                    xSemaphoreGive(wifi_conn_mutex);
+                    goto CLEAN_UP;
+                }
+                xSemaphoreGive(wifi_conn_mutex);
+                // still connected, looking for connections.
+                client_sock = accept(listen_sock, (struct sockaddr *)&client_addr, &addr_len);
+                if (client_sock < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
+                    ESP_LOGI(TCP_TAG, "waiting for 500ms before next poll");
+                    vTaskDelay(500 / portTICK_PERIOD_MS);
+                    continue;
+                } else {
+                    break;
+                }
+            }
             if (client_sock < 0) {
+                // accept failed because of some other reason.
                 ESP_LOGE(TCP_TAG, "Unable to accept connection: errno %d", errno);
-                break;
+                continue;
             }
 
             // Set tcp keepalive option
