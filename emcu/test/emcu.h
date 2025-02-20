@@ -13,3 +13,7 @@ enum SubCmd {
 
 #define EXHAUST_HMODE 0
 #define EXHAUST_CMODE 1
+
+#define MAC_ADDR "1c:69:20:94:53:0c"
+/*#define MAC_ADDR "88:79:7e:be:5e:e4"*/
+#define PORT     10898
