@@ -2,54 +2,39 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
 
 #include "utils.h"
+#include "emcu.h"
 
-int utils_get_emcu_ip(const char *mac_addr, char *ip_addr_dest) {
+int utils_get_emcu_ip(char *ip_addr_dest, const size_t size) {
 
-    int pid;
-    int pipe_out[2];
+    char buf[128] = {};
 
-    char buf[102];
+    char *cmd = "ip -f inet -br neigh | grep " MAC_ADDR " | awk '{printf $1}'";
+    FILE *fd = popen(cmd, "r");
+    int ret;
 
-    /*char *cmd[] = {*/
-    /*    "./get_emcu_ip.sh",*/
-    /*    MAC_ADDR,*/
-    /*    NULL,*/
-    /*};*/
-
-    char *cmd[] = {
-        "ip",
-        "neigh",
-        NULL,
-    };
-
-    pipe(pipe_out);
-
-    pid = fork();
-
-    if (pid < 0) {
-        printf("fork() failed.\n");
+    if (fd == NULL) {
+        fprintf(stderr, "popen() failed, while retrieving ip of emcu\n");
         return 1;
     }
 
-    if (pid == 0) {
-        dup2(pipe_out[1], STDOUT_FILENO);
-        write(pipe_out[1], "", sizeof(""));
-        execvp(cmd[0], cmd);
-        _exit(0);
-    }
+    size_t len = fread(buf, sizeof(char), sizeof(buf) - 1, fd);
 
-    int len = read(pipe_out[0], buf, sizeof(buf));
-
-    if (len == 1) {
+    if (len == 0) {
+        // emcu is not connected
         return 1;
     }
 
-    buf[len] = '\0';
-    printf("%s", buf);
+    ret = pclose(fd);
 
-    wait(NULL);
+    if (ret < 0) {
+        fprintf(stderr, "pclose() returned -1\n");
+        return 1;
+    }
+
+    strncpy(ip_addr_dest, buf, len);
 
     return 0;
 

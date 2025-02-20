@@ -9,9 +9,6 @@
 #include "utils.h"
 #include "emcu.h"
 
-#define MAC_ADDR "1c:69:20:94:53:0c"
-#define PORT     10898
-
 static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_UNKNOWN] = "unknown",
     [SUB_CMD_HMODE]   = "hmode",
@@ -194,33 +191,27 @@ int print_help (void) {
 
 int main (int argc, char *argv[]) {
 
-    if (utils_get_emcu_ip(MAC_ADDR, ip_addr)) {
+    int enable = 0;
+    int subcommand = parse_args(argc, argv, &enable);
+    int sockfd;
+
+    if (subcommand == SUB_CMD_UNKNOWN) {
+        print_help();
+        return 1;
+    }
+
+    if (utils_get_emcu_ip(ip_addr, sizeof(ip_addr))) {
         printf("Seems like emcu is not connected, exiting.\n");
         return 1;
     }
 
-    return 0;
-
-    int sockfd = connect_to_server();
+    sockfd = connect_to_server();
     if (sockfd < 0) {
         return 1;
     } else {
         serverfd = sockfd;
     }
 
-    // testing esp
-
-    int enable = 0;
-    int subcommand = parse_args(argc, argv, &enable);
-
-    if (subcommand == SUB_CMD_UNKNOWN) {
-        print_help();
-        return 1;
-    }
-    emcu_monitor();
-    /*subcommand = SUB_CMD_MONITOR;*/
-    /**/
-    /**/
-    /*return emcu(subcommand, enable);*/
+    return emcu(subcommand, enable);
 
 }

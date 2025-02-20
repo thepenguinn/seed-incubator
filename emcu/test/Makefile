@@ -15,7 +15,7 @@ emcu_test_server: emcu_test_server.o
 emcu.o: emcu.c
 	gcc -c emcu.c
 
-utils.o: utils.c
+utils.o: utils.h emcu.h utils.c
 	gcc -c utils.c
 
 emcu_test_server.o: emcu_test_server.c
