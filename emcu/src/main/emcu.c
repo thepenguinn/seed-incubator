@@ -11,8 +11,8 @@
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
 #include "esp_system.h"
-#include "esp_wifi.h"
-#include "esp_event.h"
+#include "esp_wifi.h" // maynot need
+#include "esp_event.h" // maynot need
 #include "esp_log.h"
 #include "nvs_flash.h"
 
@@ -28,9 +28,6 @@
 
 #include "emcu.h"
 #include "DHT.h"
-
-/* FreeRTOS event group to signal when we are connected*/
-static EventGroupHandle_t wifi_event_group;
 
 static SemaphoreHandle_t temp_hume_mutex;
 static SemaphoreHandle_t light_mutex;
@@ -49,20 +46,13 @@ static char light_value[6];
 static SemaphoreHandle_t wifi_conn_mutex;
 static int wifi_connected = pdFALSE;
 
-esp_event_handler_instance_t instance_any_id;
-esp_event_handler_instance_t instance_got_ip;
-
 static char ip_addr[128];
 
-static const char *WIFI_TAG = "wifi task";
 static const char *TCP_TAG = "tcp server";
 static const char *DHT_TAG = "dht task";
 static const char *LIT_TAG = "lit task";
 
 static int s_retry_num = 0;
-
-static void event_handler(void* arg, esp_event_base_t event_base,
-                                int32_t event_id, void* event_data);
 
 static int serve_client(int client_sock);
 
@@ -100,93 +90,6 @@ static void print_char_val_type(esp_adc_cal_value_t val_type)
     } else {
         printf("Characterized using Default Vref\n");
     }
-}
-
-static void event_handler(void* arg, esp_event_base_t event_base,
-                                int32_t event_id, void* event_data) {
-
-    ESP_LOGI(WIFI_TAG, "ev base: %s, ev id: %d", event_base, (int)event_id);
-    ESP_LOGI(WIFI_TAG, "Got into event_handler");
-
-
-    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
-        esp_wifi_connect();
-    } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-        if (s_retry_num < WIFI_ESP_MAXIMUM_RETRY) {
-            esp_wifi_connect();
-            s_retry_num++;
-            ESP_LOGI(WIFI_TAG, "retry to connect to the AP");
-        }
-
-        xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
-        wifi_connected = pdFALSE;
-        xSemaphoreGive(wifi_conn_mutex);
-
-        ESP_LOGI(WIFI_TAG, "connect to the AP failed");
-    } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
-        ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
-        sprintf(ip_addr, IPSTR, IP2STR(&event->ip_info.ip));
-        ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
-        s_retry_num = 0;
-
-        xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
-        wifi_connected = pdTRUE;
-        xSemaphoreGive(wifi_conn_mutex);
-
-        xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
-    }
-}
-
-void wifi_init_sta(void) {
-
-    wifi_event_group = xEventGroupCreate();
-    wifi_conn_mutex = xSemaphoreCreateMutex();
-
-    ESP_ERROR_CHECK(esp_netif_init());
-
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
-    esp_netif_create_default_wifi_sta();
-
-    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
-
-    /*
-     * starting tcp task
-     * */
-
-    xTaskCreate(tcp_server_task, "tcp server", 4096, NULL, 5, NULL);
-
-    ESP_ERROR_CHECK(
-        esp_event_handler_instance_register(
-            WIFI_EVENT,
-            ESP_EVENT_ANY_ID,
-            &event_handler,
-            NULL,
-            &instance_any_id));
-
-    ESP_ERROR_CHECK(
-        esp_event_handler_instance_register(
-            IP_EVENT,
-            IP_EVENT_STA_GOT_IP,
-            &event_handler,
-            NULL,
-            &instance_got_ip));
-
-    wifi_config_t wifi_config = {
-        .sta = {
-            .ssid = WIFI_SSID,
-            .password = WIFI_PASS,
-            .threshold.authmode = ESP_WIFI_SCAN_AUTH_MODE_THRESHOLD,
-            .sae_pwe_h2e = ESP_WIFI_SAE_MODE,
-            .sae_h2e_identifier = EXAMPLE_H2E_IDENTIFIER,
-        },
-    };
-    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
-    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
-    ESP_ERROR_CHECK(esp_wifi_start() );
-
-    ESP_LOGI(WIFI_TAG, "wifi_init_sta finished.");
-
 }
 
 static int send_all(int client_sock, char *data, size_t len) {
