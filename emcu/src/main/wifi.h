@@ -37,6 +37,17 @@
 #define WIFI_STA_IP_BIT BIT0
 
 /*
+ * @brief This should be called before calling any wifi_* functions.
+ *
+ * @param void
+ *
+ * @return
+ *      - ESP_OK: succeeded
+ *      - ESP_FAIL: failed for some reason.
+ * */
+esp_err_t wifi_init(void);
+
+/*
  * @brief Initializes WIFI into station mode
  *
  * @param void
@@ -57,3 +68,14 @@ esp_err_t wifi_init_sta_mode(void);
  *      - ESP_FAIL: failed for some reason.
  * */
 esp_err_t wifi_sta_ip_await(TickType_t wait_ticks);
+
+/*
+ * @brief checks whether wifi is connected to an access point or not.
+ *
+ * @param void
+ *
+ * @return
+ *      - ESP_OK: connected to the access point.
+ *      - ESP_FAIL: not connected to any access points.
+ * */
+esp_err_t wifi_is_sta_connected(void);

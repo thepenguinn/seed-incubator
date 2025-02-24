@@ -11,6 +11,12 @@
 
 static const char *WIFI_TAG = "wifi task";
 
+static char ip_addr[128];
+
+static int s_retry_num = 0;
+
+static esp_err_t wifi_sta_connected = ;
+
 /*
  * for sta, this event will be triggered after esp gets the ip
  * after connecting to specified access point.
@@ -35,20 +41,12 @@ static void wifi_sta_event_handler(void* arg, esp_event_base_t event_base,
             ESP_LOGI(WIFI_TAG, "retry to connect to the AP");
         }
 
-        /*xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);*/
-        /*wifi_connected = pdFALSE;*/
-        /*xSemaphoreGive(wifi_conn_mutex);*/
-
         ESP_LOGI(WIFI_TAG, "connect to the AP failed");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         sprintf(ip_addr, IPSTR, IP2STR(&event->ip_info.ip));
         ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
-
-        /*xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);*/
-        /*wifi_connected = pdTRUE;*/
-        /*xSemaphoreGive(wifi_conn_mutex);*/
 
         xEventGroupSetBits(wifi_sta_ip_event_group, WIFI_CONNECTED_BIT);
     }
@@ -82,8 +80,7 @@ esp_err_t wifi_init_sta_mode(void) {
 
     wifi_sta_ip_event_group = xEventGroupCreate();
     /*wifi_conn_mutex = xSemaphoreCreateMutex();*/
-
-    /*
+    /
      * TODO: figure out what ESP_ERROR_CHECK is doing, and properly
      * return ESP_FAIL, if needed.
      * */
@@ -135,5 +132,9 @@ esp_err_t wifi_init_sta_mode(void) {
     ESP_LOGI(WIFI_TAG, "wifi_init_sta_mode finished.");
 
     return ESP_OK;
+
+}
+
+esp_err_t wifi_is_sta_connected(void) {
 
 }
