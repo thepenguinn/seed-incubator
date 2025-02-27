@@ -1,3 +1,3 @@
-idf_component_register(SRCS "emcu.c" "DHT_c.c"
+idf_component_register(SRCS "emcu.c" "ultrasonic.c"
                     INCLUDE_DIRS ".")
 # REQUIRES driver esp_wifi)

@@ -1,40 +1,55 @@
-/* WiFi station Example
+#include <stdio.h>
+#include <stdbool.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <ultrasonic.h>
+#include <esp_err.h>
 
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
+#define MAX_DISTANCE_CM 100 // 5m max
 
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/event_groups.h"
-#include "esp_system.h"
-#include "esp_log.h"
-#include "nvs_flash.h"
+#define TRIGGER_GPIO 5
+#define ECHO_GPIO 18
 
-#include "driver/gpio.h"
-#include "driver/adc.h"
-#include "esp_adc_cal.h"
 
-#include "wifi.h"
-#include "emcu.h"
+void ultrasonic_test(void *pvParameters)
+{
+    ultrasonic_sensor_t sensor = {
+        .trigger_pin = TRIGGER_GPIO,
+        .echo_pin = ECHO_GPIO
+    };
 
-static const char *MAIN_TAG = "emcu main";
+    ultrasonic_init(&sensor);
 
-void app_main(void) {
-    //Initialize NVS
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-      ESP_ERROR_CHECK(nvs_flash_erase());
-      ret = nvs_flash_init();
+    while (true)
+    {
+        float distance;
+        esp_err_t res = ultrasonic_measure(&sensor, MAX_DISTANCE_CM, &distance);
+        if (res != ESP_OK)
+        {
+            printf("Error %d: ", res);
+            switch (res)
+            {
+                case ESP_ERR_ULTRASONIC_PING:
+                    printf("Cannot ping (device is in invalid state)\n");
+                    break;
+                case ESP_ERR_ULTRASONIC_PING_TIMEOUT:
+                    printf("Ping timeout (no device found)\n");
+                    break;
+                case ESP_ERR_ULTRASONIC_ECHO_TIMEOUT:
+                    printf("Echo timeout (i.e. distance too big)\n");
+                    break;
+                default:
+                    printf("%s\n", esp_err_to_name(res));
+            }
+        }
+        else
+            printf("Distance: %0.04f cm\n", distance*100);
+
+        vTaskDelay(pdMS_TO_TICKS(500));
     }
-    ESP_ERROR_CHECK(ret);
+}
 
-    wifi_init_sta_mode();
-
-    /* if wifi connected */
-    ESP_LOGI(MAIN_TAG, "wifi is connected");
-
+void app_main()
+{
+    xTaskCreate(ultrasonic_test, "ultrasonic_test", configMINIMAL_STACK_SIZE * 3, NULL, 5, NULL);
 }
