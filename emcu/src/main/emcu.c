@@ -32,9 +32,18 @@ void app_main(void) {
     }
     ESP_ERROR_CHECK(ret);
 
+    wifi_start();
     wifi_init_sta_mode();
 
-    /* if wifi connected */
-    ESP_LOGI(MAIN_TAG, "wifi is connected");
+    while(1) {
+        ret = wifi_sta_ip_await(portMAX_DELAY);
+        /* if wifi connected */
+        if (ret == ESP_OK) {
+            ESP_LOGI(MAIN_TAG, "wifi is connected.");
+        } else {
+            ESP_LOGI(MAIN_TAG, "couldn't connect to wifi.");
+        }
+    }
+
 
 }

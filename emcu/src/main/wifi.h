@@ -45,10 +45,21 @@
  *      - ESP_OK: succeeded
  *      - ESP_FAIL: failed for some reason.
  * */
-esp_err_t wifi_init(void);
+esp_err_t wifi_start(void);
 
 /*
- * @brief Initializes WIFI into station mode
+ * @brief This should be called before calling any wifi_* functions.
+ *
+ * @param void
+ *
+ * @return
+ *      - ESP_OK: succeeded
+ *      - ESP_FAIL: failed for some reason.
+ * */
+esp_err_t wifi_stop(void);
+
+/*
+ * @brief Initializes WIFI into station mode. This function is thread safe.
  *
  * @param void
  * @return
@@ -58,7 +69,7 @@ esp_err_t wifi_init(void);
 esp_err_t wifi_init_sta_mode(void);
 
 /*
- * @brief Waits for esp to get an ip address, for the specified time.
+ * @brief Waits for esp to get an ip address, for the specified time. This function is thread safe.
  *
  * @param   wait_ticks freertos ticks to wait, portMAX_DELAY will cause
  *                     to wait indefinitely
@@ -70,7 +81,7 @@ esp_err_t wifi_init_sta_mode(void);
 esp_err_t wifi_sta_ip_await(TickType_t wait_ticks);
 
 /*
- * @brief checks whether wifi is connected to an access point or not.
+ * @brief checks whether wifi is connected to an access point or not. This function is thread safe.
  *
  * @param void
  *

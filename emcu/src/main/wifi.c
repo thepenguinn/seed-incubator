@@ -9,13 +9,13 @@
 
 #include "wifi.h"
 
-static const char *WIFI_TAG = "wifi task";
+static const char *TAG = "wifi task";
 
 static char ip_addr[128];
 
 static int s_retry_num = 0;
 
-static esp_err_t wifi_sta_connected = ;
+static esp_err_t wifi_sta_connected = ESP_FAIL;
 
 /*
  * for sta, this event will be triggered after esp gets the ip
@@ -29,8 +29,8 @@ static void wifi_sta_event_handler(void* arg, esp_event_base_t event_base,
 static void wifi_sta_event_handler(void* arg, esp_event_base_t event_base,
                                 int32_t event_id, void* event_data) {
 
-    ESP_LOGI(WIFI_TAG, "ev base: %s, ev id: %d", event_base, (int)event_id);
-    ESP_LOGI(WIFI_TAG, "Got into event_handler");
+    ESP_LOGI(TAG, "ev base: %s, ev id: %d", event_base, (int)event_id);
+    ESP_LOGI(TAG, "Got into event_handler");
 
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
@@ -38,20 +38,27 @@ static void wifi_sta_event_handler(void* arg, esp_event_base_t event_base,
         if (s_retry_num < WIFI_ESP_MAXIMUM_RETRY) {
             esp_wifi_connect();
             s_retry_num++;
-            ESP_LOGI(WIFI_TAG, "retry to connect to the AP");
+            ESP_LOGI(TAG, "retry to connect to the AP");
         }
 
-        ESP_LOGI(WIFI_TAG, "connect to the AP failed");
+        ESP_LOGI(TAG, "connect to the AP failed");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         sprintf(ip_addr, IPSTR, IP2STR(&event->ip_info.ip));
-        ESP_LOGI(WIFI_TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+        ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
 
-        xEventGroupSetBits(wifi_sta_ip_event_group, WIFI_CONNECTED_BIT);
+        xEventGroupSetBits(wifi_sta_ip_event_group, WIFI_STA_IP_BIT);
     }
 }
 
+esp_err_t wifi_start(void) {
+    return ESP_OK;
+}
+
+esp_err_t wifi_stop(void) {
+    return ESP_OK;
+}
 
 esp_err_t wifi_sta_ip_await(TickType_t wait_ticks) {
 
@@ -65,7 +72,7 @@ esp_err_t wifi_sta_ip_await(TickType_t wait_ticks) {
         wait_ticks);
 
     if (!(bits & WIFI_STA_IP_BIT)) {
-        ESP_LOGE(WIFI_TAG, "UNEXPECTED EVENT");
+        ESP_LOGE(TAG, "UNEXPECTED EVENT");
         return ESP_FAIL;
     }
 
@@ -80,7 +87,7 @@ esp_err_t wifi_init_sta_mode(void) {
 
     wifi_sta_ip_event_group = xEventGroupCreate();
     /*wifi_conn_mutex = xSemaphoreCreateMutex();*/
-    /
+    /*
      * TODO: figure out what ESP_ERROR_CHECK is doing, and properly
      * return ESP_FAIL, if needed.
      * */
@@ -129,12 +136,12 @@ esp_err_t wifi_init_sta_mode(void) {
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
     ESP_ERROR_CHECK(esp_wifi_start() );
 
-    ESP_LOGI(WIFI_TAG, "wifi_init_sta_mode finished.");
+    ESP_LOGI(TAG, "wifi_init_sta_mode finished.");
 
     return ESP_OK;
 
 }
 
 esp_err_t wifi_is_sta_connected(void) {
-
+    return ESP_OK;
 }
