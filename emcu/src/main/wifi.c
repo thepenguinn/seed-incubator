@@ -15,7 +15,11 @@ static char ip_addr[128];
 
 static int s_retry_num = 0;
 
-static esp_err_t wifi_sta_connected = ESP_FAIL;
+/*
+ * for guarding wifi_sta_connected
+ * */
+static SemaphoreHandle_t wifi_conn_mutex;
+static int wifi_sta_connected = pdFALSE;
 
 /*
  * for sta, this event will be triggered after esp gets the ip
@@ -35,6 +39,11 @@ static void wifi_sta_event_handler(void* arg, esp_event_base_t event_base,
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+
+        xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
+        wifi_sta_connected = pdFALSE;
+        xSemaphoreGive(wifi_conn_mutex);
+
         if (s_retry_num < WIFI_ESP_MAXIMUM_RETRY) {
             esp_wifi_connect();
             s_retry_num++;
@@ -44,9 +53,16 @@ static void wifi_sta_event_handler(void* arg, esp_event_base_t event_base,
         ESP_LOGI(TAG, "connect to the AP failed");
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
+        /*
+         * TODO: need mutex here!!!!
+         * */
         sprintf(ip_addr, IPSTR, IP2STR(&event->ip_info.ip));
         ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         s_retry_num = 0;
+
+        xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
+        wifi_sta_connected = pdTRUE;
+        xSemaphoreGive(wifi_conn_mutex);
 
         xEventGroupSetBits(wifi_sta_ip_event_group, WIFI_STA_IP_BIT);
     }
@@ -86,6 +102,7 @@ esp_err_t wifi_init_sta_mode(void) {
     esp_event_handler_instance_t instance_got_ip;
 
     wifi_sta_ip_event_group = xEventGroupCreate();
+    wifi_conn_mutex = xSemaphoreCreateMutex();
     /*wifi_conn_mutex = xSemaphoreCreateMutex();*/
     /*
      * TODO: figure out what ESP_ERROR_CHECK is doing, and properly
@@ -142,6 +159,19 @@ esp_err_t wifi_init_sta_mode(void) {
 
 }
 
-esp_err_t wifi_is_sta_connected(void) {
+esp_err_t wifi_is_sta_connected(TickType_t wait_ticks) {
+
+    xSemaphoreTake(wifi_conn_mutex, wait_ticks);
+    if (wifi_sta_connected != pdTRUE) {
+        // connection to wifi lost, breaking from this loop
+        ESP_LOGW(TAG, "Seems like wifi has disconnected");
+        xSemaphoreGive(wifi_conn_mutex);
+        return ESP_FAIL;
+    }
+    xSemaphoreGive(wifi_conn_mutex);
     return ESP_OK;
+}
+
+char *wifi_get_ip_addr() {
+    return ip_addr;
 }

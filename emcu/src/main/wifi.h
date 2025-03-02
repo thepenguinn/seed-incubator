@@ -83,10 +83,21 @@ esp_err_t wifi_sta_ip_await(TickType_t wait_ticks);
 /*
  * @brief checks whether wifi is connected to an access point or not. This function is thread safe.
  *
- * @param void
+ * @param   wait_ticks freertos ticks to wait, portMAX_DELAY will cause
+ *                     to wait indefinitely
  *
  * @return
  *      - ESP_OK: connected to the access point.
  *      - ESP_FAIL: not connected to any access points.
  * */
-esp_err_t wifi_is_sta_connected(void);
+esp_err_t wifi_is_sta_connected(TickType_t wait_ticks);
+
+/*
+ * @brief gets ip addr assigned
+ *
+ * @param   void
+ *
+ * @return
+ *      - NULL: some error
+ * */
+char *wifi_get_ip_addr(void);

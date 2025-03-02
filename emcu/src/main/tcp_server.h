@@ -17,11 +17,27 @@ enum SubCmd {
 };
 
 /*
+ * TODO: make this tcp_server more event driven
+ * */
+
+/*
  * @brief initializes tcp server
  *
  * @param void
  * @return
  *      - ESP_OK: succeeded
  *      - ESP_FAIL: failed for some reason
+ *
+ *  @note wifi and netif should be initialized before calling this function
  * */
 esp_err_t tcp_server_init(void);
+
+/*
+ * @brief de-initializes tcp server
+ *
+ * @param void
+ * @return
+ *      - ESP_OK: succeeded
+ *      - ESP_FAIL: failed for some reason
+ * */
+esp_err_t tcp_server_deinit(void);

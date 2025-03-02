@@ -1,37 +1,45 @@
+#include "freertos/FreeRTOS.h"
+
 #include "lwip/err.h"
 #include "lwip/sys.h"
 #include "lwip/sockets.h"
 #include "lwip/inet.h"
 #include <lwip/netdb.h>
 
+#include "esp_log.h"
+#include "esp_err.h"
+
 #include "wifi.h"
 #include "tcp_server.h"
 
-static const char *TCP_TAG = "tcp server";
+static const char *TAG = "tcp server";
 
-static int serve_client(int client_sock);
+static esp_err_t send_all(int client_sock, char *data, size_t len);
+static esp_err_t serve_client(int client_sock);
+
 static void tcp_server_task(void *pvParameters);
 
-static int send_all(int client_sock, char *data, size_t len) {
+static esp_err_t send_all(int client_sock, char *data, size_t len) {
 
     int ret;
 
     while (len > 0) {
         ret = send(client_sock, data, 1, 0);
         if (ret < 0) {
-            ESP_LOGE(TCP_TAG, "Error occurred during receiving: errno %d", errno);
-            return 1;
+            ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
+            return ESP_FAIL;
         } else if (ret == 0) {
-            ESP_LOGW(TCP_TAG, "Connection closed");
-            return 1;
+            ESP_LOGW(TAG, "Connection closed");
+            return ESP_FAIL;
         }
         data++;
         len--;
     }
-    return 0;
+
+    return ESP_OK;
 }
 
-static int serve_client(int client_sock) {
+static esp_err_t serve_client(int client_sock) {
 
     /*
      * every command will be two bytes, response will be differently sized.
@@ -44,39 +52,40 @@ static int serve_client(int client_sock) {
     while (1) {
         len = recv(client_sock, buf, sizeof(buf) - 1, 0);
         if (len < 0) {
-            ESP_LOGE(TCP_TAG, "Error occurred during receiving: errno %d", errno);
+            ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
             break;
         } else if (len == 0) {
-            ESP_LOGW(TCP_TAG, "Connection closed");
+            ESP_LOGW(TAG, "Connection closed");
             break;
         }
         recv(client_sock, buf + 1, sizeof(buf) - 1, 0);
 
         if (len < 0) {
-            ESP_LOGE(TCP_TAG, "Error occurred during receiving: errno %d", errno);
+            ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
             break;
         } else if (len == 0) {
-            ESP_LOGW(TCP_TAG, "Connection closed");
+            ESP_LOGW(TAG, "Connection closed");
             break;
         } else {
             if ((int) buf[0] == SUB_CMD_MONITOR) {
-                xSemaphoreTake(temp_hume_mutex, portMAX_DELAY);
-                if (send_all(client_sock, temp_value, sizeof(temp_value))) {
-                    xSemaphoreGive(temp_hume_mutex);
-                    break;
-                }
-                if (send_all(client_sock, hume_value, sizeof(hume_value))) {
-                    xSemaphoreGive(temp_hume_mutex);
-                    break;
-                }
-                xSemaphoreGive(temp_hume_mutex);
-
-                xSemaphoreTake(light_mutex, portMAX_DELAY);
-                if (send_all(client_sock, light_value, sizeof(light_value))) {
-                    xSemaphoreGive(light_mutex);
-                    break;
-                }
-                xSemaphoreGive(light_mutex);
+                ESP_LOGW(TAG, "Monitor");
+            /*    xSemaphoreTake(temp_hume_mutex, portMAX_DELAY);*/
+            /*    if (send_all(client_sock, temp_value, sizeof(temp_value))) {*/
+            /*        xSemaphoreGive(temp_hume_mutex);*/
+            /*        break;*/
+            /*    }*/
+            /*    if (send_all(client_sock, hume_value, sizeof(hume_value))) {*/
+            /*        xSemaphoreGive(temp_hume_mutex);*/
+            /*        break;*/
+            /*    }*/
+            /*    xSemaphoreGive(temp_hume_mutex);*/
+            /**/
+            /*    xSemaphoreTake(light_mutex, portMAX_DELAY);*/
+            /*    if (send_all(client_sock, light_value, sizeof(light_value))) {*/
+            /*        xSemaphoreGive(light_mutex);*/
+            /*        break;*/
+            /*    }*/
+            /*    xSemaphoreGive(light_mutex);*/
             }
         }
     }
@@ -96,20 +105,20 @@ static void tcp_server_task(void *pvParameters) {
 
     do {
 
-        wifi_sta_ip_await();
+        wifi_sta_ip_await(portMAX_DELAY);
 
-        ESP_LOGI(TCP_TAG, "Starting tcp server");
+        ESP_LOGI(TAG, "Starting tcp server");
 
         bzero(&server_addr, sizeof(server_addr));
 
-        server_addr.sin_addr.s_addr = inet_addr(ip_addr); // address from event handler
+        server_addr.sin_addr.s_addr = inet_addr(wifi_get_ip_addr()); // address from event handler
         /*server_addr.sin_addr.s_addr = htonl(INADDR_ANY);*/
         server_addr.sin_family = AF_INET;
         server_addr.sin_port = htons(PORT);
 
         int listen_sock = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
         if (listen_sock < 0) {
-            ESP_LOGE(TCP_TAG, "Unable to create socket: errno %d", errno);
+            ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
             continue;
         }
         int opt = 1;
@@ -119,26 +128,26 @@ static void tcp_server_task(void *pvParameters) {
         flags = flags | O_NONBLOCK;
         err = fcntl(listen_sock, F_SETFL, flags);
         if (err == -1) {
-            ESP_LOGE(TCP_TAG, "Failed to set listening socket to NON BLOCKING, errno: %d", errno);
+            ESP_LOGE(TAG, "Failed to set listening socket to NON BLOCKING, errno: %d", errno);
             goto CLEAN_UP;
         }
 
-        ESP_LOGI(TCP_TAG, "Socket created");
+        ESP_LOGI(TAG, "Socket created");
 
         err = bind(listen_sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
         if (err != 0) {
-            ESP_LOGE(TCP_TAG, "Socket unable to bind: errno %d", errno);
+            ESP_LOGE(TAG, "Socket unable to bind: errno %d", errno);
             goto CLEAN_UP;
         }
-        ESP_LOGI(TCP_TAG, "Socket bound, port %d", PORT);
+        ESP_LOGI(TAG, "Socket bound, port %d", PORT);
 
         err = listen(listen_sock, 1);
         if (err != 0) {
-            ESP_LOGE(TCP_TAG, "Error occurred during listen: errno %d", errno);
+            ESP_LOGE(TAG, "Error occurred during listen: errno %d", errno);
             goto CLEAN_UP;
         }
 
-        ESP_LOGI(TCP_TAG, "Socket listening");
+        ESP_LOGI(TAG, "Socket listening");
 
         /*
          * waiting for android
@@ -152,27 +161,23 @@ static void tcp_server_task(void *pvParameters) {
 
             // keep polling
             for ( ;; ) {
-                xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
-                if (wifi_connected == pdFALSE) {
+                if (wifi_is_sta_connected(portMAX_DELAY) == ESP_FAIL) {
                     // connection to wifi lost, goto CLEAN_UP and wait for wifi to connect
-                    ESP_LOGW(TCP_TAG, "Seems like wifi has disconnected");
-                    xSemaphoreGive(wifi_conn_mutex);
+                    ESP_LOGW(TAG, "Seems like wifi has disconnected");
                     goto CLEAN_UP;
                 }
-                xSemaphoreGive(wifi_conn_mutex);
                 // still connected, looking for connections.
                 client_sock = accept(listen_sock, (struct sockaddr *)&client_addr, &addr_len);
                 if (client_sock < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
-                    ESP_LOGI(TCP_TAG, "waiting for 500ms before next poll");
+                    ESP_LOGI(TAG, "waiting for 500ms before next poll");
                     vTaskDelay(500 / portTICK_PERIOD_MS);
-                    continue;
                 } else {
                     break;
                 }
             }
             if (client_sock < 0) {
                 // accept failed because of some other reason.
-                ESP_LOGE(TCP_TAG, "Unable to accept connection: errno %d", errno);
+                ESP_LOGE(TAG, "Unable to accept connection: errno %d", errno);
                 continue;
             }
 
@@ -182,19 +187,16 @@ static void tcp_server_task(void *pvParameters) {
             setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPINTVL, &keepInterval, sizeof(int));
             setsockopt(client_sock, IPPROTO_TCP, TCP_KEEPCNT, &keepCount, sizeof(int));
 
-            ESP_LOGI(TCP_TAG, "GOT ANDROID CONNECTION.");
+            ESP_LOGI(TAG, "GOT CLIENT CONNECTION.");
 
             serve_client(client_sock);
 
-            xSemaphoreTake(wifi_conn_mutex, portMAX_DELAY);
-            if (wifi_connected == pdFALSE) {
+            if (wifi_is_sta_connected(portMAX_DELAY) == ESP_FAIL) {
                 // connection to wifi lost, breaking from this loop
-                ESP_LOGW(TCP_TAG, "Seems like wifi has disconnected");
-                xSemaphoreGive(wifi_conn_mutex);
+                ESP_LOGW(TAG, "Seems like wifi has disconnected");
                 break;
             }
-            ESP_LOGW(TCP_TAG, "Connection to android ended, waiting for next");
-            xSemaphoreGive(wifi_conn_mutex);
+            ESP_LOGW(TAG, "Connection to client ended, waiting for the next connection");
 
         }
 
@@ -206,7 +208,12 @@ static void tcp_server_task(void *pvParameters) {
 }
 
 esp_err_t tcp_server_init(void) {
-    /*
-     * TODO: intialize wifi
-     * */
+    xTaskCreate(tcp_server_task, "tcp server", 4096, NULL, 5, NULL);
+    return ESP_OK;
+}
+
+
+esp_err_t tcp_server_deinit(void) {
+    // delete tcp_server_task
+    return ESP_OK;
 }
