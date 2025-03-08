@@ -33,7 +33,7 @@ void app_main(void) {
     /*drv_mux_init();*/
     tcp_server_init();
 
-    drv_mux_init();
+    /*drv_mux_init();*/
 
     ESP_LOGI(MAIN_TAG, "leaving app_main");
 
