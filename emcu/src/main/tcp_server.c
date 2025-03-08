@@ -14,8 +14,6 @@
 
 static const char *TAG = "tcp server";
 
-static const ()
-
 static esp_err_t send_all(int client_sock, char *data, size_t len);
 static esp_err_t serve_client(int client_sock);
 
