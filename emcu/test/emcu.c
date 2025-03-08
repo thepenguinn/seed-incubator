@@ -25,7 +25,6 @@ static int serverfd;
 int emcu(int command, int state);
 int parse_args(int argc, char *argv[], int *enable);
 int print_help(void);
-int get_ip_addr(void);
 
 int emcu_exhaust(int mode);
 int emcu_monitor();
