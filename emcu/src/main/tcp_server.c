@@ -14,8 +14,12 @@
 
 static const char *TAG = "tcp server";
 
+static const ()
+
 static esp_err_t send_all(int client_sock, char *data, size_t len);
 static esp_err_t serve_client(int client_sock);
+
+static esp_err_t sub_cmd_monitor_handler(void);
 
 static void tcp_server_task(void *pvParameters);
 
@@ -36,6 +40,12 @@ static esp_err_t send_all(int client_sock, char *data, size_t len) {
         len--;
     }
 
+    return ESP_OK;
+}
+
+static esp_err_t sub_cmd_monitor_handler(void) {
+
+    ESP_LOGW(TAG, "Monitor");
     return ESP_OK;
 }
 
@@ -67,25 +77,11 @@ static esp_err_t serve_client(int client_sock) {
             ESP_LOGW(TAG, "Connection closed");
             break;
         } else {
+            /*
+             * matching commands and calling corresponding handler functions
+             * */
             if ((int) buf[0] == SUB_CMD_MONITOR) {
-                ESP_LOGW(TAG, "Monitor");
-            /*    xSemaphoreTake(temp_hume_mutex, portMAX_DELAY);*/
-            /*    if (send_all(client_sock, temp_value, sizeof(temp_value))) {*/
-            /*        xSemaphoreGive(temp_hume_mutex);*/
-            /*        break;*/
-            /*    }*/
-            /*    if (send_all(client_sock, hume_value, sizeof(hume_value))) {*/
-            /*        xSemaphoreGive(temp_hume_mutex);*/
-            /*        break;*/
-            /*    }*/
-            /*    xSemaphoreGive(temp_hume_mutex);*/
-            /**/
-            /*    xSemaphoreTake(light_mutex, portMAX_DELAY);*/
-            /*    if (send_all(client_sock, light_value, sizeof(light_value))) {*/
-            /*        xSemaphoreGive(light_mutex);*/
-            /*        break;*/
-            /*    }*/
-            /*    xSemaphoreGive(light_mutex);*/
+                sub_cmd_monitor_handler();
             }
         }
     }

@@ -1,11 +1,3 @@
-/* WiFi station Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -22,6 +14,8 @@
 #include "tcp_server.h"
 #include "emcu.h"
 
+#include "driver/mux.h"
+
 static const char *MAIN_TAG = "emcu main";
 
 void app_main(void) {
@@ -36,18 +30,9 @@ void app_main(void) {
     wifi_start();
     wifi_init_sta_mode();
 
+    /*drv_mux_init();*/
     tcp_server_init();
 
     ESP_LOGI(MAIN_TAG, "leaving app_main");
-
-    /*while(1) {*/
-    /*    ret = wifi_sta_ip_await(portMAX_DELAY);*/
-    /*    if (ret == ESP_OK) {*/
-    /*        ESP_LOGI(MAIN_TAG, "wifi is connected.");*/
-    /*    } else {*/
-    /*        ESP_LOGI(MAIN_TAG, "couldn't connect to wifi.");*/
-    /*    }*/
-    /*}*/
-
 
 }
