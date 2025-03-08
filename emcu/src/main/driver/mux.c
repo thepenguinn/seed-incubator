@@ -8,6 +8,7 @@
 #include "driver/ledc.h"
 
 #include "driver.h"
+#include "pins.h"
 #include "mux.h"
 
 static portMUX_TYPE muxtype = portMUX_INITIALIZER_UNLOCKED;
@@ -28,11 +29,11 @@ esp_err_t drv_mux_push_addr(uint8_t addr) {
 
     PORT_ENTER_CRITICAL;
     while (i) {
-        gpio_set_level(DRV_MUX_DATA_GPIO, !(addr & i));
+        gpio_set_level(MUX_DATA_PIN, !(addr & i));
         ets_delay_us(1);
-        gpio_set_level(DRV_MUX_CLK_GPIO, 1);
+        gpio_set_level(MUX_CLK_PIN, 1);
         ets_delay_us(1);
-        gpio_set_level(DRV_MUX_CLK_GPIO, 0);
+        gpio_set_level(MUX_CLK_PIN, 0);
         i = i >> 1;
     }
     PORT_EXIT_CRITICAL;
@@ -42,17 +43,21 @@ esp_err_t drv_mux_push_addr(uint8_t addr) {
 
 esp_err_t drv_mux_init(void) {
 
-    gpio_reset_pin(DRV_MUX_CLK_GPIO);
-    gpio_reset_pin(DRV_MUX_DATA_GPIO);
-    gpio_reset_pin(DRV_MUX_EN_GPIO);
+    gpio_reset_pin(MUX_CLK_PIN);
+    gpio_reset_pin(MUX_DATA_PIN);
+    gpio_reset_pin(MUX_EN_PIN);
 
-    gpio_set_direction(DRV_MUX_CLK_GPIO, GPIO_MODE_OUTPUT);
-    gpio_set_direction(DRV_MUX_DATA_GPIO, GPIO_MODE_OUTPUT);
-    gpio_set_direction(DRV_MUX_EN_GPIO, GPIO_MODE_OUTPUT);
+    gpio_set_direction(MUX_CLK_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_direction(MUX_DATA_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_direction(MUX_EN_PIN, GPIO_MODE_OUTPUT);
 
-    gpio_set_level(DRV_MUX_DATA_GPIO, 0);
-    gpio_set_level(DRV_MUX_CLK_GPIO, 0);
-    gpio_set_level(DRV_MUX_EN_GPIO, 0); // disable output
+    gpio_set_level(MUX_DATA_PIN, 0);
+    gpio_set_level(MUX_CLK_PIN, 0);
+    gpio_set_level(MUX_EN_PIN, 0); // disable output
+
+    /*
+     * TODO: set up read pin
+     * */
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
 
