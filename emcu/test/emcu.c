@@ -111,7 +111,7 @@ int emcu_peltier(int state) {
 
 int emcu_mux(int value) {
 
-    char msg = (char) SUB_CMD_MONITOR;
+    char msg = (char) SUB_CMD_MUX;
     char val = (char) (value & 0x1f);
 
     send(serverfd, &msg, 1, 0);
