@@ -12,6 +12,8 @@
 #include "wifi.h"
 #include "tcp_server.h"
 
+#include "driver/mux.h"
+
 static const char *TAG = "tcp server";
 
 static esp_err_t send_all(int client_sock, char *data, size_t len);
@@ -44,6 +46,13 @@ static esp_err_t send_all(int client_sock, char *data, size_t len) {
 static esp_err_t sub_cmd_monitor_handler(void) {
 
     ESP_LOGW(TAG, "Monitor");
+    return ESP_OK;
+}
+
+static esp_err_t sub_cmd_mux_push(uint8_t addr) {
+    drv_mux_take_access(portMAX_DELAY);
+    drv_mux_push_addr(addr);
+    drv_mux_give_access();
     return ESP_OK;
 }
 
@@ -80,6 +89,8 @@ static esp_err_t serve_client(int client_sock) {
              * */
             if ((int) buf[0] == SUB_CMD_MONITOR) {
                 sub_cmd_monitor_handler();
+            } else if ((int) buf[0] == SUB_CMD_MUX) {
+                sub_cmd_mux_push((uint8_t) buf[1]);
             }
         }
     }
@@ -184,6 +195,7 @@ static void tcp_server_task(void *pvParameters) {
             ESP_LOGI(TAG, "GOT CLIENT CONNECTION.");
 
             serve_client(client_sock);
+            close(client_sock);
 
             if (wifi_is_sta_connected(portMAX_DELAY) == ESP_FAIL) {
                 // connection to wifi lost, breaking from this loop

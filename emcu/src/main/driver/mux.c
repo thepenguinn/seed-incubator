@@ -5,7 +5,7 @@
 #include "esp_err.h"
 #include "ets_sys.h"
 
-#include "driver/ledc.h"
+/*#include "driver/ledc.h"*/
 
 #include "driver.h"
 #include "pins.h"
@@ -16,6 +16,8 @@ static portMUX_TYPE muxtype = portMUX_INITIALIZER_UNLOCKED;
 #define PORT_EXIT_CRITICAL portEXIT_CRITICAL(&muxtype)
 
 #define CHECK(x) do { esp_err_t __; if ((__ = x) != ESP_OK) return __; } while (0)
+
+static SemaphoreHandle_t mux_mutex;
 
 static const char *TAG = "mux driver";
 
@@ -41,7 +43,35 @@ esp_err_t drv_mux_push_addr(uint8_t addr) {
     return ESP_OK;
 }
 
+esp_err_t drv_mux_take_access(TickType_t wait_ticks) {
+
+    int status;
+
+    status = xSemaphoreTake(mux_mutex, wait_ticks);
+
+    if (status == pdTRUE) {
+        return ESP_OK;
+    }
+
+    return ESP_FAIL;
+}
+
+esp_err_t drv_mux_give_access(void) {
+
+    int status;
+
+    status = xSemaphoreGive(mux_mutex);
+
+    if (status == pdTRUE) {
+        return ESP_OK;
+    }
+
+    return ESP_FAIL;
+}
+
 esp_err_t drv_mux_init(void) {
+
+    mux_mutex = xSemaphoreCreateMutex();
 
     gpio_reset_pin(MUX_CLK_PIN);
     gpio_reset_pin(MUX_DATA_PIN);
