@@ -5,6 +5,7 @@ enum SubCmd {
     SUB_CMD_MONITOR,
     SUB_CMD_FANS,
     SUB_CMD_PELTIER,
+    SUB_CMD_MUX,
     SUB_CMD_END,
 };
 

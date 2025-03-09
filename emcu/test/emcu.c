@@ -16,6 +16,7 @@ static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_MONITOR] = "monitor",
     [SUB_CMD_FANS]    = "fans",
     [SUB_CMD_PELTIER] = "peltier",
+    [SUB_CMD_MUX]     = "mux",
 };
 
 static char ip_addr[128];
@@ -23,7 +24,7 @@ static char ip_addr[128];
 static int serverfd;
 
 int emcu(int command, int state);
-int parse_args(int argc, char *argv[], int *enable);
+int parse_args(int argc, char *argv[], int *value);
 int print_help(void);
 
 int emcu_exhaust(int mode);
@@ -132,7 +133,64 @@ int emcu (int command, int state) {
 
 }
 
-int parse_args (int argc, char *argv[], int *enable) {
+static int tworaisedto(int num) {
+    int value = 1;
+
+    while (num > 0) {
+        value = value * 2;
+        num--;
+    }
+
+    return value;
+}
+
+static int strbtonum(char *string) {
+    char *i = string;
+    int count = -1;
+    int value = 0;
+
+    /*
+     * counting how many 1s and 0s are there
+     * */
+    while (i && *i != '\0') {
+        if (*i == '0' || *i == '1') {
+            count++;
+            i++;
+        } else if (*i == '_') {
+            i++;
+            continue;
+        } else {
+            printf("There's other characters than 0, 1, _");
+            break;
+        }
+    }
+
+    i = string;
+    /*
+     * converting to number
+     * */
+    while (i && *i != '\0') {
+        if (*i == '0') {
+            count--;
+            i++;
+        } else if (*i == '1') {
+            value = value + tworaisedto(count);
+            count--;
+            i++;
+        } else if (*i == '_') {
+            i++;
+            continue;
+        } else {
+            printf("There's other characters than 0, 1, _");
+            break;
+        }
+    }
+
+    return value;
+
+}
+
+int parse_args (int argc, char *argv[], int *value) {
 
     int i;
     char *subcmd;
@@ -151,20 +209,14 @@ int parse_args (int argc, char *argv[], int *enable) {
         }
     }
 
-    if (enable) {
-        if (subcmdint == SUB_CMD_FANS || subcmdint == SUB_CMD_PELTIER) {
+    if (value) {
+
+        if (subcmdint == SUB_CMD_FANS || subcmdint == SUB_CMD_PELTIER || subcmdint == SUB_CMD_MUX) {
             if (argc >= 3) {
-                if (!strcmp(argv[2], SUB_CMD_STR_ENABLE)) {
-                    *enable = 1;
-                } else if (!strcmp(argv[2], SUB_CMD_STR_DISABLE)) {
-                    *enable = 0;
-                } else {
-                    return SUB_CMD_UNKNOWN;
-                }
+                *value = strbtonum(argv[2]);
             } else {
                 return SUB_CMD_UNKNOWN;
             }
-
         }
     }
 
@@ -190,9 +242,11 @@ int print_help (void) {
 
 int main (int argc, char *argv[]) {
 
-    int enable = 0;
-    int subcommand = parse_args(argc, argv, &enable);
+    int value = 0;
+    int subcommand = parse_args(argc, argv, &value);
     int sockfd;
+
+    printf("%d\n", value);
 
     if (subcommand == SUB_CMD_UNKNOWN) {
         print_help();
@@ -211,6 +265,6 @@ int main (int argc, char *argv[]) {
         serverfd = sockfd;
     }
 
-    return emcu(subcommand, enable);
+    return emcu(subcommand, value);
 
 }
