@@ -23,7 +23,7 @@ static char ip_addr[128];
 
 static int serverfd;
 
-int emcu(int command, int state);
+int emcu(int command, int value);
 int parse_args(int argc, char *argv[], int *value);
 int print_help(void);
 
@@ -31,6 +31,7 @@ int emcu_exhaust(int mode);
 int emcu_monitor();
 int emcu_fans(int state);
 int emcu_peltier(int state);
+int emcu_mux(int value);
 
 int connect_to_server();
 
@@ -108,9 +109,20 @@ int emcu_peltier(int state) {
     return 0;
 }
 
-int emcu (int command, int state) {
+int emcu_mux(int value) {
 
-    printf("%d, %d \n", command, state);
+    char msg = (char) SUB_CMD_MONITOR;
+    char val = (char) (value & 0x1f);
+
+    send(serverfd, &msg, 1, 0);
+    send(serverfd, &val, 1, 0);
+
+    return 0;
+}
+
+int emcu (int command, int value) {
+
+    printf("%d, %d \n", command, value);
 
     switch(command) {
 
@@ -121,9 +133,11 @@ int emcu (int command, int state) {
         case SUB_CMD_MONITOR:
             return emcu_monitor();
         case SUB_CMD_FANS:
-            return emcu_fans(state);
+            return emcu_fans(value);
         case SUB_CMD_PELTIER:
-            return emcu_peltier(state);
+            return emcu_peltier(value);
+        case SUB_CMD_MUX:
+            return emcu_mux(value);
         default:
             return 1;
 
