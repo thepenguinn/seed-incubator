@@ -57,7 +57,7 @@ static void digital_read_task(void * pvParameters) {
 }
 
 esp_err_t test_init(void) {
-    xTaskCreate(analog_read_task, "analog test task", 4096, NULL, 5, NULL);
-    xTaskCreate(digital_read_task, "digital test task", 4096, NULL, 5, NULL);
+    /*xTaskCreate(analog_read_task, "analog test task", 4096, NULL, 5, NULL);*/
+    /*xTaskCreate(digital_read_task, "digital test task", 4096, NULL, 5, NULL);*/
     return ESP_OK;
 }

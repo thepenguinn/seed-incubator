@@ -15,6 +15,7 @@
 #include "emcu.h"
 
 #include "driver/mux.h"
+#include "driver/ldr.h"
 
 /* TESTING */
 #include "driver/test.h"
@@ -40,6 +41,19 @@ void app_main(void) {
 
     /* TESTING */
     test_init();
+
+    drv_ldr_init();
+
+    int v[LDR_END];
+
+    int i;
+    while (1) {
+        for (i = 0; i < LDR_END; i++) {
+            v[i] = drv_ldr_get_value(i, portMAX_DELAY);
+        }
+        ESP_LOGI(MAIN_TAG, "LDR_0: %d mV, LDR_1: %d mV, LDR_2: %d mV", v[0], v[1], v[2]);
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
+    }
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
 

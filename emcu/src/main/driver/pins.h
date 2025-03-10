@@ -6,6 +6,8 @@
 #define MUX_EN_PIN   GPIO_NUM_26
 #define MUX_READ_PIN GPIO_NUM_32
 
+#define MUX_ADDR_LDR_OFFSET  0
+
 /*
  * pins for exhaust control board
  * */

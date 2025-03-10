@@ -59,7 +59,7 @@ static bool adc_calibration_init(
     bool calibrated = false;
 
     if (!calibrated) {
-        ESP_LOGI(TAG, "calibration scheme version is %s", "Line Fitting");
+        /*ESP_LOGI(TAG, "calibration scheme version is %s", "Line Fitting");*/
         adc_cali_line_fitting_config_t cali_config = {
             .unit_id = unit,
             .atten = atten,
@@ -72,11 +72,14 @@ static bool adc_calibration_init(
     }
 
     *out_handle = handle;
-    if (ret == ESP_OK) {
-        ESP_LOGI(TAG, "Calibration Success");
-    } else if (ret == ESP_ERR_NOT_SUPPORTED || !calibrated) {
+
+    /*if (ret == ESP_OK) {*/
+    /*    ESP_LOGI(TAG, "Calibration Success");*/
+    /*}*/
+
+    if (ret == ESP_ERR_NOT_SUPPORTED || !calibrated) {
         ESP_LOGW(TAG, "eFuse not burnt, skip software calibration");
-    } else {
+    } else if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Invalid arg or no memory");
     }
 
