@@ -1,4 +1,4 @@
-/* 
+/*
 	DHT22 temperature sensor driver
 */
 
@@ -14,8 +14,8 @@
 void setDHTgpio(int gpio);
 void errorHandler(int response);
 int readDHT();
-float getHumidity();
-float getTemperature();
+int getHumidity();
+int getTemperature();
 int getSignalLevel(int usTimeOut, bool state);
 
 #endif

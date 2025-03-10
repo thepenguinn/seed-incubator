@@ -10,6 +10,8 @@
 
 #define MUX_ADDR_SMS_OFFSET  3
 
+#define MUX_ADDR_DHT_OFFSET  7
+
 /*
  * pins for exhaust control board
  * */

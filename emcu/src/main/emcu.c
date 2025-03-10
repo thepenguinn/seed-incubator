@@ -17,6 +17,7 @@
 #include "driver/mux.h"
 #include "driver/ldr.h"
 #include "driver/sms.h"
+#include "driver/dht.h"
 
 /* TESTING */
 #include "driver/test.h"
@@ -45,15 +46,24 @@ void app_main(void) {
 
     drv_ldr_init();
     drv_sms_init();
-    int v[SMS_END];
+    drv_dht_init();
+
+    int v[DHT_END][DHT_DATA_END];
 
     int i;
     while (1) {
-        for (i = 0; i < SMS_END; i++) {
-            v[i] = drv_sms_get_value(i, portMAX_DELAY);
+        for (i = 0; i < DHT_END; i++) {
+            v[i][DHT_DATA_TEMP] = drv_dht_get_value(i, DHT_DATA_TEMP, portMAX_DELAY);
+            v[i][DHT_DATA_HUME] = drv_dht_get_value(i, DHT_DATA_HUME, portMAX_DELAY);
         }
+        ESP_LOGI(MAIN_TAG, "0_T: %f C, 0_H: %f %%, 1_T: %f C, 1_H: %f %%",
+                 (float) v[0][0] / 10,
+                 (float) v[0][1] / 10,
+                 (float) v[1][0] / 10,
+                 (float) v[1][1] / 10
+                 );
         /*ESP_LOGI(MAIN_TAG, "LDR_0: %d mV, LDR_1: %d mV, LDR_2: %d mV", v[0], v[1], v[2]);*/
-        ESP_LOGI(MAIN_TAG, "SMS_0: %d mV, SMS_1: %d mV, SMS_2: %d mV, SMS_3: %d mV", v[0], v[1], v[2], v[3]);
+        /*ESP_LOGI(MAIN_TAG, "SMS_0: %d mV, SMS_1: %d mV, SMS_2: %d mV, SMS_3: %d mV", v[0], v[1], v[2], v[3]);*/
         vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
 

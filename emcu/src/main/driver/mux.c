@@ -189,6 +189,7 @@ esp_err_t drv_mux_push_addr(uint8_t addr) {
      * disabling output before changing the address.
      * */
     gpio_set_level(MUX_EN_PIN, 0);
+    ets_delay_us(10);
     while (i) {
         gpio_set_level(MUX_DATA_PIN, !(addr & i));
         ets_delay_us(1);
@@ -200,6 +201,7 @@ esp_err_t drv_mux_push_addr(uint8_t addr) {
     /*
      * enabling output back.
      * */
+    ets_delay_us(1);
     gpio_set_level(MUX_EN_PIN, 1);
     ets_delay_us(1);
     PORT_EXIT_CRITICAL;

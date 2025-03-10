@@ -2,11 +2,11 @@
 
 	DHT22 temperature & humidity sensor AM2302 (DHT22) driver for ESP32
 
-	Jun 2017:	Ricardo Timmermann, new for DHT22  	
+	Jun 2017:	Ricardo Timmermann, new for DHT22
 
 	Code Based on Adafruit Industries and Sam Johnston and Coffe & Beer. Please help
-	to improve this code. 
-	
+	to improve this code.
+
 	This example code is in the Public Domain (or CC0 licensed, at your option.)
 
 	Unless required by applicable law or agreed to in writing, this
@@ -22,15 +22,15 @@
 #include "esp_log.h"
 #include "driver/gpio.h"
 
-#include "DHT.h"
+#include "dht.h"
 
 // == global defines =============================================
 
 static const char *TAG = "DHT";
 
-int DHTgpio = GPIO_NUM_4; // my default DHT pin = 4
-float humidity = 0.;
-float temperature = 0.;
+static int DHTgpio = GPIO_NUM_4; // my default DHT pin = 4
+static int humidity = 0;
+static int temperature = 0;
 
 // == set the DHT used pin=========================================
 
@@ -41,8 +41,9 @@ void setDHTgpio(int gpio)
 
 // == get temp & hum =============================================
 
-float getHumidity() { return humidity; }
-float getTemperature() { return temperature; }
+// will be in int, to convert to usable form we need to divide this by 10
+int getHumidity() { return humidity; }
+int getTemperature() { return temperature; }
 
 // == error handler ===============================================
 
@@ -69,7 +70,7 @@ void errorHandler(int response)
 
 /*-------------------------------------------------------------------------------
 ;
-;	get next state 
+;	get next state
 ;
 ;	I don't like this logic. It needs some interrupt blocking / priority
 ;	to ensure it runs in realtime.
@@ -111,7 +112,7 @@ Binary system Decimal system: RH=652/10=65.2%RH
 2) we convert 16 bits T data from binary system to decimal system, 0000 0001 0101 1111 → 351
 Binary system Decimal system: T=351/10=35.1°C
 
-When highest bit of temperature is 1, it means the temperature is below 0 degree Celsius. 
+When highest bit of temperature is 1, it means the temperature is below 0 degree Celsius.
 Example: 1000 0000 0110 0101, T= minus 10.1°C: 16 bits T data
 
 3) Check Sum=0000 0010+1000 1100+0000 0001+0101 1111=1110 1110 Check-sum=the last 8 bits of Sum=11101110
@@ -124,9 +125,9 @@ To request data from DHT:
 
 1) Sent low pulse for > 1~10 ms (MILI SEC)
 2) Sent high pulse for > 20~40 us (Micros).
-3) When DHT detects the start signal, it will pull low the bus 80us as response signal, 
+3) When DHT detects the start signal, it will pull low the bus 80us as response signal,
    then the DHT pulls up 80us for preparation to send data.
-4) When DHT is sending data to MCU, every bit's transmission begin with low-voltage-level that last 50us, 
+4) When DHT is sending data to MCU, every bit's transmission begin with low-voltage-level that last 50us,
    the following high-voltage-level signal's length decide the bit is "1" or "0".
 	0: 26~28 us
 	1: 70 us
@@ -216,14 +217,16 @@ int readDHT()
     humidity = dhtData[0];
     humidity *= 0x100; // >> 8
     humidity += dhtData[1];
-    humidity /= 10; // get the decimal
+    // == we want to keep the humidity value in int so won't be needing this.
+    // humidity /= 10; // get the decimal
 
     // == get temp from Data[2] and Data[3]
 
     temperature = dhtData[2] & 0x7F;
     temperature *= 0x100; // >> 8
     temperature += dhtData[3];
-    temperature /= 10;
+    // == we want to keep the humidity value in int so won't be needing this.
+    // temperature /= 10;
 
     if (dhtData[2] & 0x80) // negative temp, brrr it's freezing
         temperature *= -1;
