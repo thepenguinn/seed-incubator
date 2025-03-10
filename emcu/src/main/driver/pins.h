@@ -8,6 +8,8 @@
 
 #define MUX_ADDR_LDR_OFFSET  0
 
+#define MUX_ADDR_SMS_OFFSET  3
+
 /*
  * pins for exhaust control board
  * */

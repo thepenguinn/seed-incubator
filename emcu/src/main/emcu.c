@@ -16,6 +16,7 @@
 
 #include "driver/mux.h"
 #include "driver/ldr.h"
+#include "driver/sms.h"
 
 /* TESTING */
 #include "driver/test.h"
@@ -43,15 +44,16 @@ void app_main(void) {
     test_init();
 
     drv_ldr_init();
-
-    int v[LDR_END];
+    drv_sms_init();
+    int v[SMS_END];
 
     int i;
     while (1) {
-        for (i = 0; i < LDR_END; i++) {
-            v[i] = drv_ldr_get_value(i, portMAX_DELAY);
+        for (i = 0; i < SMS_END; i++) {
+            v[i] = drv_sms_get_value(i, portMAX_DELAY);
         }
-        ESP_LOGI(MAIN_TAG, "LDR_0: %d mV, LDR_1: %d mV, LDR_2: %d mV", v[0], v[1], v[2]);
+        /*ESP_LOGI(MAIN_TAG, "LDR_0: %d mV, LDR_1: %d mV, LDR_2: %d mV", v[0], v[1], v[2]);*/
+        ESP_LOGI(MAIN_TAG, "SMS_0: %d mV, SMS_1: %d mV, SMS_2: %d mV, SMS_3: %d mV", v[0], v[1], v[2], v[3]);
         vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
 
