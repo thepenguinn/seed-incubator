@@ -50,8 +50,11 @@ static esp_err_t sub_cmd_monitor_handler(void) {
 }
 
 static esp_err_t sub_cmd_mux_push(uint8_t addr) {
+    ESP_LOGI(TAG, "Trying to access mux");
     drv_mux_take_access(portMAX_DELAY);
+    ESP_LOGI(TAG, "Got access to mux");
     drv_mux_push_addr(addr);
+    ESP_LOGI(TAG, "Giving back the access");
     drv_mux_give_access();
     return ESP_OK;
 }
@@ -174,7 +177,7 @@ static void tcp_server_task(void *pvParameters) {
                 // still connected, looking for connections.
                 client_sock = accept(listen_sock, (struct sockaddr *)&client_addr, &addr_len);
                 if (client_sock < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
-                    ESP_LOGI(TAG, "waiting for 500ms before next poll");
+                    /*ESP_LOGI(TAG, "waiting for 500ms before next poll");*/
                     vTaskDelay(500 / portTICK_PERIOD_MS);
                 } else {
                     break;

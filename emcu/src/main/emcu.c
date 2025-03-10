@@ -16,6 +16,9 @@
 
 #include "driver/mux.h"
 
+/* TESTING */
+#include "driver/test.h"
+
 static const char *MAIN_TAG = "emcu main";
 
 void app_main(void) {
@@ -34,6 +37,9 @@ void app_main(void) {
     tcp_server_init();
 
     drv_mux_init();
+
+    /* TESTING */
+    test_init();
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
 

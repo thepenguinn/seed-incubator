@@ -1,3 +1,3 @@
-idf_component_register(SRCS "emcu.c" "wifi.c" "tcp_server.c" "driver/mux.c"
+idf_component_register(SRCS "emcu.c" "wifi.c" "tcp_server.c" "driver/mux.c" "driver/test.c"
                     INCLUDE_DIRS ".")
 # REQUIRES driver esp_wifi)
