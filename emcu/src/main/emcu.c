@@ -15,6 +15,7 @@
 #include "emcu.h"
 
 #include "driver/mux.h"
+#include "driver/rbd.h"
 #include "driver/ldr.h"
 #include "driver/sms.h"
 #include "driver/dht.h"
@@ -37,10 +38,11 @@ void app_main(void) {
     wifi_start();
     wifi_init_sta_mode();
 
-    /*drv_mux_init();*/
-    tcp_server_init();
-
     drv_mux_init();
+
+    drv_rbd_init();
+
+    tcp_server_init();
 
     /* TESTING */
     test_init();

@@ -15,11 +15,11 @@
 #define MUX_ADDR_USO_OFFSET  9
 
 /*
- * pins for exhaust control board
+ * pins for relay control board
  * */
 
-#define EXT_CLK_PIN  GPIO_NUM_27
-#define EXT_DATA_PIN GPIO_NUM_14
+#define RBD_CLK_PIN  GPIO_NUM_27
+#define RBD_DATA_PIN GPIO_NUM_14
 
 /*
  * pins for main control board
