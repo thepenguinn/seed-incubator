@@ -41,7 +41,7 @@ static void dht_task(void *pvParameters) {
 
             gpio_set_direction(MUX_READ_PIN, GPIO_MODE_OUTPUT);
             gpio_set_level(MUX_READ_PIN, 1);
-            vTaskDelay(100 / portTICK_PERIOD_MS);
+            vTaskDelay(200 / portTICK_PERIOD_MS);
             /* read using library */
 
             setDHTgpio(MUX_READ_PIN);
@@ -56,6 +56,7 @@ static void dht_task(void *pvParameters) {
                     ESP_LOGE(TAG, "CheckSum error\n");
                     break;
                 case DHT_OK:
+                    ESP_LOGW(TAG, "Got data %d", i);
                     dht_v[i][DHT_DATA_TEMP] = getTemperature();
                     dht_v[i][DHT_DATA_HUME] = getHumidity();
                     break;
