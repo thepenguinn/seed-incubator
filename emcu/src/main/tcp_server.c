@@ -13,6 +13,7 @@
 #include "tcp_server.h"
 
 #include "driver/mux.h"
+#include "driver/rbd.h"
 
 static const char *TAG = "tcp server";
 
@@ -50,52 +51,106 @@ static esp_err_t sub_cmd_monitor_handler(void) {
 }
 
 static esp_err_t sub_cmd_mux_push(uint8_t addr) {
-    ESP_LOGI(TAG, "Trying to access mux");
     drv_mux_take_access(portMAX_DELAY);
-    ESP_LOGI(TAG, "Got access to mux");
     drv_mux_push_addr(addr);
-    ESP_LOGI(TAG, "Giving back the access");
     drv_mux_give_access();
     return ESP_OK;
+}
+
+static esp_err_t sub_cmd_rbd_push(uint16_t data) {
+    drv_rbd_take_access(portMAX_DELAY);
+    drv_rbd_push_data(data);
+    drv_rbd_give_access();
+    return ESP_OK;
+}
+
+static esp_err_t receive_packet(int client_sock, char *buf) {
+
+    /*
+     * the buf should be atlest the size of 5 chars
+     * */
+
+    int i, len;
+
+    for (i = 0; i < 5; i++) {
+
+        len = recv(client_sock, buf + i, 1, 0);
+        if (len < 0) {
+            ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
+            return ESP_FAIL;
+        } else if (len == 0) {
+            ESP_LOGW(TAG, "Connection closed");
+            return ESP_FAIL;
+        }
+
+    }
+
+    return ESP_OK;
+
 }
 
 static esp_err_t serve_client(int client_sock) {
 
     /*
-     * every command will be two bytes, response will be differently sized.
+     * every request will be 5 bytes,
+     *
+     * first byte will be the request command.
+     *
+     * next four bytes will be data, the interpretation of this
+     * data will depend on the command.
+     *
+     * the data will be uint32_t
+     * it should be send in little endian order
+     *
+     * response will be differently sized.
      * monitor
      * */
 
-    char buf[2];
+    char buf[5];
     int len;
+    esp_err_t ret;
+
+    uint8_t cmd;
+    uint32_t data;
 
     while (1) {
-        len = recv(client_sock, buf, sizeof(buf) - 1, 0);
-        if (len < 0) {
-            ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
-            break;
-        } else if (len == 0) {
-            ESP_LOGW(TAG, "Connection closed");
-            break;
-        }
-        recv(client_sock, buf + 1, sizeof(buf) - 1, 0);
 
-        if (len < 0) {
-            ESP_LOGE(TAG, "Error occurred during receiving: errno %d", errno);
+        ret = receive_packet(client_sock, buf);
+
+        if (ret != ESP_OK) {
             break;
-        } else if (len == 0) {
-            ESP_LOGW(TAG, "Connection closed");
-            break;
-        } else {
-            /*
-             * matching commands and calling corresponding handler functions
-             * */
-            if ((int) buf[0] == SUB_CMD_MONITOR) {
-                sub_cmd_monitor_handler();
-            } else if ((int) buf[0] == SUB_CMD_MUX) {
-                sub_cmd_mux_push((uint8_t) buf[1]);
-            }
         }
+
+        /*
+         * data is in little endian
+         * */
+
+        cmd = (uint8_t) buf[0];
+
+        data = (uint32_t) buf[1]
+            | (((uint32_t) buf[2]) << 8)
+            | (((uint32_t) buf[3]) << 16)
+            | (((uint32_t) buf[4]) << 24);
+
+        ESP_LOGW(TAG, "Got a packet, cmd: %d data: %d", (int) cmd, (int) data);
+        /*
+         * matching commands and calling corresponding handler functions
+         * */
+
+        switch (cmd) {
+            case SUB_CMD_MONITOR:
+                sub_cmd_monitor_handler();
+                break;
+            case SUB_CMD_MUX:
+                sub_cmd_mux_push((uint8_t) data);
+                break;
+            case SUB_CMD_RBD:
+                sub_cmd_rbd_push((uint16_t)data);
+                break;
+            default:
+                ESP_LOGW(TAG, "Got an invalid packet with cmd: %d", cmd);
+        }
+
     }
 
     return 0;

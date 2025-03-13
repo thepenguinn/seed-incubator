@@ -47,10 +47,10 @@ void app_main(void) {
     /* TESTING */
     test_init();
 
-    /*drv_ldr_init();*/
-    /*drv_sms_init();*/
+    drv_ldr_init();
+    drv_sms_init();
     /*drv_dht_init();*/
-    drv_uso_init();
+    /*drv_uso_init();*/
 
     int v[DHT_END][DHT_DATA_END];
 

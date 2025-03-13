@@ -28,11 +28,11 @@ static const char *TAG = "rbd driver";
 
 esp_err_t drv_rbd_push_data(uint16_t data) {
 
-    uint16_t i = 0x10;
+    uint16_t i = 0x8000;
 
     PORT_ENTER_CRITICAL;
     while (i) {
-        gpio_set_level(RBD_DATA_PIN, !(data & i));
+        gpio_set_level(RBD_DATA_PIN, !!(data & i));
         ets_delay_us(1);
         gpio_set_level(RBD_CLK_PIN, 0);
         ets_delay_us(1);
