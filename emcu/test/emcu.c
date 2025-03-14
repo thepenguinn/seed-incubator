@@ -17,6 +17,7 @@ static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_FANS]    = "fans",
     [SUB_CMD_PELTIER] = "peltier",
     [SUB_CMD_MUX]     = "mux",
+    [SUB_CMD_RBD]     = "rbd",
 };
 
 static char ip_addr[128];
@@ -31,7 +32,8 @@ int emcu_exhaust(int mode);
 int emcu_monitor();
 int emcu_fans(int state);
 int emcu_peltier(int state);
-int emcu_mux(int value);
+int emcu_mux(uint32_t value);
+int emcu_rbd(uint32_t value);
 
 int connect_to_server();
 
@@ -64,11 +66,36 @@ int connect_to_server() {
 
 }
 
+static int send_packet(uint8_t cmd, uint32_t data) {
+
+    char buf;
+    int i;
+
+    /*
+     * data should be send in little endian
+     * */
+
+    buf = (char) cmd;
+    send(serverfd, &buf, 1, 0);
+    for (i = 0; i < 4; i++) {
+        buf = (char) ((data >> i * 8) & 0xff);
+        send(serverfd, &buf, 1, 0);
+    }
+
+    return 0;
+
+}
+
 int emcu_exhaust(int mode) {
     return 0;
 }
 
 int emcu_monitor() {
+
+    /*
+     * TODO: create a tui app
+     * */
+    return 1;
 
     char msg = (char) SUB_CMD_MONITOR;
     int i = 0;
@@ -109,14 +136,15 @@ int emcu_peltier(int state) {
     return 0;
 }
 
-int emcu_mux(int value) {
+int emcu_mux(uint32_t value) {
 
-    char msg = (char) SUB_CMD_MUX;
-    char val = (char) (value & 0x1f);
+    send_packet(SUB_CMD_MUX, value);
+    return 0;
+}
 
-    send(serverfd, &msg, 1, 0);
-    send(serverfd, &val, 1, 0);
+int emcu_rbd(uint32_t value) {
 
+    send_packet(SUB_CMD_RBD, value);
     return 0;
 }
 
@@ -138,6 +166,8 @@ int emcu (int command, int value) {
             return emcu_peltier(value);
         case SUB_CMD_MUX:
             return emcu_mux(value);
+        case SUB_CMD_RBD:
+            return emcu_rbd(value);
         default:
             return 1;
 
@@ -225,12 +255,17 @@ int parse_args (int argc, char *argv[], int *value) {
 
     if (value) {
 
-        if (subcmdint == SUB_CMD_FANS || subcmdint == SUB_CMD_PELTIER || subcmdint == SUB_CMD_MUX) {
-            if (argc >= 3) {
-                *value = strbtonum(argv[2]);
-            } else {
-                return SUB_CMD_UNKNOWN;
-            }
+        switch (subcmdint) {
+            case SUB_CMD_FANS:
+            case SUB_CMD_PELTIER:
+            case SUB_CMD_MUX:
+            case SUB_CMD_RBD:
+                if (argc >= 3) {
+                    *value = strbtonum(argv[2]);
+                } else {
+                    return SUB_CMD_UNKNOWN;
+                }
+                break;
         }
     }
 
