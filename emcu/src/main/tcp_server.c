@@ -89,6 +89,24 @@ static esp_err_t receive_packet(int client_sock, char *buf) {
 
 }
 
+static esp_err_t send_uint32_t(int client_sock, uint32_t data) {
+
+
+    char buf;
+    int i;
+
+    /*
+     * data should be send in little endian
+     * */
+
+    for (i = 0; i < 4; i++) {
+        buf = (char) ((data >> i * 8) & 0xff);
+        send(serverfd, &buf, 1, 0);
+    }
+
+    return ESP_OK;
+}
+
 static esp_err_t serve_client(int client_sock) {
 
     /*
@@ -146,6 +164,14 @@ static esp_err_t serve_client(int client_sock) {
                 break;
             case SUB_CMD_RBD:
                 sub_cmd_rbd_push((uint16_t)data);
+                break;
+            case SUB_CMD_MONITOR_TEMP:
+                send_uint32_t((uint32_t) drv_dht_get_value(DHT_0, DHT_DATA_TEMP, portMAX_DELAY));
+                send_uint32_t((uint32_t) drv_dht_get_value(DHT_1, DHT_DATA_TEMP, portMAX_DELAY));
+                break;
+            case SUB_CMD_MONITOR_TEMP:
+                send_uint32_t((uint32_t) drv_dht_get_value(DHT_0, DHT_DATA_HUME, portMAX_DELAY));
+                send_uint32_t((uint32_t) drv_dht_get_value(DHT_1, DHT_DATA_HUME, portMAX_DELAY));
                 break;
             default:
                 ESP_LOGW(TAG, "Got an invalid packet with cmd: %d", cmd);
