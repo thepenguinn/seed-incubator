@@ -11,6 +11,7 @@
 *.o
 emcu/test/emcu
 emcu/test/emcu_test_server
+emcu/test/test_emcu
 */**/icon/*.png
 */**/icon/*.svg
 *.stl

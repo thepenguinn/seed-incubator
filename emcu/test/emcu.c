@@ -8,6 +8,7 @@
 
 #include "utils.h"
 #include "emcu.h"
+#include "emcu_test_server.h"
 
 static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_UNKNOWN] = "unknown",
@@ -302,10 +303,14 @@ int main (int argc, char *argv[]) {
         return 1;
     }
 
+#ifdef __TEST_BUILD__
+    strncpy(ip_addr, TEST_IP_ADDR, sizeof(TEST_IP_ADDR));
+#else
     if (utils_get_emcu_ip(ip_addr, sizeof(ip_addr))) {
         printf("Seems like emcu is not connected, exiting.\n");
-        return 1;
+       return 1;
     }
+#endif
 
     sockfd = connect_to_server();
     if (sockfd < 0) {
