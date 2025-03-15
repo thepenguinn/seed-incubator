@@ -19,6 +19,31 @@ static const char *TAG = "test server";
 static int serve_client(int client_sock);
 static int accept_connection(int server_sock);
 static esp_err_t receive_packet(int client_sock, char *buf);
+static esp_err_t send_uint32_t(int client_sock, uint32_t data);
+
+#define RESPONSE_DELAY_US 500000
+
+/*
+ * dummy data .
+ * */
+
+static int temp_0 = 0;
+static int temp_1 = 0;
+
+static int hume_0 = 0;
+static int hume_1 = 0;
+
+static int ldr_0 = 0;
+static int ldr_1 = 0;
+static int ldr_2 = 0;
+
+static int sms_0 = 0;
+static int sms_1 = 0;
+static int sms_2 = 0;
+static int sms_3 = 0;
+
+static int uso_0 = 0;
+static int uso_1 = 0;
 
 int init_tcp_server(void);
 
@@ -75,42 +100,56 @@ static int serve_client(int client_sock) {
          * UART <-> USB bridge of ESP.
          * */
 
-        /*switch (cmd) {*/
-        /*    case SUB_CMD_MONITOR:*/
-        /*        sub_cmd_monitor_handler();*/
-        /*        break;*/
-        /*    case SUB_CMD_MUX:*/
-        /*        sub_cmd_mux_push((uint8_t) data);*/
-        /*        break;*/
-        /*    case SUB_CMD_RBD:*/
-        /*        sub_cmd_rbd_push((uint16_t)data);*/
-        /*        break;*/
-        /*    case SUB_CMD_MONITOR_TEMP:*/
-        /*        send_uint32_t((uint32_t) drv_dht_get_value(DHT_0, DHT_DATA_TEMP, portMAX_DELAY));*/
-        /*        send_uint32_t((uint32_t) drv_dht_get_value(DHT_1, DHT_DATA_TEMP, portMAX_DELAY));*/
-        /*        break;*/
-        /*    case SUB_CMD_MONITOR_HUME:*/
-        /*        send_uint32_t((uint32_t) drv_dht_get_value(DHT_0, DHT_DATA_HUME, portMAX_DELAY));*/
-        /*        send_uint32_t((uint32_t) drv_dht_get_value(DHT_1, DHT_DATA_HUME, portMAX_DELAY));*/
-        /*        break;*/
-        /*    case SUB_CMD_MONITOR_LDR:*/
-        /*        send_uint32_t((uint32_t) drv_ldr_get_value(LDR_0, portMAX_DELAY));*/
-        /*        send_uint32_t((uint32_t) drv_ldr_get_value(LDR_1, portMAX_DELAY));*/
-        /*        send_uint32_t((uint32_t) drv_ldr_get_value(LDR_2, portMAX_DELAY));*/
-        /*        break;*/
-        /*    case SUB_CMD_MONITOR_SMS:*/
-        /*        send_uint32_t((uint32_t) drv_sms_get_value(SMS_0, portMAX_DELAY));*/
-        /*        send_uint32_t((uint32_t) drv_sms_get_value(SMS_1, portMAX_DELAY));*/
-        /*        send_uint32_t((uint32_t) drv_sms_get_value(SMS_2, portMAX_DELAY));*/
-        /*        send_uint32_t((uint32_t) drv_sms_get_value(SMS_3, portMAX_DELAY));*/
-        /*        break;*/
-        /*    case SUB_CMD_MONITOR_USO:*/
-        /*        send_uint32_t((uint32_t) drv_uso_get_value(USO_0, portMAX_DELAY));*/
-        /*        send_uint32_t((uint32_t) drv_uso_get_value(USO_1, portMAX_DELAY));*/
-        /*        break;*/
-        /*    default:*/
-        /*        ESP_LOGW(TAG, "Got an invalid packet with cmd: %d", cmd);*/
-        /*}*/
+        switch (cmd) {
+            case SUB_CMD_MONITOR:
+                /*sub_cmd_monitor_handler();*/
+                printf("deperecated\n");
+                break;
+            case SUB_CMD_MUX:
+                printf("sub_cmd_mux_push(%d)\n", data);
+                break;
+            case SUB_CMD_RBD:
+                printf("sub_cmd_rbd_push(%d)\n", data);
+                break;
+            case SUB_CMD_MONITOR_TEMP:
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) temp_0++);
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) temp_1++);
+                break;
+            case SUB_CMD_MONITOR_HUME:
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) hume_0++);
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) hume_1++);
+                break;
+            case SUB_CMD_MONITOR_LDR:
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) ldr_0++);
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) ldr_1++);
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) ldr_2++);
+                break;
+            case SUB_CMD_MONITOR_SMS:
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) sms_0++);
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) sms_1++);
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) sms_2++);
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) sms_3++);
+                break;
+            case SUB_CMD_MONITOR_USO:
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) uso_0++);
+                usleep(RESPONSE_DELAY_US);
+                send_uint32_t(client_sock, (uint32_t) uso_1++);
+                break;
+            default:
+                ESP_LOGW(TAG, "Got an invalid packet with cmd: %d", cmd);
+        }
 
     }
 
@@ -164,6 +203,25 @@ static esp_err_t receive_packet(int client_sock, char *buf) {
     return ESP_OK;
 
 }
+
+
+static esp_err_t send_uint32_t(int client_sock, uint32_t data) {
+
+    char buf;
+    int i;
+
+    /*
+     * data should be send in little endian
+     * */
+
+    for (i = 0; i < 4; i++) {
+        buf = (char) ((data >> i * 8) & 0xff);
+        send(client_sock, &buf, 1, 0);
+    }
+
+    return ESP_OK;
+}
+
 
 int init_tcp_server(void) {
 

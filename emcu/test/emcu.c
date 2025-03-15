@@ -5,20 +5,26 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <errno.h>
 
 #include "utils.h"
 #include "emcu.h"
 #include "emcu_test_server.h"
 
 static const char *sub_cmd_str[SUB_CMD_END] = {
-    [SUB_CMD_UNKNOWN] = "unknown",
-    [SUB_CMD_HMODE]   = "hmode",
-    [SUB_CMD_CMODE]   = "cmode",
-    [SUB_CMD_MONITOR] = "monitor",
-    [SUB_CMD_FANS]    = "fans",
-    [SUB_CMD_PELTIER] = "peltier",
-    [SUB_CMD_MUX]     = "mux",
-    [SUB_CMD_RBD]     = "rbd",
+    [SUB_CMD_UNKNOWN]      = "unknown",
+    [SUB_CMD_HMODE]        = "hmode",
+    [SUB_CMD_CMODE]        = "cmode",
+    [SUB_CMD_MONITOR]      = "monitor",
+    [SUB_CMD_FANS]         = "fans",
+    [SUB_CMD_PELTIER]      = "peltier",
+    [SUB_CMD_MUX]          = "mux",
+    [SUB_CMD_RBD]          = "rbd",
+    [SUB_CMD_MONITOR_TEMP] = "mtemp",
+    [SUB_CMD_MONITOR_HUME] = "mhume",
+    [SUB_CMD_MONITOR_LDR]  = "mldr",
+    [SUB_CMD_MONITOR_SMS]  = "msms",
+    [SUB_CMD_MONITOR_USO]  = "muso",
 };
 
 static char ip_addr[128];
@@ -36,7 +42,38 @@ int emcu_peltier(int state);
 int emcu_mux(uint32_t value);
 int emcu_rbd(uint32_t value);
 
+uint32_t recieve_uint32_t(int serverfd);
+
 int connect_to_server();
+
+uint32_t recieve_uint32_t(int serverfd) {
+
+    char buf[4];
+    int i, len;
+    uint32_t data;
+
+    for (i = 0; i < 4; i++) {
+
+        len = recv(serverfd, buf + i, 1, 0);
+        if (len < 0) {
+            printf("Error occurred during receiving: errno %d\n", errno);
+            return 0;
+        } else if (len == 0) {
+            printf("Connection closed\n");
+            return 0;
+        }
+
+    }
+
+    data = (uint32_t) buf[0]
+        | (((uint32_t) buf[1]) << 8)
+        | (((uint32_t) buf[2]) << 16)
+        | (((uint32_t) buf[3]) << 24);
+
+
+    return data;
+
+}
 
 int connect_to_server() {
 
@@ -169,6 +206,20 @@ int emcu (int command, int value) {
             return emcu_mux(value);
         case SUB_CMD_RBD:
             return emcu_rbd(value);
+        case SUB_CMD_MONITOR_TEMP:
+            send_packet(SUB_CMD_MONITOR_TEMP, 0);
+            printf("TEMP_0: %d TEMP_1: %d\n", (int)recieve_uint32_t(serverfd), (int)recieve_uint32_t(serverfd));
+            break;
+        case SUB_CMD_MONITOR_HUME:
+            send_packet(SUB_CMD_MONITOR_HUME, 0);
+            printf("HUME_0: %d HUME_1: %d\n", (int)recieve_uint32_t(serverfd), (int)recieve_uint32_t(serverfd));
+            break;
+        case SUB_CMD_MONITOR_LDR:
+            break;
+        case SUB_CMD_MONITOR_SMS:
+            break;
+        case SUB_CMD_MONITOR_USO:
+            break;
         default:
             return 1;
 
