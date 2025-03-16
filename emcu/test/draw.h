@@ -1,3 +1,5 @@
+#include<ncurses.h>
+
 /*
  * we are using use_default_colors() from ncurses library
  * */
@@ -61,6 +63,50 @@ enum ColorElements {
     /*element_toggle_button_inactive_state,*/
     /*element_toggle_button_active_state,*/
 	ELEMENT_END,
+};
+
+enum SeperatorChars {
+	CHAR_CORNER_TOPLEFT,
+	CHAR_CORNER_TOPRIGHT,
+	CHAR_CORNER_BOTRIGHT,
+	CHAR_CORNER_BOTLEFT,
+	CHAR_EDGE_TOP,
+	CHAR_EDGE_RIGHT,
+	CHAR_EDGE_BOT,
+	CHAR_EDGE_LEFT,
+	CHAR_MINUS,
+	CHAR_PIPE,
+	CHAR_CROSS,
+	CHAR_DOT,
+	CHAR_END,
+};
+
+struct MainMenu;
+struct SubMenu;
+
+struct MainMenu {
+    int sel_sub_menu_idx;
+    int total_sub_menus;
+    int cury;
+    const struct SubMenu *first_sub_menu;
+};
+
+struct SubMenu {
+    /*
+     * title and info should be short as possible,
+     * because it shouldn't bleed out at the right edge.
+     * */
+    char title[64];
+    char info[128];
+    void *(*handler)(void *param);
+    void *param;
+};
+
+struct SubMenuParam {
+    WINDOW *win;
+    /*
+     * something else
+     * */
 };
 
 int draw_init_ncurses(void);

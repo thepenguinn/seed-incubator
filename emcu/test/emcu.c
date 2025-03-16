@@ -343,6 +343,10 @@ int print_help (void) {
 
 }
 
+void *test_fn (void *param) {
+    return NULL;
+}
+
 int main (int argc, char *argv[]) {
 
     int value = 0;
