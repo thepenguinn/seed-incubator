@@ -11,6 +11,8 @@
 #include "emcu.h"
 #include "emcu_test_server.h"
 
+#include "draw.h"
+
 static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_UNKNOWN]      = "unknown",
     [SUB_CMD_HMODE]        = "hmode",
@@ -350,6 +352,10 @@ int main (int argc, char *argv[]) {
     printf("%d\n", value);
 
     if (subcommand == SUB_CMD_UNKNOWN) {
+        /*
+         * start ncurses mode
+         * */
+        draw_init_ncurses();
         print_help();
         return 1;
     }

@@ -1,18 +1,18 @@
 # a simple makefile
 #
 
-# LDFLAGS = `pkg-config --libs-only-L ncursesw`
-# LDLIBS = `pkg-config --libs-only-l ncursesw`
+LDFLAGS = `pkg-config --libs-only-L ncursesw`
+LDLIBS = `pkg-config --libs-only-l ncursesw`
 
 build: emcu
 
 test_build: test_emcu emcu_test_server
 
-test_emcu: test_emcu.o utils.o
-	gcc -o test_emcu test_emcu.o utils.o
+test_emcu: test_emcu.o utils.o draw.o
+	gcc -o test_emcu test_emcu.o utils.o draw.o $(LDFLAGS) $(LDLIBS)
 
-emcu: emcu.o utils.o
-	gcc -o emcu emcu.o utils.o
+emcu: emcu.o utils.o draw.o
+	gcc -o emcu emcu.o utils.o draw.o $(LDFLAGS) $(LDLIBS)
 
 ## object files
 
@@ -24,6 +24,9 @@ emcu.o: emcu.c emcu.h
 
 utils.o: utils.h emcu.h utils.c
 	gcc -c utils.c
+
+draw.o: draw.h draw.c
+	gcc -c draw.c
 
 # TEST SERVER
 emcu_test_server: emcu_test_server.o esp_log.o
