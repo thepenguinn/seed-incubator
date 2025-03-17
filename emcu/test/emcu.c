@@ -12,6 +12,7 @@
 #include "emcu_test_server.h"
 
 #include "draw.h"
+#include "tcp.h"
 
 static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_UNKNOWN]      = "unknown",
@@ -27,6 +28,7 @@ static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_MONITOR_LDR]  = "mldr",
     [SUB_CMD_MONITOR_SMS]  = "msms",
     [SUB_CMD_MONITOR_USO]  = "muso",
+    [SUB_CMD_TUI]          = "tui",
 };
 
 static char ip_addr[128];
@@ -44,127 +46,11 @@ int emcu_peltier(int state);
 int emcu_mux(uint32_t value);
 int emcu_rbd(uint32_t value);
 
-uint32_t recieve_uint32_t(int serverfd);
-
-int connect_to_server();
-
-uint32_t recieve_uint32_t(int serverfd) {
-
-    char buf[4];
-    int i, len;
-    uint32_t data;
-
-    for (i = 0; i < 4; i++) {
-
-        len = recv(serverfd, buf + i, 1, 0);
-        if (len < 0) {
-            printf("Error occurred during receiving: errno %d\n", errno);
-            return 0;
-        } else if (len == 0) {
-            printf("Connection closed\n");
-            return 0;
-        }
-
-    }
-
-    data = (uint32_t) buf[0]
-        | (((uint32_t) buf[1]) << 8)
-        | (((uint32_t) buf[2]) << 16)
-        | (((uint32_t) buf[3]) << 24);
-
-
-    return data;
-
-}
-
-int connect_to_server() {
-
-    int sockfd;
-
-    printf("%s\n", ip_addr);
-
-    struct sockaddr_in server_addr;
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1) {
-        printf("socket() failed.\n");
-        return -1;
-    }
-    printf("Created socket.\n");
-    bzero(&server_addr, sizeof(server_addr));
-
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = inet_addr(ip_addr);
-    server_addr.sin_port = (uint16_t) htons(PORT);
-
-    if (connect(sockfd, (struct sockaddr *) &server_addr, sizeof(server_addr)) == -1) {
-        printf("connect() failed.\n");
-        return -1;
-    }
-    printf("Connected successfully.\n");
-
-    return sockfd;
-
-}
-
-static int send_packet(uint8_t cmd, uint32_t data) {
-
-    char buf;
-    int i;
-
-    /*
-     * data should be send in little endian
-     * */
-
-    buf = (char) cmd;
-    send(serverfd, &buf, 1, 0);
-    for (i = 0; i < 4; i++) {
-        buf = (char) ((data >> i * 8) & 0xff);
-        send(serverfd, &buf, 1, 0);
-    }
-
-    return 0;
-
-}
-
 int emcu_exhaust(int mode) {
     return 0;
 }
 
 int emcu_monitor() {
-
-    /*
-     * TODO: create a tui app
-     * */
-    return 1;
-
-    char msg = (char) SUB_CMD_MONITOR;
-    int i = 0;
-    char buf[7];
-
-    while (1) {
-        send(serverfd, &msg, 1, 0);
-        send(serverfd, &msg, 1, 0);
-
-        for (i = 0; i < 6; i++) {
-            recv(serverfd, buf + i, 1, 0);
-        }
-        buf[6] = '\0';
-        printf("Temp: %s ", buf);
-
-        for (i = 0; i < 6; i++) {
-            recv(serverfd, buf + i, 1, 0);
-        }
-        buf[6] = '\0';
-        printf("Hume: %s ", buf);
-
-        for (i = 0; i < 6; i++) {
-            recv(serverfd, buf + i, 1, 0);
-        }
-        buf[6] = '\0';
-        printf("Voltage: %smV\n", buf);
-        usleep(500);
-    }
-
     return 0;
 }
 
@@ -178,13 +64,13 @@ int emcu_peltier(int state) {
 
 int emcu_mux(uint32_t value) {
 
-    send_packet(SUB_CMD_MUX, value);
+    tcp_send_packet(serverfd, SUB_CMD_MUX, value);
     return 0;
 }
 
 int emcu_rbd(uint32_t value) {
 
-    send_packet(SUB_CMD_RBD, value);
+    tcp_send_packet(serverfd, SUB_CMD_RBD, value);
     return 0;
 }
 
@@ -209,12 +95,20 @@ int emcu (int command, int value) {
         case SUB_CMD_RBD:
             return emcu_rbd(value);
         case SUB_CMD_MONITOR_TEMP:
-            send_packet(SUB_CMD_MONITOR_TEMP, 0);
-            printf("TEMP_0: %d TEMP_1: %d\n", (int)recieve_uint32_t(serverfd), (int)recieve_uint32_t(serverfd));
+            tcp_send_packet(serverfd, SUB_CMD_MONITOR_TEMP, 0);
+            printf(
+                "TEMP_0: %d TEMP_1: %d\n",
+                (int)tcp_recieve_uint32_t(serverfd),
+                (int)tcp_recieve_uint32_t(serverfd)
+            );
             break;
         case SUB_CMD_MONITOR_HUME:
-            send_packet(SUB_CMD_MONITOR_HUME, 0);
-            printf("HUME_0: %d HUME_1: %d\n", (int)recieve_uint32_t(serverfd), (int)recieve_uint32_t(serverfd));
+            tcp_send_packet(serverfd, SUB_CMD_MONITOR_HUME, 0);
+            printf(
+                "HUME_0: %d HUME_1: %d\n",
+                (int)tcp_recieve_uint32_t(serverfd),
+                (int)tcp_recieve_uint32_t(serverfd)
+            );
             break;
         case SUB_CMD_MONITOR_LDR:
             break;
@@ -222,69 +116,17 @@ int emcu (int command, int value) {
             break;
         case SUB_CMD_MONITOR_USO:
             break;
+        case SUB_CMD_TUI:
+            /*
+             * start the tui app
+             * */
+            break;
         default:
             return 1;
 
     }
 
     return 0;
-
-}
-
-static int tworaisedto(int num) {
-    int value = 1;
-
-    while (num > 0) {
-        value = value * 2;
-        num--;
-    }
-
-    return value;
-}
-
-static int strbtonum(char *string) {
-    char *i = string;
-    int count = -1;
-    int value = 0;
-
-    /*
-     * counting how many 1s and 0s are there
-     * */
-    while (i && *i != '\0') {
-        if (*i == '0' || *i == '1') {
-            count++;
-            i++;
-        } else if (*i == '_') {
-            i++;
-            continue;
-        } else {
-            printf("There's other characters than 0, 1, _");
-            break;
-        }
-    }
-
-    i = string;
-    /*
-     * converting to number
-     * */
-    while (i && *i != '\0') {
-        if (*i == '0') {
-            count--;
-            i++;
-        } else if (*i == '1') {
-            value = value + tworaisedto(count);
-            count--;
-            i++;
-        } else if (*i == '_') {
-            i++;
-            continue;
-        } else {
-            printf("There's other characters than 0, 1, _");
-            break;
-        }
-    }
-
-    return value;
 
 }
 
@@ -315,7 +157,7 @@ int parse_args (int argc, char *argv[], int *value) {
             case SUB_CMD_MUX:
             case SUB_CMD_RBD:
                 if (argc >= 3) {
-                    *value = strbtonum(argv[2]);
+                    *value = utils_strbtonum(argv[2]);
                 } else {
                     return SUB_CMD_UNKNOWN;
                 }
@@ -373,7 +215,7 @@ int main (int argc, char *argv[]) {
     }
 #endif
 
-    sockfd = connect_to_server();
+    sockfd = tcp_connect_to_server(ip_addr, PORT);
     if (sockfd < 0) {
         return 1;
     } else {

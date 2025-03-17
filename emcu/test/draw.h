@@ -50,19 +50,23 @@ enum ColorSchemes {
 };
 
 enum ColorElements {
-	ELEMENT_MENU_TITLE,
-	ELEMENT_SUBMENU_TITLE_NORMAL,
-	ELEMENT_SUBMENU_TITLE_SELECTED,
-	ELEMENT_SUBMENU_INFO_NORMAL,
-	ELEMENT_SUBMENU_INFO_SELECTED,
+    ELEMENT_MENU_TITLE,
+    ELEMENT_SUBMENU_TITLE_NORMAL,
+    ELEMENT_SUBMENU_TITLE_SELECTED,
+    ELEMENT_SUBMENU_INFO_NORMAL,
+    ELEMENT_SUBMENU_INFO_SELECTED,
     ELEMENT_INFO_FRAME,
     ELEMENT_INFO_TEXT,
     ELEMENT_INFO_VALUE,
+    ELEMENT_DOTS_NORMAL,
+    ELEMENT_DOTS_SELECTED,
+    ELEMENT_EMCU_CONNECTED,
+    ELEMENT_EMCU_NOT_CONNECTED,
     /*element_toggle_button_frame,*/
     /*element_toggle_button_text,*/
     /*element_toggle_button_inactive_state,*/
     /*element_toggle_button_active_state,*/
-	ELEMENT_END,
+    ELEMENT_END,
 };
 
 enum SeperatorChars {

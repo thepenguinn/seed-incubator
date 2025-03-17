@@ -14,7 +14,7 @@ static WINDOW *TopWin, *MainWin, *BotWin;
 static unsigned int edge_pad_vertical = 3;
 static unsigned int edge_pad_horizontal = 1;
 static unsigned int topwin_nlines = 3;
-static unsigned int botwin_nlines = 3;
+static unsigned int botwin_nlines = 2;
 static unsigned int mainwin_pad_horizontal = 1;
 
 /*
@@ -22,6 +22,9 @@ static unsigned int mainwin_pad_horizontal = 1;
  * */
 #define KEY_RETURN  10
 #define KEY_ESCAPE  27
+
+#define EMCU_CONNECTED_TEXT          "Connected"
+#define EMCU_NOT_CONNECTED_TEXT  "Not Connected"
 
 static void *sub_menu_temp_handler(void *param);
 
@@ -57,6 +60,24 @@ static const struct SubMenu sub_menus[] = {
     {
         .title = "Soil Moisture",
         .info = "Soil moisture at the base of each plant",
+        .handler = sub_menu_temp_handler,
+        .param = NULL,
+    },
+    {
+        .title = "Reservoir Level",
+        .info = "Water and fertilizer level",
+        .handler = sub_menu_temp_handler,
+        .param = NULL,
+    },
+    {
+        .title = "Exhaust",
+        .info = "Exhaust control",
+        .handler = sub_menu_temp_handler,
+        .param = NULL,
+    },
+    {
+        .title = "Humidifier",
+        .info = "Humidifier control",
         .handler = sub_menu_temp_handler,
         .param = NULL,
     },
@@ -113,6 +134,11 @@ static int color_schemes[SCHEME_END][ELEMENT_END] = {
         [ELEMENT_INFO_FRAME]             = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
         [ELEMENT_INFO_TEXT]              = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG),
         [ELEMENT_INFO_VALUE]             = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG) | A_BOLD,
+        [ELEMENT_DOTS_NORMAL]            = ColorPair(PAIR_TER_WHITE_DEFAULT_BG),
+        [ELEMENT_DOTS_SELECTED]          = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
+        [ELEMENT_EMCU_CONNECTED]         = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
+        [ELEMENT_EMCU_NOT_CONNECTED]     = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
+
 
 	},
 	/* ill set this later */
@@ -198,22 +224,28 @@ static void resize_windows(void) {
 
 }
 
-static void draw_top_win(WINDOW *win, const char *title) {
+void draw_top_win(const char *title) {
 
-	wmove(win, 0, 0);
+    WINDOW *win = TopWin;
+
+	wmove(win, 1, 0);
 	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_MENU_TITLE]);
 	wprintw(win, "%s", title);
-	/*wattroff(win, A_BOLD);*/
-	/*wmove(win, 2, 0);*/
-	/*wprintw(win, "%s", "local | stashed | news");*/
 
 }
 
-static void draw_main_menu(WINDOW *win, struct MainMenu *menu) {
+void draw_main_menu(struct MainMenu *menu) {
+
+    /*
+     * TODO: there's a bug lurking somewhere here,
+     * fix it.
+     * */
 
     int i;
     int ymax, xmax;
     int cury;
+
+    WINDOW *win = MainWin;
 
     getmaxyx(win, ymax, xmax);
     werase(win);
@@ -306,15 +338,51 @@ static void draw_main_menu(WINDOW *win, struct MainMenu *menu) {
         cury = cury + 2;
 
     }
+}
 
-    /*if (pcury != menu->cury) {*/
-    /*    endwin();*/
-    /*    printf("pcury: %d, menu->cury: %d, ymax: %d\n", pcury, menu->cury, ymax);*/
-    /*    fflush(stdout);*/
-    /*    exit(EXIT_FAILURE);*/
-    /*}*/
+void draw_bot_win(struct MainMenu *menu, int emcu_connected) {
 
-    /*assert(pcury == menu->cury);*/
+    WINDOW *win = BotWin;
+
+    int ymax, xmax;
+
+	int maxitems;
+	int left_smenus, right_smenus;
+
+	getmaxyx(win, ymax, xmax);
+
+	maxitems = menu->total_sub_menus;
+
+	left_smenus = menu->sel_sub_menu_idx;
+	right_smenus = menu->total_sub_menus - menu->sel_sub_menu_idx - 1;
+
+	wmove(win, 0, 0);
+	wclrtoeol(win);
+
+	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_DOTS_NORMAL]);
+	while (left_smenus) {
+		wprintw(win, "%s", char_symbols[CHAR_DOT]);
+		left_smenus--;
+	}
+
+	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_DOTS_SELECTED]);
+	wprintw(win, "%s", char_symbols[CHAR_DOT]);
+
+	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_DOTS_NORMAL]);
+	while (right_smenus) {
+		wprintw(win, "%s", char_symbols[CHAR_DOT]);
+		right_smenus--;
+	}
+
+    if (emcu_connected == 1) {
+        wmove(win, 0, xmax - sizeof(EMCU_CONNECTED_TEXT));
+        wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_EMCU_CONNECTED]);
+        wprintw(win, "%s", EMCU_CONNECTED_TEXT);
+    } else {
+        wmove(win, 0, xmax - sizeof(EMCU_NOT_CONNECTED_TEXT));
+        wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_EMCU_NOT_CONNECTED]);
+        wprintw(win, "%s", EMCU_NOT_CONNECTED_TEXT);
+    }
 
 }
 
@@ -328,15 +396,13 @@ static void start_tui_app(void) {
     mainmenu.first_sub_menu = sub_menus;
     mainmenu.cury = 0;
 
-    draw_top_win(TopWin, app_name);
-
-	draw_main_menu(MainWin, &mainmenu);
-
-	/*draw_page_hints(Botwin, &mainmenu);*/
+    draw_top_win(app_name);
+	draw_main_menu(&mainmenu);
+    draw_bot_win(&mainmenu, 0);
 
 	wrefresh(TopWin);
-	/*wrefresh(Botwin);*/
 	wrefresh(MainWin);
+    wrefresh(BotWin);
 
 	while ((event = wgetch(MainWin)) != 'q') {
 
@@ -358,17 +424,16 @@ static void start_tui_app(void) {
                 break;
             case KEY_RESIZE:
                 resize_windows();
-                draw_top_win(TopWin, app_name);
+                draw_top_win(app_name);
                 wrefresh(TopWin);
                 break;
         }
 
-		draw_main_menu(MainWin, &mainmenu);
+		draw_main_menu(&mainmenu);
         wrefresh(MainWin);
 
-		/*draw_page_hints(BotWin, &mainmenu);*/
-
-		/*wrefresh(BotWin);*/
+        draw_bot_win(&mainmenu, 1);
+        wrefresh(BotWin);
 
 	}
 

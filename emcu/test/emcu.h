@@ -12,6 +12,7 @@ enum SubCmd {
     SUB_CMD_MONITOR_LDR,
     SUB_CMD_MONITOR_SMS,
     SUB_CMD_MONITOR_USO,
+    SUB_CMD_TUI,
     SUB_CMD_END,
 };
 

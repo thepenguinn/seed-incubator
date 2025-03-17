@@ -8,18 +8,18 @@ build: emcu
 
 test_build: test_emcu emcu_test_server
 
-test_emcu: test_emcu.o utils.o draw.o
-	gcc -o test_emcu test_emcu.o utils.o draw.o $(LDFLAGS) $(LDLIBS)
+test_emcu: test_emcu.o utils.o draw.o tcp.o
+	gcc -o test_emcu test_emcu.o utils.o draw.o tcp.o $(LDFLAGS) $(LDLIBS)
 
-emcu: emcu.o utils.o draw.o
-	gcc -o emcu emcu.o utils.o draw.o $(LDFLAGS) $(LDLIBS)
+emcu: emcu.o utils.o draw.o tcp.o
+	gcc -o emcu emcu.o utils.o draw.o tcp.o $(LDFLAGS) $(LDLIBS)
 
 ## object files
 
-test_emcu.o: emcu.c
+test_emcu.o: emcu.c emcu.h tcp.h draw.h
 	gcc -c emcu.c -o test_emcu.o -D__TEST_BUILD__
 
-emcu.o: emcu.c emcu.h
+emcu.o: emcu.c emcu.h tcp.h draw.h
 	gcc -c emcu.c
 
 utils.o: utils.h emcu.h utils.c
@@ -27,6 +27,9 @@ utils.o: utils.h emcu.h utils.c
 
 draw.o: draw.h draw.c
 	gcc -c draw.c
+
+tcp.o: tcp.h tcp.c
+	gcc -c tcp.c
 
 # TEST SERVER
 emcu_test_server: emcu_test_server.o esp_log.o
