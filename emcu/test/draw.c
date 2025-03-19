@@ -41,48 +41,50 @@ static void init_colorschemes(void);
 static void create_windows(void);
 static void resize_windows(void);
 
+struct TempData DhtTempData = {0};
+
 static const struct SubMenu sub_menus[] = {
     {
         .title = "Temperature",
         .info = "Indoor and outdoor temperature",
         .handler = sub_menu_temp_handler,
-        .param = NULL,
+        .data = (void *) &DhtTempData,
     },
     {
         .title = "Air Moisture",
         .info = "Indoor and outdoor air moisture",
         .handler = sub_menu_temp_handler,
-        .param = NULL,
+        .data = (void *) &DhtTempData,
     },
     {
         .title = "Lighting",
         .info = "LDR data within the incubator",
         .handler = sub_menu_temp_handler,
-        .param = NULL,
+        .data = (void *) &DhtTempData,
     },
     {
         .title = "Soil Moisture",
         .info = "Soil moisture at the base of each plant",
         .handler = sub_menu_temp_handler,
-        .param = NULL,
+        .data = (void *) &DhtTempData,
     },
     {
         .title = "Reservoir Level",
         .info = "Water and fertilizer level",
         .handler = sub_menu_temp_handler,
-        .param = NULL,
+        .data = (void *) &DhtTempData,
     },
     {
         .title = "Exhaust",
         .info = "Exhaust control",
         .handler = sub_menu_temp_handler,
-        .param = NULL,
+        .data = (void *) &DhtTempData,
     },
     {
         .title = "Humidifier",
         .info = "Humidifier control",
         .handler = sub_menu_temp_handler,
-        .param = NULL,
+        .data = (void *) &DhtTempData,
     },
 };
 
@@ -555,10 +557,6 @@ static void draw_data_widget(WINDOW *win, const struct DataWidget *widget) {
 
     wattroff(win, widget->data_value_scheme);
 
-	/*   wmove(win, 2, 5);*/
-	/*wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_SUBMENU_TITLE_SELECTED]);*/
-	/*   wprintw(win, "DHT 0");*/
-
 }
 
 static void fill_data_widget_config(struct DataWidget *widget) {
@@ -588,16 +586,38 @@ static void draw_sub_menu_temp(WINDOW *win, const struct SubMenu *submenu) {
     werase(win);
 
     int ymax, xmax;
+    struct DataWidget widget;
+    struct TempData *data = (struct TempData *)submenu->data;
+    char key[] = "DHT 0";
+    char val_buf[128];
+    int wrtn;
+    int i;
+    int cury = 0;
+
+    data->dht[0] = 327;
+    data->dht[1] = 182;
+
     getmaxyx(win, ymax, xmax);
 
-    struct DataWidget widget;
     fill_data_widget_config(&widget);
     widget.width = xmax;
 
-    wmove(win, 0, 0);
-    draw_data_widget(win, &widget);
+    widget.data_key = key;
+    widget.data_key_size = sizeof(key) - 1;
+    widget.data_value = val_buf;
 
-    /*wprintw(win, "Say hello, this is temp sub menu.");*/
+    for (i = 0; i < DHT_COUNT; i++) {
+        snprintf(key + 4, 2, "%d", i);
+        wrtn = snprintf(val_buf, sizeof(val_buf), "%0.02f deg. Cel.", ((float) data->dht[i]) / 10);
+        widget.data_value_size = wrtn - 1;
+        if (cury + 5 < ymax) {
+            wmove(win, cury, 0);
+            draw_data_widget(win, &widget);
+            cury = cury + 5;
+        }
+    }
+
+
 
 }
 

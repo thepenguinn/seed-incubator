@@ -116,7 +116,7 @@ struct SubMenu {
     char title[64];
     char info[128];
     void *(*handler)(void *param);
-    void *param;
+    void *data;
 };
 
 struct SubMenuParam {
@@ -143,12 +143,16 @@ struct DataWidget {
 };
 
 /*
- * TODO: move this to somewhere else that makes sense.
+* TODO: move this to somewhere else that makes sense.
  * */
 
+#define DHT_COUNT 2
+#define LDR_COUNT 3
+#define SMS_COUNT 4
+#define USO_COUNT 2
+
 struct TempData {
-    int dht_0;
-    int dht_1;
+    int dht[2];
 };
 
 void draw_top_win(const char *title);
