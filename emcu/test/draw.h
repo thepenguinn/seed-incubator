@@ -62,6 +62,13 @@ enum ColorElements {
     ELEMENT_DOTS_SELECTED,
     ELEMENT_EMCU_CONNECTED,
     ELEMENT_EMCU_NOT_CONNECTED,
+    /**/
+    ELEMENT_DATA_WIDGET_FRAME_NORMAL,
+    ELEMENT_DATA_WIDGET_FRAME_SELECTED,
+    ELEMENT_DATA_WIDGET_KEY_NORMAL,
+    ELEMENT_DATA_WIDGET_KEY_SELECTED,
+    ELEMENT_DATA_WIDGET_VALUE_NORMAL,
+    ELEMENT_DATA_WIDGET_VALUE_SELECTED,
     /*element_toggle_button_frame,*/
     /*element_toggle_button_text,*/
     /*element_toggle_button_inactive_state,*/
@@ -74,6 +81,10 @@ enum SeperatorChars {
 	CHAR_CORNER_TOPRIGHT,
 	CHAR_CORNER_BOTRIGHT,
 	CHAR_CORNER_BOTLEFT,
+	CHAR_CORNER_ROUNDED_TOPLEFT,
+	CHAR_CORNER_ROUNDED_TOPRIGHT,
+	CHAR_CORNER_ROUNDED_BOTRIGHT,
+	CHAR_CORNER_ROUNDED_BOTLEFT,
 	CHAR_EDGE_TOP,
 	CHAR_EDGE_RIGHT,
 	CHAR_EDGE_BOT,
@@ -92,7 +103,9 @@ struct MainMenu {
     int sel_sub_menu_idx;
     int total_sub_menus;
     int cury;
+    int event;
     const struct SubMenu *first_sub_menu;
+    int emcu_connected;
 };
 
 struct SubMenu {
@@ -112,5 +125,36 @@ struct SubMenuParam {
      * something else
      * */
 };
+
+struct DataWidget {
+    int width;
+    int height;
+    int xopad; /* outer padding along x direction*/
+    int xipad; /* inner padding along x direction*/
+    int yopad; /* outer padding along y direction*/
+    int yipad; /* inner padding along y direction*/
+    const char *data_key;
+    int data_key_size;
+    const char *data_value;
+    int data_value_size;
+    int frame_scheme;
+    int data_key_scheme;
+    int data_value_scheme;
+};
+
+/*
+ * TODO: move this to somewhere else that makes sense.
+ * */
+
+struct TempData {
+    int dht_0;
+    int dht_1;
+};
+
+void draw_top_win(const char *title);
+void draw_bot_win(struct MainMenu *menu);
+int draw_sub_menu(struct MainMenu *mainmenu);
+void draw_main_menu(struct MainMenu *menu);
+void start_tui_app(void);
 
 int draw_init_ncurses(void);

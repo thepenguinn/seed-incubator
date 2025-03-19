@@ -26,17 +26,20 @@ static unsigned int mainwin_pad_horizontal = 1;
 #define EMCU_CONNECTED_TEXT          "Connected"
 #define EMCU_NOT_CONNECTED_TEXT  "Not Connected"
 
-static void *sub_menu_temp_handler(void *param);
+#define DATA_WIDGET_DEFAULT_KEY    "SENSOR"
+#define DATA_WIDGET_DEFAULT_VALUE  "VALUE"
 
+static void *sub_menu_temp_handler(void *param);
 static void *sub_menu_hume_handler(void *param);
 
-static void *sub_menu_temp_handler(void *param) {
-    return NULL;
-}
+static void fill_data_widget_config(struct DataWidget *widget);
+static void draw_sub_menu_temp(WINDOW *win, const struct SubMenu *submenu);
 
-static void *sub_menu_hume_handler(void *param) {
-    return NULL;
-}
+static void draw_data_widget(WINDOW *win, const struct DataWidget *widget);
+
+static void init_colorschemes(void);
+static void create_windows(void);
+static void resize_windows(void);
 
 static const struct SubMenu sub_menus[] = {
     {
@@ -86,22 +89,22 @@ static const struct SubMenu sub_menus[] = {
 static const char app_name[] = "Seed Incubator";
 
 static const char *char_symbols[CHAR_END] = {
-	[CHAR_CORNER_TOPLEFT]   = "┌",
-	// [CHAR_CORNER_TOPLEFT]   = "╭",
-	[CHAR_CORNER_TOPRIGHT]  = "┐",
-	// [CHAR_CORNER_TOPRIGHT]  = "╮",
-	[CHAR_CORNER_BOTRIGHT]  = "┘",
-	// [CHAR_CORNER_BOTRIGHT]  = "╯",
-	[CHAR_CORNER_BOTLEFT]   = "└",
-	// [CHAR_CORNER_BOTLEFT]   = "╰",
-	[CHAR_EDGE_TOP]         = "┬",
-	[CHAR_EDGE_RIGHT]       = "┤",
-	[CHAR_EDGE_BOT]         = "┴",
-	[CHAR_EDGE_LEFT]        = "├",
-	[CHAR_MINUS]            = "─",
-	[CHAR_PIPE]             = "│",
-	[CHAR_CROSS]            = "┼",
-	[CHAR_DOT]              = "•"
+    [CHAR_CORNER_TOPLEFT]           = "┌",
+    [CHAR_CORNER_TOPRIGHT]          = "┐",
+    [CHAR_CORNER_BOTRIGHT]          = "┘",
+    [CHAR_CORNER_BOTLEFT]           = "└",
+    [CHAR_CORNER_ROUNDED_TOPLEFT]   = "╭",
+    [CHAR_CORNER_ROUNDED_TOPRIGHT]  = "╮",
+    [CHAR_CORNER_ROUNDED_BOTRIGHT]  = "╯",
+    [CHAR_CORNER_ROUNDED_BOTLEFT]   = "╰",
+    [CHAR_EDGE_TOP]                 = "┬",
+    [CHAR_EDGE_RIGHT]               = "┤",
+    [CHAR_EDGE_BOT]                 = "┴",
+    [CHAR_EDGE_LEFT]                = "├",
+    [CHAR_MINUS]                    = "─",
+    [CHAR_PIPE]                     = "│",
+    [CHAR_CROSS]                    = "┼",
+    [CHAR_DOT]                      = "•"
 };
 static const char *colors[COLOR_END] = {
 	[COLOR_PRI_ACCENT] = "#CCE099",
@@ -126,19 +129,26 @@ static int color_schemes[SCHEME_END][ELEMENT_END] = {
          * instead of bolding it, here in termux terminal A_BLINK seems to
          * do bold the text.
          * */
-        [ELEMENT_MENU_TITLE]             = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_BLINK,
-        [ELEMENT_SUBMENU_TITLE_NORMAL]   = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG),
-        [ELEMENT_SUBMENU_TITLE_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
-        [ELEMENT_SUBMENU_INFO_NORMAL]    = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
-        [ELEMENT_SUBMENU_INFO_SELECTED]  = ColorPair(PAIR_SEC_ACCENT_DEFAULT_BG),
-        [ELEMENT_INFO_FRAME]             = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
-        [ELEMENT_INFO_TEXT]              = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG),
-        [ELEMENT_INFO_VALUE]             = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG) | A_BOLD,
-        [ELEMENT_DOTS_NORMAL]            = ColorPair(PAIR_TER_WHITE_DEFAULT_BG),
-        [ELEMENT_DOTS_SELECTED]          = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
-        [ELEMENT_EMCU_CONNECTED]         = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
-        [ELEMENT_EMCU_NOT_CONNECTED]     = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
+        [ELEMENT_MENU_TITLE]                 = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG)  | A_BLINK,
+        [ELEMENT_SUBMENU_TITLE_NORMAL]       = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG),
+        [ELEMENT_SUBMENU_TITLE_SELECTED]     = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
+        [ELEMENT_SUBMENU_INFO_NORMAL]        = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
+        [ELEMENT_SUBMENU_INFO_SELECTED]      = ColorPair(PAIR_SEC_ACCENT_DEFAULT_BG),
+        [ELEMENT_INFO_FRAME]                 = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
+        [ELEMENT_INFO_TEXT]                  = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG),
+        [ELEMENT_INFO_VALUE]                 = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)  | A_BOLD,
+        [ELEMENT_DOTS_NORMAL]                = ColorPair(PAIR_TER_WHITE_DEFAULT_BG),
+        [ELEMENT_DOTS_SELECTED]              = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
+        [ELEMENT_EMCU_CONNECTED]             = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
+        [ELEMENT_EMCU_NOT_CONNECTED]         = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
 
+        [ELEMENT_DATA_WIDGET_FRAME_NORMAL]   = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG)  | A_NORMAL,
+        [ELEMENT_DATA_WIDGET_FRAME_SELECTED] = ColorPair(PAIR_SEC_ACCENT_DEFAULT_BG) | A_NORMAL,
+
+        [ELEMENT_DATA_WIDGET_KEY_NORMAL]     = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)  | A_BLINK,
+        [ELEMENT_DATA_WIDGET_KEY_SELECTED]   = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_BLINK,
+        [ELEMENT_DATA_WIDGET_VALUE_NORMAL]   = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)  | A_BLINK,
+        [ELEMENT_DATA_WIDGET_VALUE_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_BLINK,
 
 	},
 	/* ill set this later */
@@ -229,9 +239,126 @@ void draw_top_win(const char *title) {
     WINDOW *win = TopWin;
 
 	wmove(win, 1, 0);
+	wclrtoeol(win);
 	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_MENU_TITLE]);
 	wprintw(win, "%s", title);
 
+}
+
+void draw_bot_win(struct MainMenu *menu) {
+
+    WINDOW *win = BotWin;
+
+    int ymax, xmax;
+
+	int maxitems;
+	int left_smenus, right_smenus;
+
+	getmaxyx(win, ymax, xmax);
+
+	maxitems = menu->total_sub_menus;
+
+	left_smenus = menu->sel_sub_menu_idx;
+	right_smenus = menu->total_sub_menus - menu->sel_sub_menu_idx - 1;
+
+	wmove(win, 0, 0);
+	wclrtoeol(win);
+
+	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_DOTS_NORMAL]);
+	while (left_smenus) {
+		wprintw(win, "%s", char_symbols[CHAR_DOT]);
+		left_smenus--;
+	}
+
+	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_DOTS_SELECTED]);
+	wprintw(win, "%s", char_symbols[CHAR_DOT]);
+
+	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_DOTS_NORMAL]);
+	while (right_smenus) {
+		wprintw(win, "%s", char_symbols[CHAR_DOT]);
+		right_smenus--;
+	}
+
+    if (menu->emcu_connected == 1) {
+        wmove(win, 0, xmax - sizeof(EMCU_CONNECTED_TEXT));
+        wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_EMCU_CONNECTED]);
+        wprintw(win, "%s", EMCU_CONNECTED_TEXT);
+    } else {
+        wmove(win, 0, xmax - sizeof(EMCU_NOT_CONNECTED_TEXT));
+        wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_EMCU_NOT_CONNECTED]);
+        wprintw(win, "%s", EMCU_NOT_CONNECTED_TEXT);
+    }
+
+}
+
+int draw_sub_menu(struct MainMenu *mainmenu) {
+
+    int event;
+
+    const struct SubMenu *submenu = mainmenu->first_sub_menu + mainmenu->sel_sub_menu_idx;
+
+    draw_top_win(submenu->title);
+
+    /*
+     * just filling a dummy value that the handler functions should
+     * ignore.
+     * */
+    mainmenu->event = KEY_ESCAPE;
+    submenu->handler((void *) mainmenu);
+
+    /*draw_main_menu(&mainmenu);*/
+    draw_bot_win(mainmenu);
+
+	wrefresh(TopWin);
+	wrefresh(MainWin);
+    wrefresh(BotWin);
+
+	while ((event = wgetch(MainWin))) {
+
+        mainmenu->event = event;
+        switch (event) {
+            case 'q':
+            case KEY_ESCAPE:
+                return 0;
+            case KEY_UP:
+                break;
+            case 'p':
+                if (mainmenu->sel_sub_menu_idx > 0) {
+                    mainmenu->cury = mainmenu->cury - 3;
+                    /*assert((mainmenu.cury >= 0));*/
+                    mainmenu->sel_sub_menu_idx--;
+                    submenu--;
+                    draw_top_win(submenu->title);
+                    wrefresh(TopWin);
+                }
+                break;
+            case KEY_DOWN:
+                break;
+            case 'n':
+                if (mainmenu->sel_sub_menu_idx < mainmenu->total_sub_menus - 1) {
+                    mainmenu->cury = mainmenu->cury + 3;
+                    mainmenu->sel_sub_menu_idx++;
+                    submenu++;
+                    draw_top_win(submenu->title);
+                    wrefresh(TopWin);
+                }
+                break;
+            case KEY_RESIZE:
+                resize_windows();
+                draw_top_win(submenu->title);
+                wrefresh(TopWin);
+                break;
+        }
+
+        submenu->handler((void *) mainmenu);
+        wrefresh(MainWin);
+
+        draw_bot_win(mainmenu);
+        wrefresh(BotWin);
+
+	}
+
+    return 0;
 }
 
 void draw_main_menu(struct MainMenu *menu) {
@@ -340,53 +467,167 @@ void draw_main_menu(struct MainMenu *menu) {
     }
 }
 
-void draw_bot_win(struct MainMenu *menu, int emcu_connected) {
+static void draw_data_widget(WINDOW *win, const struct DataWidget *widget) {
 
-    WINDOW *win = BotWin;
+    int i;
+    int cury, curx;
+    int oriy, orix;
+    getyx(win, cury, curx);
+    oriy = cury;
+    orix = curx;
 
-    int ymax, xmax;
+    cury = cury + widget->yopad;
+    curx = curx + widget->xopad;
 
-	int maxitems;
-	int left_smenus, right_smenus;
+    int frame_width = widget->width - (2 * (widget->xopad));
+    int frame_height = widget->height - (2 * (widget->yopad));
 
-	getmaxyx(win, ymax, xmax);
+	wattron(win, widget->frame_scheme);
 
-	maxitems = menu->total_sub_menus;
-
-	left_smenus = menu->sel_sub_menu_idx;
-	right_smenus = menu->total_sub_menus - menu->sel_sub_menu_idx - 1;
-
-	wmove(win, 0, 0);
-	wclrtoeol(win);
-
-	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_DOTS_NORMAL]);
-	while (left_smenus) {
-		wprintw(win, "%s", char_symbols[CHAR_DOT]);
-		left_smenus--;
-	}
-
-	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_DOTS_SELECTED]);
-	wprintw(win, "%s", char_symbols[CHAR_DOT]);
-
-	wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_DOTS_NORMAL]);
-	while (right_smenus) {
-		wprintw(win, "%s", char_symbols[CHAR_DOT]);
-		right_smenus--;
-	}
-
-    if (emcu_connected == 1) {
-        wmove(win, 0, xmax - sizeof(EMCU_CONNECTED_TEXT));
-        wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_EMCU_CONNECTED]);
-        wprintw(win, "%s", EMCU_CONNECTED_TEXT);
-    } else {
-        wmove(win, 0, xmax - sizeof(EMCU_NOT_CONNECTED_TEXT));
-        wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_EMCU_NOT_CONNECTED]);
-        wprintw(win, "%s", EMCU_NOT_CONNECTED_TEXT);
+    /*
+     * top line
+     * */
+    wmove(win, cury, curx);
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_TOPLEFT]);
+    curx++;
+    for (i = 0; i < frame_width - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_MINUS]);
+        curx++;
     }
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_TOPRIGHT]);
+
+    /*
+     * bot line
+     * */
+
+    cury = oriy + widget->height - widget->yopad - 1;
+    curx = orix + widget->xopad;
+    wmove(win, cury, curx);
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_BOTLEFT]);
+    curx++;
+    for (i = 0; i < frame_width - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_MINUS]);
+        curx++;
+    }
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_BOTRIGHT]);
+
+    /*
+     * left side
+     * */
+    cury = oriy + widget->yopad + 1;
+    curx = orix + widget->xopad;
+    for (i = 0; i < frame_height - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_PIPE]);
+        cury++;
+    }
+
+    /*
+     * right side
+     * */
+    cury = oriy + widget->yopad + 1;
+    curx = orix + widget->xopad + frame_width - 1;
+    for (i = 0; i < frame_height - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_PIPE]);
+        cury++;
+    }
+
+	wattroff(win, widget->frame_scheme);
+
+    wattron(win, widget->data_key_scheme);
+
+    cury = oriy + widget->yopad + 1 + widget->yipad;
+    curx = orix + widget->xopad + 1 + widget->xipad;
+    wmove(win, cury, curx);
+    wprintw(win, "%s", widget->data_key);
+
+    wattroff(win, widget->data_key_scheme);
+
+    wattron(win, widget->data_value_scheme);
+
+    cury = oriy + frame_height - 2 - widget->yipad;
+    curx = orix + frame_width - widget->xipad - widget->data_value_size;
+    wmove(win, cury, curx);
+    wprintw(win, "%s", widget->data_value);
+
+    wattroff(win, widget->data_value_scheme);
+
+	/*   wmove(win, 2, 5);*/
+	/*wattron(win, color_schemes[SCHEME_DEFAULT][ELEMENT_SUBMENU_TITLE_SELECTED]);*/
+	/*   wprintw(win, "DHT 0");*/
 
 }
 
-static void start_tui_app(void) {
+static void fill_data_widget_config(struct DataWidget *widget) {
+
+    if (!widget) {
+        return;
+    }
+
+    widget->width = 5;
+    widget->height = 5;
+    widget->xopad = 1;
+    widget->xipad = 3;
+    widget->yopad = 0;
+    widget->yipad = 1;
+    widget->data_key = DATA_WIDGET_DEFAULT_KEY;
+    widget->data_key_size = sizeof(DATA_WIDGET_DEFAULT_KEY) - 1;
+    widget->data_value = DATA_WIDGET_DEFAULT_VALUE;
+    widget->data_value_size = sizeof(DATA_WIDGET_DEFAULT_VALUE) - 1;
+    widget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_DATA_WIDGET_FRAME_NORMAL];
+    widget->data_key_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_DATA_WIDGET_KEY_NORMAL];
+    widget->data_value_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_DATA_WIDGET_VALUE_NORMAL];
+
+}
+
+static void draw_sub_menu_temp(WINDOW *win, const struct SubMenu *submenu) {
+
+    werase(win);
+
+    int ymax, xmax;
+    getmaxyx(win, ymax, xmax);
+
+    struct DataWidget widget;
+    fill_data_widget_config(&widget);
+    widget.width = xmax;
+
+    wmove(win, 0, 0);
+    draw_data_widget(win, &widget);
+
+    /*wprintw(win, "Say hello, this is temp sub menu.");*/
+
+}
+
+static void *sub_menu_temp_handler(void *param) {
+
+    /*
+     * handlers will be called with a pointer to mainmenu,
+     * and the mainmenu->event will be populated and the
+     * handler can respond to the event and draw the sub menu,
+     * but never refresh the window.
+     * */
+
+    assert(param);
+    struct MainMenu *mainmenu = (struct MainMenu *) param;
+    const struct SubMenu *submenu = mainmenu->first_sub_menu + mainmenu->sel_sub_menu_idx;
+
+    draw_sub_menu_temp(MainWin, submenu);
+    switch(mainmenu->event) {
+        case KEY_ESCAPE:
+            break;
+    }
+
+    return NULL;
+}
+
+static void *sub_menu_hume_handler(void *param) {
+    return NULL;
+}
+
+void start_tui_app(void) {
 
 	int event;
 	struct MainMenu mainmenu;
@@ -395,10 +636,11 @@ static void start_tui_app(void) {
     mainmenu.total_sub_menus = sizeof(sub_menus) / sizeof(struct SubMenu);
     mainmenu.first_sub_menu = sub_menus;
     mainmenu.cury = 0;
+    mainmenu.emcu_connected = 1;
 
     draw_top_win(app_name);
 	draw_main_menu(&mainmenu);
-    draw_bot_win(&mainmenu, 0);
+    draw_bot_win(&mainmenu);
 
 	wrefresh(TopWin);
 	wrefresh(MainWin);
@@ -427,12 +669,17 @@ static void start_tui_app(void) {
                 draw_top_win(app_name);
                 wrefresh(TopWin);
                 break;
+            case KEY_RETURN:
+                draw_sub_menu(&mainmenu);
+                draw_top_win(app_name);
+                wrefresh(TopWin);
+                break;
         }
 
 		draw_main_menu(&mainmenu);
         wrefresh(MainWin);
 
-        draw_bot_win(&mainmenu, 1);
+        draw_bot_win(&mainmenu);
         wrefresh(BotWin);
 
 	}
