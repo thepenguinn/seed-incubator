@@ -96,6 +96,27 @@ enum SeperatorChars {
 	CHAR_END,
 };
 
+enum SensSubMenu {
+    SENS_SUB_MENU_TEMPERATURE = 0,
+    SENS_SUB_MENU_AIR_MOISTURE,
+    SENS_SUB_MENU_LIGHTING,
+    SENS_SUB_MENU_SOIL_MOISTURE,
+    SENS_SUB_MENU_RESERVOIR_LEVEL,
+    SENS_SUB_MENU_END,
+};
+
+enum GenSubMenu {
+    GEN_SUB_MENU_TEMPERATURE     = SENS_SUB_MENU_TEMPERATURE,
+    GEN_SUB_MENU_AIR_MOISTURE    = SENS_SUB_MENU_AIR_MOISTURE,
+    GEN_SUB_MENU_LIGHTING        = SENS_SUB_MENU_LIGHTING,
+    GEN_SUB_MENU_SOIL_MOISTURE   = SENS_SUB_MENU_SOIL_MOISTURE,
+    GEN_SUB_MENU_RESERVOIR_LEVEL = SENS_SUB_MENU_RESERVOIR_LEVEL,
+
+    GEN_SUB_MENU_EXHAUST         = SENS_SUB_MENU_END,
+    GEN_SUB_MENU_HUMIDIFIER,
+    GEN_SUB_MENU_END,
+};
+
 struct MainMenu;
 struct SubMenu;
 
@@ -152,7 +173,23 @@ struct DataWidget {
 #define USO_COUNT 2
 
 struct TempData {
-    int dht[2];
+    int dht[DHT_COUNT];
+};
+
+struct HumeData {
+    int dht[DHT_COUNT];
+};
+
+struct LdrData {
+    int ldr[LDR_COUNT];
+};
+
+struct SmsData {
+    int sms[SMS_COUNT];
+};
+
+struct UsoData {
+    int uso[USO_COUNT];
 };
 
 void draw_top_win(const char *title);

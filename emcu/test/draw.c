@@ -29,63 +29,79 @@ static unsigned int mainwin_pad_horizontal = 1;
 #define DATA_WIDGET_DEFAULT_KEY    "SENSOR"
 #define DATA_WIDGET_DEFAULT_VALUE  "VALUE"
 
-static void *sub_menu_temp_handler(void *param);
-static void *sub_menu_hume_handler(void *param);
+static void *sub_menu_sensor_handler(void *param);
+
+static void draw_sub_menu_temp(WINDOW *win, const struct SubMenu *submenu);
+static void draw_sub_menu_hume(WINDOW *win, const struct SubMenu *submenu);
+static void draw_sub_menu_ldr(WINDOW *win, const struct SubMenu *submenu);
+static void draw_sub_menu_sms(WINDOW *win, const struct SubMenu *submenu);
+static void draw_sub_menu_uso(WINDOW *win, const struct SubMenu *submenu);
 
 static void fill_data_widget_config(struct DataWidget *widget);
-static void draw_sub_menu_temp(WINDOW *win, const struct SubMenu *submenu);
-
 static void draw_data_widget(WINDOW *win, const struct DataWidget *widget);
 
 static void init_colorschemes(void);
 static void create_windows(void);
 static void resize_windows(void);
 
-struct TempData DhtTempData = {0};
+struct TempData TempSensorData  = { .dht = { 327, 182 }             };
+struct HumeData HumeSensorData  = { .dht = { 239, 789 }             };
+struct LdrData LdrSensorData    = { .ldr = { 3199, 199, 2400 }      };
+struct SmsData SmsSensorData    = { .sms = { 2400, 122, 3199, 1600 }};
+struct UsoData UsoSensorData    = { .uso = { 140, 188 }             };
 
-static const struct SubMenu sub_menus[] = {
-    {
+static const struct SubMenu sub_menus[GEN_SUB_MENU_END] = {
+    [GEN_SUB_MENU_TEMPERATURE] = {
         .title = "Temperature",
         .info = "Indoor and outdoor temperature",
-        .handler = sub_menu_temp_handler,
-        .data = (void *) &DhtTempData,
+        .handler = sub_menu_sensor_handler,
+        .data = (void *) &TempSensorData,
     },
-    {
+    [GEN_SUB_MENU_AIR_MOISTURE] = {
         .title = "Air Moisture",
         .info = "Indoor and outdoor air moisture",
-        .handler = sub_menu_temp_handler,
-        .data = (void *) &DhtTempData,
+        .handler = sub_menu_sensor_handler,
+        .data = (void *) &HumeSensorData,
     },
-    {
+    [GEN_SUB_MENU_LIGHTING] = {
         .title = "Lighting",
         .info = "LDR data within the incubator",
-        .handler = sub_menu_temp_handler,
-        .data = (void *) &DhtTempData,
+        .handler = sub_menu_sensor_handler,
+        .data = (void *) &LdrSensorData,
     },
-    {
+    [GEN_SUB_MENU_SOIL_MOISTURE] = {
         .title = "Soil Moisture",
         .info = "Soil moisture at the base of each plant",
-        .handler = sub_menu_temp_handler,
-        .data = (void *) &DhtTempData,
+        .handler = sub_menu_sensor_handler,
+        .data = (void *) &SmsSensorData,
     },
-    {
+    [GEN_SUB_MENU_RESERVOIR_LEVEL] = {
         .title = "Reservoir Level",
         .info = "Water and fertilizer level",
-        .handler = sub_menu_temp_handler,
-        .data = (void *) &DhtTempData,
+        .handler = sub_menu_sensor_handler,
+        .data = (void *) &UsoSensorData,
     },
-    {
+    [GEN_SUB_MENU_EXHAUST] = {
         .title = "Exhaust",
         .info = "Exhaust control",
-        .handler = sub_menu_temp_handler,
-        .data = (void *) &DhtTempData,
+        .handler = sub_menu_sensor_handler,
+        .data = (void *) &TempSensorData,
     },
-    {
+    [GEN_SUB_MENU_HUMIDIFIER] = {
         .title = "Humidifier",
         .info = "Humidifier control",
-        .handler = sub_menu_temp_handler,
-        .data = (void *) &DhtTempData,
+        .handler = sub_menu_sensor_handler,
+        .data = (void *) &TempSensorData,
     },
+};
+
+static void (*sensor_sub_menu_draw_lut[SENS_SUB_MENU_END])
+    (WINDOW *, const struct SubMenu *) = {
+        [SENS_SUB_MENU_TEMPERATURE]     = draw_sub_menu_temp,
+        [SENS_SUB_MENU_AIR_MOISTURE]    = draw_sub_menu_hume,
+        [SENS_SUB_MENU_LIGHTING]        = draw_sub_menu_ldr,
+        [SENS_SUB_MENU_SOIL_MOISTURE]   = draw_sub_menu_sms,
+        [SENS_SUB_MENU_RESERVOIR_LEVEL] = draw_sub_menu_uso,
 };
 
 static const char app_name[] = "Seed Incubator";
@@ -594,9 +610,6 @@ static void draw_sub_menu_temp(WINDOW *win, const struct SubMenu *submenu) {
     int i;
     int cury = 0;
 
-    data->dht[0] = 327;
-    data->dht[1] = 182;
-
     getmaxyx(win, ymax, xmax);
 
     fill_data_widget_config(&widget);
@@ -617,11 +630,149 @@ static void draw_sub_menu_temp(WINDOW *win, const struct SubMenu *submenu) {
         }
     }
 
+}
 
+static void draw_sub_menu_hume(WINDOW *win, const struct SubMenu *submenu) {
+
+    werase(win);
+
+    int ymax, xmax;
+    struct DataWidget widget;
+    struct HumeData *data = (struct HumeData *)submenu->data;
+    char key[] = "DHT 0";
+    char val_buf[128];
+    int wrtn;
+    int i;
+    int cury = 0;
+
+    getmaxyx(win, ymax, xmax);
+
+    fill_data_widget_config(&widget);
+    widget.width = xmax;
+
+    widget.data_key = key;
+    widget.data_key_size = sizeof(key) - 1;
+    widget.data_value = val_buf;
+
+    for (i = 0; i < DHT_COUNT; i++) {
+        snprintf(key + 4, 2, "%d", i);
+        wrtn = snprintf(val_buf, sizeof(val_buf), "%0.02f %%", ((float) data->dht[i]) / 10);
+        widget.data_value_size = wrtn - 1;
+        if (cury + 5 < ymax) {
+            wmove(win, cury, 0);
+            draw_data_widget(win, &widget);
+            cury = cury + 5;
+        }
+    }
 
 }
 
-static void *sub_menu_temp_handler(void *param) {
+static void draw_sub_menu_ldr(WINDOW *win, const struct SubMenu *submenu) {
+
+    werase(win);
+
+    int ymax, xmax;
+    struct DataWidget widget;
+    struct LdrData *data = (struct LdrData *)submenu->data;
+    char key[] = "LDR 0";
+    char val_buf[128];
+    int wrtn;
+    int i;
+    int cury = 0;
+
+    getmaxyx(win, ymax, xmax);
+
+    fill_data_widget_config(&widget);
+    widget.width = xmax;
+
+    widget.data_key = key;
+    widget.data_key_size = sizeof(key) - 1;
+    widget.data_value = val_buf;
+
+    for (i = 0; i < LDR_COUNT; i++) {
+        snprintf(key + 4, 2, "%d", i);
+        wrtn = snprintf(val_buf, sizeof(val_buf), "%d mV", data->ldr[i] );
+        widget.data_value_size = wrtn - 1;
+        if (cury + 5 < ymax) {
+            wmove(win, cury, 0);
+            draw_data_widget(win, &widget);
+            cury = cury + 5;
+        }
+    }
+
+}
+
+static void draw_sub_menu_sms(WINDOW *win, const struct SubMenu *submenu) {
+
+    werase(win);
+
+    int ymax, xmax;
+    struct DataWidget widget;
+    struct SmsData *data = (struct SmsData *)submenu->data;
+    char key[] = "SMS 0";
+    char val_buf[128];
+    int wrtn;
+    int i;
+    int cury = 0;
+
+    getmaxyx(win, ymax, xmax);
+
+    fill_data_widget_config(&widget);
+    widget.width = xmax;
+
+    widget.data_key = key;
+    widget.data_key_size = sizeof(key) - 1;
+    widget.data_value = val_buf;
+
+    for (i = 0; i < SMS_COUNT; i++) {
+        snprintf(key + 4, 2, "%d", i);
+        wrtn = snprintf(val_buf, sizeof(val_buf), "%d mV", data->sms[i] );
+        widget.data_value_size = wrtn - 1;
+        if (cury + 5 < ymax) {
+            wmove(win, cury, 0);
+            draw_data_widget(win, &widget);
+            cury = cury + 5;
+        }
+    }
+
+}
+
+static void draw_sub_menu_uso(WINDOW *win, const struct SubMenu *submenu) {
+
+    werase(win);
+
+    int ymax, xmax;
+    struct DataWidget widget;
+    struct UsoData *data = (struct UsoData *)submenu->data;
+    char key[] = "USO 0";
+    char val_buf[128];
+    int wrtn;
+    int i;
+    int cury = 0;
+
+    getmaxyx(win, ymax, xmax);
+
+    fill_data_widget_config(&widget);
+    widget.width = xmax;
+
+    widget.data_key = key;
+    widget.data_key_size = sizeof(key) - 1;
+    widget.data_value = val_buf;
+
+    for (i = 0; i < USO_COUNT; i++) {
+        snprintf(key + 4, 2, "%d", i);
+        wrtn = snprintf(val_buf, sizeof(val_buf), "%0.02f cm", ((float) data->uso[i]) / 10);
+        widget.data_value_size = wrtn - 1;
+        if (cury + 5 < ymax) {
+            wmove(win, cury, 0);
+            draw_data_widget(win, &widget);
+            cury = cury + 5;
+        }
+    }
+
+}
+
+static void *sub_menu_sensor_handler(void *param) {
 
     /*
      * handlers will be called with a pointer to mainmenu,
@@ -634,16 +785,12 @@ static void *sub_menu_temp_handler(void *param) {
     struct MainMenu *mainmenu = (struct MainMenu *) param;
     const struct SubMenu *submenu = mainmenu->first_sub_menu + mainmenu->sel_sub_menu_idx;
 
-    draw_sub_menu_temp(MainWin, submenu);
+    sensor_sub_menu_draw_lut[mainmenu->sel_sub_menu_idx](MainWin, submenu);
     switch(mainmenu->event) {
         case KEY_ESCAPE:
             break;
     }
 
-    return NULL;
-}
-
-static void *sub_menu_hume_handler(void *param) {
     return NULL;
 }
 
