@@ -69,6 +69,29 @@ enum ColorElements {
     ELEMENT_DATA_WIDGET_KEY_SELECTED,
     ELEMENT_DATA_WIDGET_VALUE_NORMAL,
     ELEMENT_DATA_WIDGET_VALUE_SELECTED,
+    /**/
+    ELEMENT_RADIO_BUTTON_FRAME_NORMAL,
+    ELEMENT_RADIO_BUTTON_FRAME_SELECTED,
+    ELEMENT_RADIO_BUTTON_TEXT_NORMAL,
+    ELEMENT_RADIO_BUTTON_TEXT_SELECTED,
+
+    /*
+     * normal -> the widget is not the one user selected
+     * selected -> the widget is the one user is selected
+     * active -> the state which is active (only one will be active)
+     * inactive -> the rest of the states that are not active
+     * focused -> the state which the user is focused
+     * */
+    ELEMENT_RADIO_BUTTON_ACTIVE_NORMAL,
+    ELEMENT_RADIO_BUTTON_ACTIVE_SELECTED,
+    ELEMENT_RADIO_BUTTON_INACTIVE_NORMAL,
+    ELEMENT_RADIO_BUTTON_INACTIVE_SELECTED,
+
+    ELEMENT_RADIO_BUTTON_ACTIVE_FOCUSED_NORMAL,
+    ELEMENT_RADIO_BUTTON_ACTIVE_FOCUSED_SELECTED,
+    ELEMENT_RADIO_BUTTON_INACTIVE_FOCUSED_NORMAL,
+    ELEMENT_RADIO_BUTTON_INACTIVE_FOCUSED_SELECTED,
+
     /*element_toggle_button_frame,*/
     /*element_toggle_button_text,*/
     /*element_toggle_button_inactive_state,*/
@@ -93,6 +116,8 @@ enum SeperatorChars {
 	CHAR_PIPE,
 	CHAR_CROSS,
 	CHAR_DOT,
+    CHAR_FISHEYE,
+    CHAR_CIRCLE,
 	CHAR_END,
 };
 
@@ -115,6 +140,13 @@ enum GenSubMenu {
     GEN_SUB_MENU_EXHAUST         = SENS_SUB_MENU_END,
     GEN_SUB_MENU_HUMIDIFIER,
     GEN_SUB_MENU_END,
+};
+
+enum WidgetType {
+    WIDGET_TYPE_DATA = 0,
+    WIDGET_TYPE_SWITCH,
+    WIDGET_TYPE_RADIO_BUTTON,
+    WIDGET_TYPE_END,
 };
 
 struct MainMenu;
@@ -163,6 +195,36 @@ struct DataWidget {
     int data_value_scheme;
 };
 
+struct RadioButtonWidget {
+    int width;
+    int height;
+
+    int xopad; /* outer padding along x direction*/
+    int xipad; /* inner padding along x direction*/
+    int yopad; /* outer padding along y direction*/
+    int yipad; /* inner padding along y direction*/
+
+    const char *text;
+    int text_size;
+    const char *first_state_text;
+    int first_state_size;
+    const char *second_state_text;
+    int second_state_size;
+    const char *third_state_text;
+    int third_state_size;
+
+    int frame_scheme;
+    int text_scheme;
+    int first_state_scheme;
+    int second_state_scheme;
+    int third_state_scheme;
+};
+
+struct Widget {
+    enum WidgetType type;
+    void *state;
+};
+
 /*
 * TODO: move this to somewhere else that makes sense.
  * */
@@ -171,6 +233,9 @@ struct DataWidget {
 #define LDR_COUNT 3
 #define SMS_COUNT 4
 #define USO_COUNT 2
+
+#define EXHAUST_PANEL_COUNT 7
+#define EXHAUST_FAN_COUNT   2
 
 struct TempData {
     int dht[DHT_COUNT];
@@ -190,6 +255,45 @@ struct SmsData {
 
 struct UsoData {
     int uso[USO_COUNT];
+};
+
+enum ExhaustPanelState {
+    EXHAUST_PANEL_LEFT = 0,
+    EXHAUST_PANEL_RIGHT,
+    EXHAUST_PANEL_UNDEFINED,
+    EXHAUST_PANEL_END,
+};
+
+enum ExhaustMode {
+    EXHAUST_CMODE = 0,
+    EXHAUST_HMODE,
+    EXHAUST_NONE,
+    EXhaust_end,
+};
+
+enum BistableState {
+    BISTABLE_STATE_OFF = 0,
+    BISTABLE_STATE_ON,
+    BISTABLE_STATE_END,
+};
+
+struct ExhaustData {
+    enum ExhaustMode mode;
+
+    enum ExhaustPanelState panels[EXHAUST_PANEL_COUNT];
+
+    enum BistableState peltier;
+    enum BistableState fans[EXHAUST_FAN_COUNT];
+};
+
+struct ExhaustSubMenuState {
+    struct ExhaustData *data;
+    /*
+     * this feels lame
+     * */
+    int sel_widget; /* index */
+    int exhaust_focused; /* focused state of exhaust radio widget */
+    int total_widgets;
 };
 
 void draw_top_win(const char *title);

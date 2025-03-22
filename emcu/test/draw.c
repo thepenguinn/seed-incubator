@@ -29,7 +29,15 @@ static unsigned int mainwin_pad_horizontal = 1;
 #define DATA_WIDGET_DEFAULT_KEY    "SENSOR"
 #define DATA_WIDGET_DEFAULT_VALUE  "VALUE"
 
+#define RADIO_BUTTON_WIDGET_DEFAULT_TEXT         "Radio Button Name"
+#define RADIO_BUTTON_WIDGET_DEFAULT_FIRST_STATE            "STATE 1"
+#define RADIO_BUTTON_WIDGET_DEFAULT_SECOND_STATE           "STATE 2"
+#define RADIO_BUTTON_WIDGET_DEFAULT_THIRD_STATE            "STATE 3"
+
 static void *sub_menu_sensor_handler(void *param);
+
+static void *sub_menu_exhaust_handler(void *param);
+static void *sub_menu_humidifier_handler(void *param);
 
 static void draw_sub_menu_temp(WINDOW *win, const struct SubMenu *submenu);
 static void draw_sub_menu_hume(WINDOW *win, const struct SubMenu *submenu);
@@ -37,8 +45,13 @@ static void draw_sub_menu_ldr(WINDOW *win, const struct SubMenu *submenu);
 static void draw_sub_menu_sms(WINDOW *win, const struct SubMenu *submenu);
 static void draw_sub_menu_uso(WINDOW *win, const struct SubMenu *submenu);
 
+static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu);
+
 static void fill_data_widget_config(struct DataWidget *widget);
 static void draw_data_widget(WINDOW *win, const struct DataWidget *widget);
+
+/*static void fill_radio_button_widget_config(struct DataWidget *widget);*/
+static void draw_radio_button_widget(WINDOW *win, const struct RadioButtonWidget *widget);
 
 static void init_colorschemes(void);
 static void create_windows(void);
@@ -49,6 +62,78 @@ struct HumeData HumeSensorData  = { .dht = { 239, 789 }             };
 struct LdrData LdrSensorData    = { .ldr = { 3199, 199, 2400 }      };
 struct SmsData SmsSensorData    = { .sms = { 2400, 122, 3199, 1600 }};
 struct UsoData UsoSensorData    = { .uso = { 140, 188 }             };
+
+static struct ExhaustData IncExhaustData = {
+    .mode = EXHAUST_NONE,
+    .panels = {
+        EXHAUST_PANEL_UNDEFINED,
+        EXHAUST_PANEL_UNDEFINED,
+        EXHAUST_PANEL_UNDEFINED,
+        EXHAUST_PANEL_UNDEFINED,
+        EXHAUST_PANEL_UNDEFINED,
+        EXHAUST_PANEL_UNDEFINED,
+        EXHAUST_PANEL_UNDEFINED,
+    },
+    .peltier = BISTABLE_STATE_OFF,
+    .fans = {
+        BISTABLE_STATE_OFF,
+        BISTABLE_STATE_OFF,
+    },
+};
+
+const struct Widget exhaust_widgets[] = {
+    /* mode    */
+    {
+        .type = WIDGET_TYPE_RADIO_BUTTON,
+        .state = (void *) &(IncExhaustData.mode),
+    },
+
+    /* peltier */
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.panels),
+    },
+
+    /* fans    */
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.fans[0]),
+    },
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.fans[1]),
+    },
+
+    /* panels  */
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.panels[0]),
+    },
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.panels[1]),
+    },
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.panels[2]),
+    },
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.panels[3]),
+    },
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.panels[4]),
+    },
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.panels[5]),
+    },
+    {
+        .type = WIDGET_TYPE_SWITCH,
+        .state = (void *) &(IncExhaustData.panels[6]),
+    },
+};
 
 static const struct SubMenu sub_menus[GEN_SUB_MENU_END] = {
     [GEN_SUB_MENU_TEMPERATURE] = {
@@ -84,13 +169,13 @@ static const struct SubMenu sub_menus[GEN_SUB_MENU_END] = {
     [GEN_SUB_MENU_EXHAUST] = {
         .title = "Exhaust",
         .info = "Exhaust control",
-        .handler = sub_menu_sensor_handler,
+        .handler = sub_menu_exhaust_handler,
         .data = (void *) &TempSensorData,
     },
     [GEN_SUB_MENU_HUMIDIFIER] = {
         .title = "Humidifier",
         .info = "Humidifier control",
-        .handler = sub_menu_sensor_handler,
+        .handler = sub_menu_humidifier_handler,
         .data = (void *) &TempSensorData,
     },
 };
@@ -122,8 +207,15 @@ static const char *char_symbols[CHAR_END] = {
     [CHAR_MINUS]                    = "─",
     [CHAR_PIPE]                     = "│",
     [CHAR_CROSS]                    = "┼",
-    [CHAR_DOT]                      = "•"
+    [CHAR_DOT]                      = "•",
+    [CHAR_FISHEYE]                  = "◉",
+    [CHAR_CIRCLE]                   = "○",
 };
+
+/*❰ 5 ◉ hai*/
+/*  4  ◎ lol*/
+/*  3   ○ llkk*/
+
 static const char *colors[COLOR_END] = {
 	[COLOR_PRI_ACCENT] = "#CCE099",
 	[COLOR_SEC_ACCENT] = "#8AB872",
@@ -167,6 +259,21 @@ static int color_schemes[SCHEME_END][ELEMENT_END] = {
         [ELEMENT_DATA_WIDGET_KEY_SELECTED]   = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_BLINK,
         [ELEMENT_DATA_WIDGET_VALUE_NORMAL]   = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)  | A_BLINK,
         [ELEMENT_DATA_WIDGET_VALUE_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_BLINK,
+        /* Radio button */
+        [ELEMENT_RADIO_BUTTON_FRAME_NORMAL]   = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
+        [ELEMENT_RADIO_BUTTON_FRAME_SELECTED] = ColorPair(PAIR_SEC_ACCENT_DEFAULT_BG),
+        [ELEMENT_RADIO_BUTTON_TEXT_NORMAL]   = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG) | A_BLINK,
+        [ELEMENT_RADIO_BUTTON_TEXT_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_BLINK,
+
+        [ELEMENT_RADIO_BUTTON_ACTIVE_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG),
+        [ELEMENT_RADIO_BUTTON_ACTIVE_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
+        [ELEMENT_RADIO_BUTTON_INACTIVE_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)    | A_DIM,
+        [ELEMENT_RADIO_BUTTON_INACTIVE_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_DIM,
+
+        [ELEMENT_RADIO_BUTTON_ACTIVE_FOCUSED_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG) | A_BLINK,
+        [ELEMENT_RADIO_BUTTON_ACTIVE_FOCUSED_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG)  | A_BLINK,
+        [ELEMENT_RADIO_BUTTON_INACTIVE_FOCUSED_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)    | A_DIM | A_BLINK,
+        [ELEMENT_RADIO_BUTTON_INACTIVE_FOCUSED_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_DIM | A_BLINK,
 
 	},
 	/* ill set this later */
@@ -790,6 +897,215 @@ static void *sub_menu_sensor_handler(void *param) {
         case KEY_ESCAPE:
             break;
     }
+
+    return NULL;
+}
+
+static void fill_radio_button_widget_config(struct RadioButtonWidget *widget) {
+
+    if (!widget) {
+        return;
+    }
+
+    widget->width = 5;
+    widget->height = 7;
+    widget->xopad = 1;
+    widget->xipad = 3;
+    widget->yopad = 0;
+    widget->yipad = 1;
+
+    widget->text = RADIO_BUTTON_WIDGET_DEFAULT_TEXT;
+    widget->text_size = sizeof(RADIO_BUTTON_WIDGET_DEFAULT_TEXT) - 1;
+    widget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_RADIO_BUTTON_TEXT_NORMAL];
+
+    widget->first_state_text = RADIO_BUTTON_WIDGET_DEFAULT_FIRST_STATE;
+    widget->first_state_size = sizeof(RADIO_BUTTON_WIDGET_DEFAULT_FIRST_STATE) - 1;
+    widget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_RADIO_BUTTON_ACTIVE_NORMAL];
+
+    widget->second_state_text = RADIO_BUTTON_WIDGET_DEFAULT_SECOND_STATE;
+    widget->second_state_size = sizeof(RADIO_BUTTON_WIDGET_DEFAULT_SECOND_STATE) - 1;
+    widget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_RADIO_BUTTON_INACTIVE_NORMAL];
+
+    widget->third_state_text = RADIO_BUTTON_WIDGET_DEFAULT_THIRD_STATE;
+    widget->third_state_size = sizeof(RADIO_BUTTON_WIDGET_DEFAULT_THIRD_STATE) - 1;
+    widget->third_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_RADIO_BUTTON_INACTIVE_NORMAL];
+
+    /*widget->data_key = DATA_WIDGET_DEFAULT_KEY;*/
+    /*widget->data_key_size = sizeof(DATA_WIDGET_DEFAULT_KEY) - 1;*/
+    /*widget->data_value = DATA_WIDGET_DEFAULT_VALUE;*/
+    /*widget->data_value_size = sizeof(DATA_WIDGET_DEFAULT_VALUE) - 1;*/
+
+    widget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_RADIO_BUTTON_FRAME_NORMAL];
+
+    /*widget->data_key_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_DATA_WIDGET_KEY_NORMAL];*/
+    /*widget->data_value_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_DATA_WIDGET_VALUE_NORMAL];*/
+
+
+}
+
+static void draw_radio_button_widget(WINDOW *win, const struct RadioButtonWidget *widget) {
+
+    int i;
+    int cury, curx;
+    int oriy, orix;
+    getyx(win, cury, curx);
+    oriy = cury;
+    orix = curx;
+
+    cury = cury + widget->yopad;
+    curx = curx + widget->xopad;
+
+    int frame_width = widget->width - (2 * (widget->xopad));
+    int frame_height = widget->height - (2 * (widget->yopad));
+
+	wattron(win, widget->frame_scheme);
+
+    /*
+     * top line
+     * */
+    wmove(win, cury, curx);
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_TOPLEFT]);
+    curx++;
+    for (i = 0; i < frame_width - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_MINUS]);
+        curx++;
+    }
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_TOPRIGHT]);
+
+    /*
+     * bot line
+     * */
+    cury = oriy + widget->height - widget->yopad - 1;
+    curx = orix + widget->xopad;
+    wmove(win, cury, curx);
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_BOTLEFT]);
+    curx++;
+    for (i = 0; i < frame_width - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_MINUS]);
+        curx++;
+    }
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_BOTRIGHT]);
+
+    /*
+     * left side
+     * */
+    cury = oriy + widget->yopad + 1;
+    curx = orix + widget->xopad;
+    for (i = 0; i < frame_height - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_PIPE]);
+        cury++;
+    }
+
+    /*
+     * right side
+     * */
+    cury = oriy + widget->yopad + 1;
+    curx = orix + widget->xopad + frame_width - 1;
+    for (i = 0; i < frame_height - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_PIPE]);
+        cury++;
+    }
+
+	wattroff(win, widget->frame_scheme);
+
+    wattron(win, widget->text_scheme);
+
+    cury = oriy + widget->yopad + 1 + widget->yipad;
+    curx = orix + widget->xopad + 1 + widget->xipad;
+    wmove(win, cury, curx);
+    wprintw(win, "%s", widget->text);
+
+    wattroff(win, widget->text_scheme);
+
+    /*
+     * first state
+     * */
+
+    /*cury = oriy + frame_height - 2 - widget->yipad;*/
+    /*curx = orix + frame_width - widget->xipad - widget->text_size;*/
+
+    wattron(win, widget->first_state_scheme);
+
+    cury = oriy + frame_height - 2 - widget->yipad;
+    curx = orix + widget->xopad + 1 + widget->xipad;
+    wmove(win, cury, curx);
+    wprintw(win, "%s %s", char_symbols[CHAR_FISHEYE], widget->first_state_text);
+
+    wattroff(win, widget->first_state_scheme);
+
+    /*
+     * second state
+     * */
+
+    wattron(win, widget->second_state_scheme);
+
+    cury = oriy + frame_height - 2 - widget->yipad;
+    curx = orix + (frame_width - widget->second_state_size) / 2 + 1;
+    /*curx = orix + frame_width - widget->xipad - widget->third_state_size - 2;*/
+    wmove(win, cury, curx);
+    wprintw(win, "%s %s", char_symbols[CHAR_CIRCLE], widget->second_state_text);
+
+    wattroff(win, widget->second_state_scheme);
+
+    /*
+     * third state
+     * */
+
+    wattron(win, widget->third_state_scheme);
+
+    cury = oriy + frame_height - 2 - widget->yipad;
+    curx = orix + frame_width - widget->xipad - widget->third_state_size - 2;
+    wmove(win, cury, curx);
+    wprintw(win, "%s %s", char_symbols[CHAR_CIRCLE], widget->third_state_text);
+
+    wattroff(win, widget->third_state_scheme);
+
+}
+
+static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
+
+    struct RadioButtonWidget widget;
+    int ymax, xmax;
+    int cury, curx;
+
+    werase(win);
+
+    getmaxyx(win, ymax, xmax);
+
+    fill_radio_button_widget_config(&widget);
+    widget.width = xmax;
+
+    cury = curx = 0;
+
+    wmove(win, cury, curx);
+    draw_radio_button_widget(win, &widget);
+
+    cury = cury + widget.height;
+    wmove(win, cury, curx);
+    draw_radio_button_widget(win, &widget);
+
+}
+
+static void *sub_menu_exhaust_handler(void *param) {
+
+    assert(param);
+    struct MainMenu *mainmenu = (struct MainMenu *) param;
+    const struct SubMenu *submenu = mainmenu->first_sub_menu + mainmenu->sel_sub_menu_idx;
+
+    draw_sub_menu_exhaust(MainWin, submenu);
+    switch(mainmenu->event) {
+        case KEY_ESCAPE:
+            break;
+    }
+
+    return NULL;
+}
+
+static void *sub_menu_humidifier_handler(void *param) {
 
     return NULL;
 }
