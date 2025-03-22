@@ -142,13 +142,6 @@ enum GenSubMenu {
     GEN_SUB_MENU_END,
 };
 
-enum WidgetType {
-    WIDGET_TYPE_DATA = 0,
-    WIDGET_TYPE_SWITCH,
-    WIDGET_TYPE_RADIO_BUTTON,
-    WIDGET_TYPE_END,
-};
-
 struct MainMenu;
 struct SubMenu;
 
@@ -220,13 +213,8 @@ struct RadioButtonWidget {
     int third_state_scheme;
 };
 
-struct Widget {
-    enum WidgetType type;
-    void *state;
-};
-
 /*
-* TODO: move this to somewhere else that makes sense.
+ * TODO: move this to somewhere else that makes sense.
  * */
 
 #define DHT_COUNT 2
@@ -257,11 +245,12 @@ struct UsoData {
     int uso[USO_COUNT];
 };
 
-enum ExhaustPanelState {
-    EXHAUST_PANEL_LEFT = 0,
-    EXHAUST_PANEL_RIGHT,
-    EXHAUST_PANEL_UNDEFINED,
-    EXHAUST_PANEL_END,
+enum ExhaustWidgetType {
+    EXHAUST_WIDGET_TYEPE_PELTIER = 0,
+    EXHAUST_WIDGET_TYPE_FAN,
+    EXHAUST_WIDGET_TYPE_PANEL,
+    EXHAUST_WIDGET_TYPE_EXHAUST_MODE,
+    EXHAUST_WIDGET_TYPE_END,
 };
 
 enum ExhaustMode {
@@ -274,26 +263,33 @@ enum ExhaustMode {
 enum BistableState {
     BISTABLE_STATE_OFF = 0,
     BISTABLE_STATE_ON,
+    BISTABLE_STATE_UNDEFINED,
     BISTABLE_STATE_END,
+};
+
+struct ExhaustWidget {
+    enum ExhaustWidgetType type;
+    void *state;
+    void *widget;
 };
 
 struct ExhaustData {
     enum ExhaustMode mode;
 
-    enum ExhaustPanelState panels[EXHAUST_PANEL_COUNT];
-
+    enum BistableState panels[EXHAUST_PANEL_COUNT];
     enum BistableState peltier;
     enum BistableState fans[EXHAUST_FAN_COUNT];
 };
 
 struct ExhaustSubMenuState {
-    struct ExhaustData *data;
+    const struct ExhaustWidget *first_widget;
     /*
      * this feels lame
      * */
-    int sel_widget; /* index */
-    int exhaust_focused; /* focused state of exhaust radio widget */
+    enum ExhaustMode exhaust_focused; /* focused state of exhaust radio widget */
+    int sel_widget_idx; /* index */
     int total_widgets;
+    int cury;
 };
 
 void draw_top_win(const char *title);
