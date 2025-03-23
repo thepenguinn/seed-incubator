@@ -226,9 +226,6 @@ struct RadioButtonWidget {
     int yopad; /* outer padding along y direction*/
     int yipad; /* inner padding along y direction*/
 
-    /*
-     * TODO: draw with this
-     * */
     enum ExhaustMode mode;
 
     const char *text;
@@ -308,6 +305,7 @@ struct ExhaustWidget {
     enum ExhaustWidgetType type;
     void *state;
     void *widget;
+    int idx; /* for fans and panels */
 };
 
 struct ExhaustData {
