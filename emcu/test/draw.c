@@ -1120,6 +1120,8 @@ static void draw_radio_button_widget(WINDOW *win, void *widget_data) {
     int frame_width = widget->width - (2 * (widget->xopad));
     int frame_height = widget->height - (2 * (widget->yopad));
 
+    const char *dot_char;
+
 	wattron(win, widget->frame_scheme);
 
     /*
@@ -1192,10 +1194,16 @@ static void draw_radio_button_widget(WINDOW *win, void *widget_data) {
 
     wattron(win, widget->first_state_scheme);
 
+    if (widget->mode == EXHAUST_MODE_CMODE) {
+        dot_char = char_symbols[CHAR_FISHEYE];
+    } else {
+        dot_char = char_symbols[CHAR_CIRCLE];
+    }
+
     cury = oriy + frame_height - 2 - widget->yipad;
     curx = orix + widget->xopad + 1 + widget->xipad;
     wmove(win, cury, curx);
-    wprintw(win, "%s %s", char_symbols[CHAR_FISHEYE], widget->first_state_text);
+    wprintw(win, "%s %s", dot_char, widget->first_state_text);
 
     wattroff(win, widget->first_state_scheme);
 
@@ -1205,11 +1213,17 @@ static void draw_radio_button_widget(WINDOW *win, void *widget_data) {
 
     wattron(win, widget->second_state_scheme);
 
+    if (widget->mode == EXHAUST_MODE_HMODE) {
+        dot_char = char_symbols[CHAR_FISHEYE];
+    } else {
+        dot_char = char_symbols[CHAR_CIRCLE];
+    }
+
     cury = oriy + frame_height - 2 - widget->yipad;
     curx = orix + (frame_width - widget->second_state_size) / 2 + 1;
     /*curx = orix + frame_width - widget->xipad - widget->third_state_size - 2;*/
     wmove(win, cury, curx);
-    wprintw(win, "%s %s", char_symbols[CHAR_CIRCLE], widget->second_state_text);
+    wprintw(win, "%s %s", dot_char, widget->second_state_text);
 
     wattroff(win, widget->second_state_scheme);
 
@@ -1219,10 +1233,16 @@ static void draw_radio_button_widget(WINDOW *win, void *widget_data) {
 
     wattron(win, widget->third_state_scheme);
 
+    if (widget->mode == EXHAUST_MODE_NONE) {
+        dot_char = char_symbols[CHAR_FISHEYE];
+    } else {
+        dot_char = char_symbols[CHAR_CIRCLE];
+    }
+
     cury = oriy + frame_height - 2 - widget->yipad;
     curx = orix + frame_width - widget->xipad - widget->third_state_size - 2;
     wmove(win, cury, curx);
-    wprintw(win, "%s %s", char_symbols[CHAR_CIRCLE], widget->third_state_text);
+    wprintw(win, "%s %s", dot_char, widget->third_state_text);
 
     wattroff(win, widget->third_state_scheme);
 
