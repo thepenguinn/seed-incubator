@@ -46,6 +46,7 @@ static void draw_sub_menu_sms(WINDOW *win, const struct SubMenu *submenu);
 static void draw_sub_menu_uso(WINDOW *win, const struct SubMenu *submenu);
 
 static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu);
+static void draw_sub_menu_humidifier(WINDOW *win, const struct SubMenu *submenu);
 
 static void fill_data_widget_config(struct DataWidget *widget);
 static void draw_data_widget(WINDOW *win, const struct DataWidget *widget);
@@ -79,6 +80,10 @@ static struct ExhaustData IncExhaustData = {
         BISTABLE_STATE_OFF,
         BISTABLE_STATE_OFF,
     },
+};
+
+static struct HumidifierData IncHumidifierData = {
+    .humidifier = BISTABLE_STATE_OFF,
 };
 
 #define EXHAUST_RADIO_MODE_HEIGHT       7
@@ -302,6 +307,54 @@ static struct ExhaustSubMenuState exhaust_sub_menu_state = {
     .first_widget = exhaust_widgets,
     .sel_widget_idx = 0,
     .total_widgets = sizeof(exhaust_widgets) / sizeof(struct ExhaustWidget),
+    .cury = 0,
+};
+
+#define HUMIDIFIER_SWITCH_JUST_TEXT                                       "Humidifier "
+#define HUMIDIFIER_SWITCH_NUM_IDX               sizeof(HUMIDIFIER_SWITCH_JUST_TEXT) - 1
+#define HUMIDIFIER_SWITCH_FIRST_STATE_TEXT                                 "OFF"
+#define HUMIDIFIER_SWITCH_SECOND_STATE_TEXT                                 "ON"
+
+static char humidifier_switch_text[] = HUMIDIFIER_SWITCH_JUST_TEXT "0";
+
+static struct SwitchWidget humidifier_switch_widget = {
+
+    /*
+     * ALERT: need to fill the rest of the fields before using.
+     * */
+
+    .width = 5,
+    .height = SWITCH_WIDGET_HEIGHT,
+    .xopad = 1,
+    .xipad = 3,
+    .yopad = 0,
+    .yipad = 1,
+
+    .state = BISTABLE_STATE_OFF,
+
+    .text = humidifier_switch_text,
+    .text_size = sizeof(humidifier_switch_text) - 1,
+
+    .first_state_text = HUMIDIFIER_SWITCH_FIRST_STATE_TEXT,
+    .first_state_size = sizeof(HUMIDIFIER_SWITCH_FIRST_STATE_TEXT) - 1,
+
+    .second_state_text = HUMIDIFIER_SWITCH_SECOND_STATE_TEXT,
+    .second_state_size = sizeof(HUMIDIFIER_SWITCH_SECOND_STATE_TEXT) - 1,
+};
+
+static struct HumidifierWidget humidifier_widgets[] = {
+    {
+        .state = (void *) &(IncHumidifierData.humidifier),
+        .widget = (void *) &humidifier_switch_widget,
+        .bfocused = BISTABLE_STATE_OFF,
+        .idx = 0,
+    },
+};
+
+static struct HumidifierSubMenuState humidifier_sub_menu_state = {
+    .first_widget = humidifier_widgets,
+    .sel_widget_idx = 0,
+    .total_widgets = sizeof(humidifier_widgets) / sizeof(struct HumidifierWidget),
     .cury = 0,
 };
 
@@ -1406,12 +1459,8 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
     int cury, curx;
     int i;
 
-    enum ExhaustMode *emode;
-    enum BistableState *bstate;
-
     int sel_widget_height = 5;
     void *widget_data;
-    void (*widget_draw_fn)(WINDOW *, void *);
 
     widget = exmenu->first_widget + exmenu->sel_widget_idx;
 
@@ -1426,11 +1475,9 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
         case EXHAUST_WIDGET_TYPE_PELTIER:
             ((struct SwitchWidget *) widget_data)->width = xmax;
             sel_widget_height = ((struct SwitchWidget *)widget_data)->height;
-            widget_draw_fn = draw_switch_widget;
             break;
         case EXHAUST_WIDGET_TYPE_EXHAUST_MODE:
             sel_widget_height = ((struct RadioButtonWidget *)widget_data)->height;
-            widget_draw_fn = draw_radio_button_widget;
             ((struct RadioButtonWidget *) widget_data)->width = xmax;
             break;
     }
@@ -1859,7 +1906,251 @@ static void *sub_menu_exhaust_handler(void *param) {
     return NULL;
 }
 
+static void draw_sub_menu_humidifier(WINDOW *win, const struct SubMenu *submenu) {
+
+    struct HumidifierSubMenuState *humenu = &humidifier_sub_menu_state;
+    struct HumidifierWidget *widget;
+
+    struct SwitchWidget *swidget;
+
+    int ymax, xmax;
+    int cury, curx;
+    int i;
+
+    int sel_widget_height = 5;
+    void *widget_data;
+
+    widget = humenu->first_widget + humenu->sel_widget_idx;
+
+    getmaxyx(win, ymax, xmax);
+    cury = curx = 0;
+
+    widget_data = widget->widget;
+
+    sel_widget_height = ((struct SwitchWidget *)widget_data)->height;
+    ((struct SwitchWidget *) widget_data)->width = xmax;
+
+    werase(win);
+
+    /*
+     * if the screen has been resized after the last
+     * draw we need to adjust the position of currently
+     * selected widget
+     * */
+
+    if (humenu->cury + sel_widget_height > ymax) {
+        humenu->cury = ymax - sel_widget_height;
+    }
+    if (humenu->cury < 0) {
+        humenu->cury = 0;
+    }
+
+    int widgets_above = humenu->sel_widget_idx;
+    int widget_draw_start = widgets_above;
+
+    int lines_left_above = humenu->cury;
+    int widget_height;
+    for (i = 0; i < widgets_above; i++) {
+        widget_height = SWITCH_WIDGET_HEIGHT;
+
+        if ((lines_left_above - widget_height) >= 0) {
+            lines_left_above = lines_left_above - widget_height;
+            widget_draw_start--;
+        } else {
+            break;
+        }
+    }
+
+    if (lines_left_above > 0) {
+        /* if there is lines left above then push everything above */
+        humenu->cury = humenu->cury - lines_left_above;
+    }
+
+    int widgets_below = humenu->total_widgets - humenu->sel_widget_idx - 1;
+    int widget_draw_end = humenu->sel_widget_idx + 1;
+
+    int lines_left_below = ymax - humenu->cury - sel_widget_height;
+
+    for (i = 0; i < widgets_below; i++) {
+        widget_height = SWITCH_WIDGET_HEIGHT;
+        if (lines_left_below - widget_height >= 0) {
+            lines_left_below = lines_left_below - widget_height;
+            widget_draw_end++;
+        } else {
+            break;
+        }
+    }
+
+    int cury_offset;
+    for (i = widget_draw_start; i < humenu->sel_widget_idx; i++) {
+        wmove(win, cury, curx);
+        widget = humenu->first_widget + i;
+        widget_data = widget->widget;
+
+        swidget = (struct SwitchWidget *) widget_data;
+
+        snprintf(humidifier_switch_text + HUMIDIFIER_SWITCH_NUM_IDX, 2, "%d", widget->idx);
+
+        swidget->width = xmax;
+        swidget->state = *((enum BistableState *) widget->state);
+
+        swidget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_FRAME_NORMAL];
+        swidget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_TEXT_NORMAL];
+
+        /* fill with inactive */
+        swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+        swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+
+        switch (swidget->state) {
+            case BISTABLE_STATE_OFF:
+                swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                break;
+            case BISTABLE_STATE_ON:
+                swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                break;
+            default:
+                /* other wise leave as it is */
+                break;
+        }
+
+        draw_switch_widget(win, widget_data);
+        cury_offset = SWITCH_WIDGET_HEIGHT;
+        cury = cury + cury_offset;
+    }
+
+    wmove(win, cury, curx);
+    widget = humenu->first_widget + humenu->sel_widget_idx;
+    widget_data = widget->widget;
+
+    swidget = (struct SwitchWidget *) widget_data;
+
+    snprintf(humidifier_switch_text + HUMIDIFIER_SWITCH_NUM_IDX, 2, "%d", widget->idx);
+
+    swidget->width = xmax;
+    swidget->state = *((enum BistableState *) widget->state);
+
+    swidget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_FRAME_SELECTED];
+    swidget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_TEXT_SELECTED];
+
+    /* fill with inactive */
+    swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_SELECTED];
+    swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_SELECTED];
+
+    /* filling active one */
+    switch (swidget->state) {
+        case BISTABLE_STATE_OFF:
+            swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_SELECTED];
+            break;
+        case BISTABLE_STATE_ON:
+            swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_SELECTED];
+            break;
+        default:
+            /* other wise leave as it is */
+            break;
+    }
+
+    /* filling focused one */
+    switch (widget->bfocused) {
+        case BISTABLE_STATE_OFF:
+            if (swidget->state == BISTABLE_STATE_OFF) {
+                swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT]
+                    [ELEMENT_SWITCH_ACTIVE_FOCUSED_SELECTED];
+            } else {
+                swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT]
+                    [ELEMENT_SWITCH_INACTIVE_FOCUSED_SELECTED];
+            }
+            break;
+        case BISTABLE_STATE_ON:
+            if (swidget->state == BISTABLE_STATE_ON) {
+                swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT]
+                    [ELEMENT_SWITCH_ACTIVE_FOCUSED_SELECTED];
+            } else {
+                swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT]
+                    [ELEMENT_SWITCH_INACTIVE_FOCUSED_SELECTED];
+            }
+            break;
+        default:
+            /* other wise leave as it is */
+            break;
+    }
+
+    draw_switch_widget(win, widget_data);
+    cury_offset = SWITCH_WIDGET_HEIGHT;
+
+    cury = cury + cury_offset;
+
+    for (i = humenu->sel_widget_idx + 1; i < widget_draw_end; i++) {
+        wmove(win, cury, curx);
+        widget = humenu->first_widget + i;
+        widget_data = widget->widget;
+
+        swidget = (struct SwitchWidget *) widget_data;
+
+        snprintf(humidifier_switch_text + HUMIDIFIER_SWITCH_NUM_IDX, 2, "%d", widget->idx);
+
+        swidget->width = xmax;
+        swidget->state = *((enum BistableState *) widget->state);
+
+        swidget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_FRAME_NORMAL];
+        swidget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_TEXT_NORMAL];
+
+        /* fill with inactive */
+        swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+        swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+
+        switch (swidget->state) {
+            case BISTABLE_STATE_OFF:
+                swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                break;
+            case BISTABLE_STATE_ON:
+                swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                break;
+            default:
+                /* other wise leave as it is */
+                break;
+        }
+
+        draw_switch_widget(win, widget_data);
+
+        cury_offset = SWITCH_WIDGET_HEIGHT;
+        cury = cury + cury_offset;
+    }
+
+}
+
 static void *sub_menu_humidifier_handler(void *param) {
+
+    assert(param);
+    struct MainMenu *mainmenu = (struct MainMenu *) param;
+    const struct SubMenu *submenu = mainmenu->first_sub_menu + mainmenu->sel_sub_menu_idx;
+    struct HumidifierSubMenuState *humenu = &humidifier_sub_menu_state;
+
+    struct HumidifierWidget *widget;
+
+    int widget_height;
+
+    widget = humenu->first_widget + humenu->sel_widget_idx;
+
+    switch(mainmenu->event) {
+        case KEY_RIGHT:
+        case 'l':
+            if (widget->bfocused == BISTABLE_STATE_OFF) {
+                widget->bfocused = BISTABLE_STATE_ON;
+            }
+            break;
+
+        case KEY_LEFT:
+        case 'h':
+            if (widget->bfocused == BISTABLE_STATE_ON) {
+                widget->bfocused = BISTABLE_STATE_OFF;
+            }
+            break;
+
+        case KEY_ESCAPE:
+            break;
+    }
+
+    draw_sub_menu_humidifier(MainWin, submenu);
 
     return NULL;
 }

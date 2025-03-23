@@ -306,6 +306,10 @@ struct UsoData {
     int uso[USO_COUNT];
 };
 
+/*
+ * TODO: create an ActuatorWidget by combining all these Widgets
+ * */
+
 struct ExhaustWidget {
     enum ExhaustWidgetType type;
     void *state;
@@ -327,6 +331,27 @@ struct ExhaustData {
 
 struct ExhaustSubMenuState {
     struct ExhaustWidget *first_widget;
+    /*
+     * this feels lame
+     * */
+    int sel_widget_idx; /* index */
+    int total_widgets;
+    int cury;
+};
+
+struct HumidifierData {
+    enum BistableState humidifier;
+};
+
+struct HumidifierWidget {
+    void *state;
+    void *widget;
+    enum BistableState bfocused;
+    int idx; /* not usefull right now */
+};
+
+struct HumidifierSubMenuState {
+    struct HumidifierWidget *first_widget;
     /*
      * this feels lame
      * */
