@@ -64,7 +64,7 @@ static struct SmsData SmsSensorData    = { .sms = { 2400, 122, 3199, 1600 }};
 static struct UsoData UsoSensorData    = { .uso = { 140, 188 }             };
 
 static struct ExhaustData IncExhaustData = {
-    .mode = EXHAUST_NONE,
+    .mode = EXHAUST_MODE_NONE,
     .panels = {
         BISTABLE_STATE_OFF,
         BISTABLE_STATE_OFF,
@@ -83,11 +83,11 @@ static struct ExhaustData IncExhaustData = {
 
 #define EXHAUST_RADIO_MODE_HEIGHT       7
 #define EXHAUST_RADIO_MODE_TEXT         "Exhaust Mode"
-#define EXHAUST_RADIO_FIRST_STATE_TEXT  "CMODE"
-#define EXHAUST_RADIO_SECOND_STATE_TEXT "HMODE"
-#define EXHAUST_RADIO_THIRD_STATE_TEXT  "NONE"
+#define EXHAUST_RADIO_FIRST_MODE_TEXT  "CMODE"
+#define EXHAUST_RADIO_SECOND_MODE_TEXT "HMODE"
+#define EXHAUST_RADIO_THIRD_MODE_TEXT  "NONE"
 
-struct RadioButtonWidget exhaust_mode_widget = {
+static struct RadioButtonWidget exhaust_mode_widget = {
 
     /*
      * ALERT: need to fill the rest of the fields before using.
@@ -100,18 +100,115 @@ struct RadioButtonWidget exhaust_mode_widget = {
     .yopad = 0,
     .yipad = 1,
 
+    .mode = EXHAUST_MODE_NONE,
+
     .text = EXHAUST_RADIO_MODE_TEXT,
     .text_size = sizeof(EXHAUST_RADIO_MODE_TEXT) - 1,
 
-    .first_state_text = EXHAUST_RADIO_FIRST_STATE_TEXT,
-    .first_state_size = sizeof(EXHAUST_RADIO_FIRST_STATE_TEXT) - 1,
+    .first_state_text = EXHAUST_RADIO_FIRST_MODE_TEXT,
+    .first_state_size = sizeof(EXHAUST_RADIO_FIRST_MODE_TEXT) - 1,
 
-    .second_state_text = EXHAUST_RADIO_SECOND_STATE_TEXT,
-    .second_state_size = sizeof(EXHAUST_RADIO_SECOND_STATE_TEXT) - 1,
+    .second_state_text = EXHAUST_RADIO_SECOND_MODE_TEXT,
+    .second_state_size = sizeof(EXHAUST_RADIO_SECOND_MODE_TEXT) - 1,
 
-    .third_state_text = EXHAUST_RADIO_THIRD_STATE_TEXT,
-    .third_state_size = sizeof(EXHAUST_RADIO_THIRD_STATE_TEXT) - 1,
+    .third_state_text = EXHAUST_RADIO_THIRD_MODE_TEXT,
+    .third_state_size = sizeof(EXHAUST_RADIO_THIRD_MODE_TEXT) - 1,
 
+};
+
+#define SWITCH_WIDGET_HEIGHT  7
+
+#define PANEL_SWITCH_JUST_TEXT                                     "Panel "
+#define PANEL_SWITCH_NUM_IDX             sizeof(PANEL_SWITCH_JUST_TEXT) - 1
+#define PANEL_SWITCH_FIRST_STATE_TEXT                                "Left"
+#define PANEL_SWITCH_SECOND_STATE_TEXT                              "Right"
+
+static char panel_switch_text[] = PANEL_SWITCH_JUST_TEXT "0";
+
+static struct SwitchWidget panel_switch_widget = {
+
+    /*
+     * ALERT: need to fill the rest of the fields before using.
+     * */
+
+    .width = 5,
+    .height = SWITCH_WIDGET_HEIGHT,
+    .xopad = 1,
+    .xipad = 3,
+    .yopad = 0,
+    .yipad = 1,
+
+    .state = BISTABLE_STATE_OFF,
+
+    .text = panel_switch_text,
+    .text_size = sizeof(panel_switch_text) - 1,
+
+    .first_state_text = PANEL_SWITCH_FIRST_STATE_TEXT,
+    .first_state_size = sizeof(PANEL_SWITCH_FIRST_STATE_TEXT) - 1,
+
+    .second_state_text = PANEL_SWITCH_SECOND_STATE_TEXT,
+    .second_state_size = sizeof(PANEL_SWITCH_SECOND_STATE_TEXT) - 1,
+};
+
+#define FAN_SWITCH_JUST_TEXT                                       "Fan "
+#define FAN_SWITCH_NUM_IDX               sizeof(FAN_SWITCH_JUST_TEXT) - 1
+#define FAN_SWITCH_FIRST_STATE_TEXT                                 "Off"
+#define FAN_SWITCH_SECOND_STATE_TEXT                                 "On"
+
+static char fan_switch_text[] = FAN_SWITCH_JUST_TEXT "0";
+
+static struct SwitchWidget fan_switch_widget = {
+
+    /*
+     * ALERT: need to fill the rest of the fields before using.
+     * */
+
+    .width = 5,
+    .height = SWITCH_WIDGET_HEIGHT,
+    .xopad = 1,
+    .xipad = 3,
+    .yopad = 0,
+    .yipad = 1,
+
+    .state = BISTABLE_STATE_OFF,
+
+    .text = fan_switch_text,
+    .text_size = sizeof(fan_switch_text) - 1,
+
+    .first_state_text = FAN_SWITCH_FIRST_STATE_TEXT,
+    .first_state_size = sizeof(FAN_SWITCH_FIRST_STATE_TEXT) - 1,
+
+    .second_state_text = FAN_SWITCH_SECOND_STATE_TEXT,
+    .second_state_size = sizeof(FAN_SWITCH_SECOND_STATE_TEXT) - 1,
+};
+
+#define PELTIER_SWITCH_TEXT                                  "Peltier"
+#define PELTIER_SWITCH_FIRST_STATE_TEXT                          "Off"
+#define PELTIER_SWITCH_SECOND_STATE_TEXT                          "On"
+
+static struct SwitchWidget peltier_switch_widget = {
+
+    /*
+     * ALERT: need to fill the rest of the fields before using.
+     * */
+
+    .width = 5,
+    .height = SWITCH_WIDGET_HEIGHT,
+    .xopad = 1,
+    .xipad = 3,
+    .yopad = 0,
+    .yipad = 1,
+
+    .state = BISTABLE_STATE_OFF,
+
+    .text = PELTIER_SWITCH_TEXT,
+    .text_size = sizeof(PELTIER_SWITCH_TEXT) - 1,
+
+    .first_state_text = PELTIER_SWITCH_FIRST_STATE_TEXT,
+    .first_state_size = sizeof(PELTIER_SWITCH_FIRST_STATE_TEXT) - 1,
+
+    .second_state_text = PELTIER_SWITCH_SECOND_STATE_TEXT,
+    .second_state_size = sizeof(PELTIER_SWITCH_SECOND_STATE_TEXT) - 1,
 };
 
 static const struct ExhaustWidget exhaust_widgets[] = {
@@ -124,48 +221,58 @@ static const struct ExhaustWidget exhaust_widgets[] = {
 
     /* peltier */
     {
-        .type = EXHAUST_WIDGET_TYEPE_PELTIER,
+        .type = EXHAUST_WIDGET_TYPE_PELTIER,
         .state = (void *) &(IncExhaustData.panels),
+        .widget = (void *) &peltier_switch_widget,
     },
 
     /* fans    */
     {
         .type = EXHAUST_WIDGET_TYPE_FAN,
         .state = (void *) &(IncExhaustData.fans[0]),
+        .widget = (void *) &fan_switch_widget,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_FAN,
         .state = (void *) &(IncExhaustData.fans[1]),
+        .widget = (void *) &fan_switch_widget,
     },
 
     /* panels  */
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[0]),
+        .widget = (void *) &panel_switch_widget,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[1]),
+        .widget = (void *) &panel_switch_widget,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[2]),
+        .widget = (void *) &panel_switch_widget,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[3]),
+        .widget = (void *) &panel_switch_widget,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[4]),
+        .widget = (void *) &panel_switch_widget,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[5]),
+        .widget = (void *) &panel_switch_widget,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[6]),
+        .widget = (void *) &panel_switch_widget,
     },
 };
 
@@ -173,7 +280,7 @@ static struct ExhaustSubMenuState exhaust_sub_menu_state = {
     .first_widget = exhaust_widgets,
     .sel_widget_idx = 0,
     .total_widgets = sizeof(exhaust_widgets) / sizeof(struct ExhaustWidget),
-    .exhaust_focused = EXHAUST_CMODE,
+    .exhaust_focused = EXHAUST_MODE_CMODE,
     .cury = 0,
 };
 
@@ -316,6 +423,18 @@ static int color_schemes[SCHEME_END][ELEMENT_END] = {
         [ELEMENT_RADIO_BUTTON_ACTIVE_FOCUSED_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG)  | A_BLINK,
         [ELEMENT_RADIO_BUTTON_INACTIVE_FOCUSED_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)    | A_DIM | A_BLINK,
         [ELEMENT_RADIO_BUTTON_INACTIVE_FOCUSED_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_DIM | A_BLINK,
+
+        /* Switche */
+
+        [ELEMENT_SWITCH_FRAME_NORMAL]   = ColorPair(PAIR_SEC_WHITE_DEFAULT_BG),
+        [ELEMENT_SWITCH_FRAME_SELECTED] = ColorPair(PAIR_SEC_ACCENT_DEFAULT_BG),
+        [ELEMENT_SWITCH_TEXT_NORMAL]   = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG) | A_BLINK,
+        [ELEMENT_SWITCH_TEXT_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_BLINK,
+
+        [ELEMENT_SWITCH_ACTIVE_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG),
+        [ELEMENT_SWITCH_ACTIVE_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
+        [ELEMENT_SWITCH_INACTIVE_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)    | A_DIM,
+        [ELEMENT_SWITCH_INACTIVE_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_DIM,
 
 	},
 	/* ill set this later */
@@ -1109,6 +1228,126 @@ static void draw_radio_button_widget(WINDOW *win, void *widget_data) {
 
 }
 
+static void draw_switch_widget(WINDOW *win, void *widget_data) {
+
+    struct SwitchWidget *widget = (struct SwitchWidget *) widget_data;
+    const char *dot_char;
+    int i;
+    int cury, curx;
+    int oriy, orix;
+    getyx(win, cury, curx);
+    oriy = cury;
+    orix = curx;
+
+    cury = cury + widget->yopad;
+    curx = curx + widget->xopad;
+
+    int frame_width = widget->width - (2 * (widget->xopad));
+    int frame_height = widget->height - (2 * (widget->yopad));
+
+	wattron(win, widget->frame_scheme);
+
+    /*
+     * top line
+     * */
+    wmove(win, cury, curx);
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_TOPLEFT]);
+    curx++;
+    for (i = 0; i < frame_width - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_MINUS]);
+        curx++;
+    }
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_TOPRIGHT]);
+
+    /*
+     * bot line
+     * */
+    cury = oriy + widget->height - widget->yopad - 1;
+    curx = orix + widget->xopad;
+    wmove(win, cury, curx);
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_BOTLEFT]);
+    curx++;
+    for (i = 0; i < frame_width - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_MINUS]);
+        curx++;
+    }
+    wprintw(win, "%s", char_symbols[CHAR_CORNER_ROUNDED_BOTRIGHT]);
+
+    /*
+     * left side
+     * */
+    cury = oriy + widget->yopad + 1;
+    curx = orix + widget->xopad;
+    for (i = 0; i < frame_height - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_PIPE]);
+        cury++;
+    }
+
+    /*
+     * right side
+     * */
+    cury = oriy + widget->yopad + 1;
+    curx = orix + widget->xopad + frame_width - 1;
+    for (i = 0; i < frame_height - 2; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "%s", char_symbols[CHAR_PIPE]);
+        cury++;
+    }
+
+	wattroff(win, widget->frame_scheme);
+
+    wattron(win, widget->text_scheme);
+
+    cury = oriy + widget->yopad + 1 + widget->yipad;
+    curx = orix + widget->xopad + 1 + widget->xipad;
+    wmove(win, cury, curx);
+    wprintw(win, "%s", widget->text);
+
+    wattroff(win, widget->text_scheme);
+
+    /*
+     * first state
+     * */
+
+    wattron(win, widget->first_state_scheme);
+
+    if (widget->state == BISTABLE_STATE_OFF) {
+        dot_char = char_symbols[CHAR_FISHEYE];
+    } else {
+        dot_char = char_symbols[CHAR_CIRCLE];
+    }
+
+    cury = oriy + frame_height - 2 - widget->yipad;
+    curx = orix + (frame_width - widget->first_state_size) / 2 + 1;
+    wmove(win, cury, curx);
+    wprintw(win, "%s %s", dot_char, widget->first_state_text);
+
+    wattroff(win, widget->second_state_scheme);
+
+    /*
+     * second state
+     * */
+
+    wattron(win, widget->second_state_scheme);
+
+    if (widget->state == BISTABLE_STATE_ON) {
+        dot_char = char_symbols[CHAR_FISHEYE];
+    } else {
+        dot_char = char_symbols[CHAR_CIRCLE];
+    }
+
+    cury = oriy + frame_height - 2 - widget->yipad;
+    curx = orix + frame_width - widget->xipad - widget->second_state_size - 2;
+    wmove(win, cury, curx);
+    wprintw(win, "%s %s", dot_char, widget->second_state_text);
+
+    wattroff(win, widget->second_state_scheme);
+
+}
+
 static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
 
     struct ExhaustSubMenuState *exmenu = &exhaust_sub_menu_state;
@@ -1129,24 +1368,27 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
 
     widget = exmenu->first_widget + exmenu->sel_widget_idx;
 
-    switch (widget->type) {
-        case EXHAUST_WIDGET_TYPE_PANEL:
-            break;
-        case EXHAUST_WIDGET_TYPE_FAN:
-            break;
-        case EXHAUST_WIDGET_TYPE_EXHAUST_MODE:
-            widget_data = widget->widget;
-            sel_widget_height = ((struct RadioButtonWidget *)widget_data)->height;
-            widget_draw_fn = draw_radio_button_widget;
-            break;
-        case EXHAUST_WIDGET_TYEPE_PELTIER:
-            break;
-    }
-
     getmaxyx(win, ymax, xmax);
     cury = curx = 0;
 
+    widget_data = widget->widget;
+
+    switch (widget->type) {
+        case EXHAUST_WIDGET_TYPE_PANEL:
+        case EXHAUST_WIDGET_TYPE_FAN:
+        case EXHAUST_WIDGET_TYPE_PELTIER:
+            ((struct SwitchWidget *) widget_data)->width = xmax;
+            sel_widget_height = ((struct SwitchWidget *)widget_data)->height;
+            break;
+        case EXHAUST_WIDGET_TYPE_EXHAUST_MODE:
+            sel_widget_height = ((struct RadioButtonWidget *)widget_data)->height;
+            widget_draw_fn = draw_radio_button_widget;
+            ((struct RadioButtonWidget *) widget_data)->width = xmax;
+            break;
+    }
+
     werase(win);
+
 
     /*
      * if the screen has been resized after the last
@@ -1176,7 +1418,7 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
             /* this is radio button at the top */
             widget_height = EXHAUST_RADIO_MODE_HEIGHT;
         } else {
-            widget_height = 5;
+            widget_height = SWITCH_WIDGET_HEIGHT;
         }
 
         if ((lines_left_above - widget_height) >= 0) {
@@ -1202,7 +1444,7 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
          * Assuming everything below will be switch widget
          * TODO: Again, Stop Assuming!!
          * */
-        widget_height = 5;
+        widget_height = SWITCH_WIDGET_HEIGHT;
         if (lines_left_below - widget_height >= 0) {
             lines_left_below = lines_left_below - widget_height;
             widget_draw_end++;
@@ -1211,8 +1453,44 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
         }
     }
 
-    /*fill_radio_button_widget_config(&exhaust_mode_widget);*/
-    /*exhaust_mode_widget.width = xmax;*/
+    int cury_offset;
+    for (i = widget_draw_start; i < exmenu->sel_widget_idx; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "WIDGET ABOVE");
+        if (widget->type == EXHAUST_WIDGET_TYPE_EXHAUST_MODE) {
+            cury_offset = EXHAUST_RADIO_MODE_HEIGHT;
+        } else {
+            cury_offset = SWITCH_WIDGET_HEIGHT;
+        }
+
+        cury = cury + cury_offset;
+    }
+
+    wmove(win, cury, curx);
+    wprintw(win, "WIDGET SELECTED");
+
+    if (widget->type == EXHAUST_WIDGET_TYPE_EXHAUST_MODE) {
+        /*fill_radio_button_widget_config((struct RadioButtonWidget *) widget_data);*/
+        cury_offset = EXHAUST_RADIO_MODE_HEIGHT;
+    } else {
+        cury_offset = SWITCH_WIDGET_HEIGHT;
+    }
+
+    cury = cury + cury_offset;
+
+    for (i = exmenu->sel_widget_idx + 1; i < widget_draw_end; i++) {
+        wmove(win, cury, curx);
+        wprintw(win, "WIDGET BELOW");
+        if (widget->type == EXHAUST_WIDGET_TYPE_EXHAUST_MODE) {
+            cury_offset = EXHAUST_RADIO_MODE_HEIGHT;
+        } else {
+            cury_offset = SWITCH_WIDGET_HEIGHT;
+        }
+        cury = cury + cury_offset;
+    }
+
+    /*draw_radio_button_widget(win, widget_data);*/
+
     /**/
     /*cury = curx = 0;*/
     /**/

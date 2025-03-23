@@ -92,10 +92,17 @@ enum ColorElements {
     ELEMENT_RADIO_BUTTON_INACTIVE_FOCUSED_NORMAL,
     ELEMENT_RADIO_BUTTON_INACTIVE_FOCUSED_SELECTED,
 
-    /*element_toggle_button_frame,*/
-    /*element_toggle_button_text,*/
-    /*element_toggle_button_inactive_state,*/
-    /*element_toggle_button_active_state,*/
+    /**/
+    ELEMENT_SWITCH_FRAME_NORMAL,
+    ELEMENT_SWITCH_FRAME_SELECTED,
+    ELEMENT_SWITCH_TEXT_NORMAL,
+    ELEMENT_SWITCH_TEXT_SELECTED,
+
+    ELEMENT_SWITCH_ACTIVE_NORMAL,
+    ELEMENT_SWITCH_ACTIVE_SELECTED,
+    ELEMENT_SWITCH_INACTIVE_NORMAL,
+    ELEMENT_SWITCH_INACTIVE_SELECTED,
+
     ELEMENT_END,
 };
 
@@ -140,6 +147,28 @@ enum GenSubMenu {
     GEN_SUB_MENU_EXHAUST         = SENS_SUB_MENU_END,
     GEN_SUB_MENU_HUMIDIFIER,
     GEN_SUB_MENU_END,
+};
+
+enum ExhaustWidgetType {
+    EXHAUST_WIDGET_TYPE_PELTIER = 0,
+    EXHAUST_WIDGET_TYPE_FAN,
+    EXHAUST_WIDGET_TYPE_PANEL,
+    EXHAUST_WIDGET_TYPE_EXHAUST_MODE,
+    EXHAUST_WIDGET_TYPE_END,
+};
+
+enum ExhaustMode {
+    EXHAUST_MODE_CMODE = 0,
+    EXHAUST_MODE_HMODE,
+    EXHAUST_MODE_NONE,
+    EXHAUST_MODE_END,
+};
+
+enum BistableState {
+    BISTABLE_STATE_OFF = 0,
+    BISTABLE_STATE_ON,
+    BISTABLE_STATE_UNDEFINED,
+    BISTABLE_STATE_END,
 };
 
 struct MainMenu;
@@ -197,6 +226,11 @@ struct RadioButtonWidget {
     int yopad; /* outer padding along y direction*/
     int yipad; /* inner padding along y direction*/
 
+    /*
+     * TODO: draw with this
+     * */
+    enum ExhaustMode mode;
+
     const char *text;
     int text_size;
     const char *first_state_text;
@@ -211,6 +245,31 @@ struct RadioButtonWidget {
     int first_state_scheme;
     int second_state_scheme;
     int third_state_scheme;
+};
+
+struct SwitchWidget {
+    int width;
+    int height;
+
+    int xopad; /* outer padding along x direction*/
+    int xipad; /* inner padding along x direction*/
+    int yopad; /* outer padding along y direction*/
+    int yipad; /* inner padding along y direction*/
+
+    enum BistableState state;
+
+    const char *text;
+    int text_size;
+
+    const char *first_state_text;
+    int first_state_size;
+    const char *second_state_text;
+    int second_state_size;
+
+    int frame_scheme;
+    int text_scheme;
+    int first_state_scheme;
+    int second_state_scheme;
 };
 
 /*
@@ -243,28 +302,6 @@ struct SmsData {
 
 struct UsoData {
     int uso[USO_COUNT];
-};
-
-enum ExhaustWidgetType {
-    EXHAUST_WIDGET_TYEPE_PELTIER = 0,
-    EXHAUST_WIDGET_TYPE_FAN,
-    EXHAUST_WIDGET_TYPE_PANEL,
-    EXHAUST_WIDGET_TYPE_EXHAUST_MODE,
-    EXHAUST_WIDGET_TYPE_END,
-};
-
-enum ExhaustMode {
-    EXHAUST_CMODE = 0,
-    EXHAUST_HMODE,
-    EXHAUST_NONE,
-    EXhaust_end,
-};
-
-enum BistableState {
-    BISTABLE_STATE_OFF = 0,
-    BISTABLE_STATE_ON,
-    BISTABLE_STATE_UNDEFINED,
-    BISTABLE_STATE_END,
 };
 
 struct ExhaustWidget {
