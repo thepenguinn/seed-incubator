@@ -38,6 +38,7 @@ static void *sub_menu_sensor_handler(void *param);
 
 static void *sub_menu_exhaust_handler(void *param);
 static void *sub_menu_humidifier_handler(void *param);
+static void *sub_menu_lighting_handler(void *param);
 
 static void draw_sub_menu_temp(WINDOW *win, const struct SubMenu *submenu);
 static void draw_sub_menu_hume(WINDOW *win, const struct SubMenu *submenu);
@@ -47,6 +48,7 @@ static void draw_sub_menu_uso(WINDOW *win, const struct SubMenu *submenu);
 
 static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu);
 static void draw_sub_menu_humidifier(WINDOW *win, const struct SubMenu *submenu);
+static void draw_sub_menu_lighting(WINDOW *win, const struct SubMenu *submenu);
 
 static void fill_data_widget_config(struct DataWidget *widget);
 static void draw_data_widget(WINDOW *win, const struct DataWidget *widget);
@@ -84,6 +86,13 @@ static struct ExhaustData IncExhaustData = {
 
 static struct HumidifierData IncHumidifierData = {
     .humidifier = BISTABLE_STATE_OFF,
+};
+
+static struct LightingData IncLightingData = {
+    .lights = {
+        BISTABLE_STATE_OFF,
+        BISTABLE_STATE_OFF,
+    },
 };
 
 #define EXHAUST_RADIO_MODE_HEIGHT       7
@@ -358,6 +367,60 @@ static struct HumidifierSubMenuState humidifier_sub_menu_state = {
     .cury = 0,
 };
 
+#define LIGHTING_SWITCH_JUST_TEXT                                       "Light "
+#define LIGHTING_SWITCH_NUM_IDX               sizeof(LIGHTING_SWITCH_JUST_TEXT) - 1
+#define LIGHTING_SWITCH_FIRST_STATE_TEXT                                 "OFF"
+#define LIGHTING_SWITCH_SECOND_STATE_TEXT                                 "ON"
+
+static char lighting_switch_text[] = LIGHTING_SWITCH_JUST_TEXT "0";
+
+static struct SwitchWidget lighting_switch_widget = {
+
+    /*
+     * ALERT: need to fill the rest of the fields before using.
+     * */
+
+    .width = 5,
+    .height = SWITCH_WIDGET_HEIGHT,
+    .xopad = 1,
+    .xipad = 3,
+    .yopad = 0,
+    .yipad = 1,
+
+    .state = BISTABLE_STATE_OFF,
+
+    .text = lighting_switch_text,
+    .text_size = sizeof(lighting_switch_text) - 1,
+
+    .first_state_text = LIGHTING_SWITCH_FIRST_STATE_TEXT,
+    .first_state_size = sizeof(LIGHTING_SWITCH_FIRST_STATE_TEXT) - 1,
+
+    .second_state_text = LIGHTING_SWITCH_SECOND_STATE_TEXT,
+    .second_state_size = sizeof(LIGHTING_SWITCH_SECOND_STATE_TEXT) - 1,
+};
+
+static struct HumidifierWidget lighting_widgets[] = {
+    {
+        .state = (void *) &(IncLightingData.lights[0]),
+        .widget = (void *) &lighting_switch_widget,
+        .bfocused = BISTABLE_STATE_OFF,
+        .idx = 0,
+    },
+    {
+        .state = (void *) &(IncLightingData.lights[1]),
+        .widget = (void *) &lighting_switch_widget,
+        .bfocused = BISTABLE_STATE_OFF,
+        .idx = 1,
+    },
+};
+
+static struct LightingSubMenuState lighting_sub_menu_state = {
+    .first_widget = lighting_widgets,
+    .sel_widget_idx = 0,
+    .total_widgets = sizeof(lighting_widgets) / sizeof(struct LightingWidget),
+    .cury = 0,
+};
+
 static const struct SubMenu sub_menus[GEN_SUB_MENU_END] = {
     [GEN_SUB_MENU_TEMPERATURE] = {
         .title = "Temperature",
@@ -371,7 +434,7 @@ static const struct SubMenu sub_menus[GEN_SUB_MENU_END] = {
         .handler = sub_menu_sensor_handler,
         .data = (void *) &HumeSensorData,
     },
-    [GEN_SUB_MENU_LIGHTING] = {
+    [GEN_SUB_MENU_LIGHT_SENSE] = {
         .title = "Lighting",
         .info = "LDR data within the incubator",
         .handler = sub_menu_sensor_handler,
@@ -393,12 +456,18 @@ static const struct SubMenu sub_menus[GEN_SUB_MENU_END] = {
         .title = "Exhaust",
         .info = "Exhaust control",
         .handler = sub_menu_exhaust_handler,
-        .data = (void *) &TempSensorData,
+        .data = (void *) &TempSensorData, /* TODO: remove this */
     },
     [GEN_SUB_MENU_HUMIDIFIER] = {
         .title = "Humidifier",
         .info = "Humidifier control",
         .handler = sub_menu_humidifier_handler,
+        .data = (void *) &TempSensorData,
+    },
+    [GEN_SUB_MENU_LIGHTING] = {
+        .title = "Lighting",
+        .info = "Lighting control",
+        .handler = sub_menu_lighting_handler,
         .data = (void *) &TempSensorData,
     },
 };
@@ -407,7 +476,7 @@ static void (*sensor_sub_menu_draw_lut[SENS_SUB_MENU_END])
     (WINDOW *, const struct SubMenu *) = {
         [SENS_SUB_MENU_TEMPERATURE]     = draw_sub_menu_temp,
         [SENS_SUB_MENU_AIR_MOISTURE]    = draw_sub_menu_hume,
-        [SENS_SUB_MENU_LIGHTING]        = draw_sub_menu_ldr,
+        [SENS_SUB_MENU_LIGHT_SENSE]        = draw_sub_menu_ldr,
         [SENS_SUB_MENU_SOIL_MOISTURE]   = draw_sub_menu_sms,
         [SENS_SUB_MENU_RESERVOIR_LEVEL] = draw_sub_menu_uso,
 };
@@ -2155,6 +2224,275 @@ static void *sub_menu_humidifier_handler(void *param) {
     return NULL;
 }
 
+static void draw_sub_menu_lighting(WINDOW *win, const struct SubMenu *submenu) {
+
+    struct LightingSubMenuState *limenu = &lighting_sub_menu_state;
+    struct LightingWidget *widget;
+
+    struct SwitchWidget *swidget;
+
+    int ymax, xmax;
+    int cury, curx;
+    int i;
+
+    int sel_widget_height = 5;
+    void *widget_data;
+
+    widget = limenu->first_widget + limenu->sel_widget_idx;
+
+    getmaxyx(win, ymax, xmax);
+    cury = curx = 0;
+
+    widget_data = widget->widget;
+
+    sel_widget_height = ((struct SwitchWidget *)widget_data)->height;
+    ((struct SwitchWidget *) widget_data)->width = xmax;
+
+    werase(win);
+
+    /*
+     * if the screen has been resized after the last
+     * draw we need to adjust the position of currently
+     * selected widget
+     * */
+
+    if (limenu->cury + sel_widget_height > ymax) {
+        limenu->cury = ymax - sel_widget_height;
+    }
+    if (limenu->cury < 0) {
+        limenu->cury = 0;
+    }
+
+    int widgets_above = limenu->sel_widget_idx;
+    int widget_draw_start = widgets_above;
+
+    int lines_left_above = limenu->cury;
+    int widget_height;
+    for (i = 0; i < widgets_above; i++) {
+        widget_height = SWITCH_WIDGET_HEIGHT;
+
+        if ((lines_left_above - widget_height) >= 0) {
+            lines_left_above = lines_left_above - widget_height;
+            widget_draw_start--;
+        } else {
+            break;
+        }
+    }
+
+    if (lines_left_above > 0) {
+        /* if there is lines left above then push everything above */
+        limenu->cury = limenu->cury - lines_left_above;
+    }
+
+    int widgets_below = limenu->total_widgets - limenu->sel_widget_idx - 1;
+    int widget_draw_end = limenu->sel_widget_idx + 1;
+
+    int lines_left_below = ymax - limenu->cury - sel_widget_height;
+
+    for (i = 0; i < widgets_below; i++) {
+        widget_height = SWITCH_WIDGET_HEIGHT;
+        if (lines_left_below - widget_height >= 0) {
+            lines_left_below = lines_left_below - widget_height;
+            widget_draw_end++;
+        } else {
+            break;
+        }
+    }
+
+    int cury_offset;
+    for (i = widget_draw_start; i < limenu->sel_widget_idx; i++) {
+        wmove(win, cury, curx);
+        widget = limenu->first_widget + i;
+        widget_data = widget->widget;
+
+        swidget = (struct SwitchWidget *) widget_data;
+
+        snprintf(lighting_switch_text + LIGHTING_SWITCH_NUM_IDX, 2, "%d", widget->idx);
+
+        swidget->width = xmax;
+        swidget->state = *((enum BistableState *) widget->state);
+
+        swidget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_FRAME_NORMAL];
+        swidget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_TEXT_NORMAL];
+
+        /* fill with inactive */
+        swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+        swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+
+        switch (swidget->state) {
+            case BISTABLE_STATE_OFF:
+                swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                break;
+            case BISTABLE_STATE_ON:
+                swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                break;
+            default:
+                /* other wise leave as it is */
+                break;
+        }
+
+        draw_switch_widget(win, widget_data);
+        cury_offset = SWITCH_WIDGET_HEIGHT;
+        cury = cury + cury_offset;
+    }
+
+    wmove(win, cury, curx);
+    widget = limenu->first_widget + limenu->sel_widget_idx;
+    widget_data = widget->widget;
+
+    swidget = (struct SwitchWidget *) widget_data;
+
+    snprintf(lighting_switch_text + LIGHTING_SWITCH_NUM_IDX, 2, "%d", widget->idx);
+
+    swidget->width = xmax;
+    swidget->state = *((enum BistableState *) widget->state);
+
+    swidget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_FRAME_SELECTED];
+    swidget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_TEXT_SELECTED];
+
+    /* fill with inactive */
+    swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_SELECTED];
+    swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_SELECTED];
+
+    /* filling active one */
+    switch (swidget->state) {
+        case BISTABLE_STATE_OFF:
+            swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_SELECTED];
+            break;
+        case BISTABLE_STATE_ON:
+            swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_SELECTED];
+            break;
+        default:
+            /* other wise leave as it is */
+            break;
+    }
+
+    /* filling focused one */
+    switch (widget->bfocused) {
+        case BISTABLE_STATE_OFF:
+            if (swidget->state == BISTABLE_STATE_OFF) {
+                swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT]
+                    [ELEMENT_SWITCH_ACTIVE_FOCUSED_SELECTED];
+            } else {
+                swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT]
+                    [ELEMENT_SWITCH_INACTIVE_FOCUSED_SELECTED];
+            }
+            break;
+        case BISTABLE_STATE_ON:
+            if (swidget->state == BISTABLE_STATE_ON) {
+                swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT]
+                    [ELEMENT_SWITCH_ACTIVE_FOCUSED_SELECTED];
+            } else {
+                swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT]
+                    [ELEMENT_SWITCH_INACTIVE_FOCUSED_SELECTED];
+            }
+            break;
+        default:
+            /* other wise leave as it is */
+            break;
+    }
+
+    draw_switch_widget(win, widget_data);
+    cury_offset = SWITCH_WIDGET_HEIGHT;
+
+    cury = cury + cury_offset;
+
+    for (i = limenu->sel_widget_idx + 1; i < widget_draw_end; i++) {
+        wmove(win, cury, curx);
+        widget = limenu->first_widget + i;
+        widget_data = widget->widget;
+
+        swidget = (struct SwitchWidget *) widget_data;
+
+        snprintf(lighting_switch_text + LIGHTING_SWITCH_NUM_IDX, 2, "%d", widget->idx);
+
+        swidget->width = xmax;
+        swidget->state = *((enum BistableState *) widget->state);
+
+        swidget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_FRAME_NORMAL];
+        swidget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_TEXT_NORMAL];
+
+        /* fill with inactive */
+        swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+        swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+
+        switch (swidget->state) {
+            case BISTABLE_STATE_OFF:
+                swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                break;
+            case BISTABLE_STATE_ON:
+                swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                break;
+            default:
+                /* other wise leave as it is */
+                break;
+        }
+
+        draw_switch_widget(win, widget_data);
+
+        cury_offset = SWITCH_WIDGET_HEIGHT;
+        cury = cury + cury_offset;
+    }
+
+}
+
+static void *sub_menu_lighting_handler(void *param) {
+
+    assert(param);
+    struct MainMenu *mainmenu = (struct MainMenu *) param;
+    const struct SubMenu *submenu = mainmenu->first_sub_menu + mainmenu->sel_sub_menu_idx;
+    struct LightingSubMenuState *limenu = &lighting_sub_menu_state;
+
+    struct LightingWidget *widget;
+
+    int widget_height;
+
+    widget = limenu->first_widget + limenu->sel_widget_idx;
+
+    switch(mainmenu->event) {
+        case KEY_UP:
+        case 'k':
+            widget_height = SWITCH_WIDGET_HEIGHT;
+            if (limenu->sel_widget_idx > 0) {
+                limenu->cury = limenu->cury - widget_height;
+                /*assert((mainmenu.cury >= 0));*/
+                limenu->sel_widget_idx--;
+            }
+            break;
+
+        case KEY_DOWN:
+        case 'j':
+            widget_height = SWITCH_WIDGET_HEIGHT;
+            if (limenu->sel_widget_idx < limenu->total_widgets - 1) {
+                limenu->cury = limenu->cury + widget_height;
+                /*assert((mainmenu.cury >= 0));*/
+                limenu->sel_widget_idx++;
+            }
+            break;
+
+        case KEY_RIGHT:
+        case 'l':
+            if (widget->bfocused == BISTABLE_STATE_OFF) {
+                widget->bfocused = BISTABLE_STATE_ON;
+            }
+            break;
+
+        case KEY_LEFT:
+        case 'h':
+            if (widget->bfocused == BISTABLE_STATE_ON) {
+                widget->bfocused = BISTABLE_STATE_OFF;
+            }
+            break;
+
+        case KEY_ESCAPE:
+            break;
+    }
+
+    draw_sub_menu_lighting(MainWin, submenu);
+
+    return NULL;
+}
+
 void start_tui_app(void) {
 
 	int event;
@@ -2239,18 +2577,10 @@ int draw_init_ncurses(void) {
 	 * */
 	keypad(MainWin, TRUE);
 	ESCDELAY = 10;
-	/*stretch_window(Mainwin);*/
-	/*normal_mode();*/
-
-    /*printf("hai\n");*/
 
     start_tui_app();
 
-    /*wgetch(MainWin);*/
-
 	endwin();
-
-    printf("hai\n");
 
     return 0;
 }

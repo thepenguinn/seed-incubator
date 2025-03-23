@@ -136,7 +136,7 @@ enum SeperatorChars {
 enum SensSubMenu {
     SENS_SUB_MENU_TEMPERATURE = 0,
     SENS_SUB_MENU_AIR_MOISTURE,
-    SENS_SUB_MENU_LIGHTING,
+    SENS_SUB_MENU_LIGHT_SENSE,
     SENS_SUB_MENU_SOIL_MOISTURE,
     SENS_SUB_MENU_RESERVOIR_LEVEL,
     SENS_SUB_MENU_END,
@@ -145,12 +145,13 @@ enum SensSubMenu {
 enum GenSubMenu {
     GEN_SUB_MENU_TEMPERATURE     = SENS_SUB_MENU_TEMPERATURE,
     GEN_SUB_MENU_AIR_MOISTURE    = SENS_SUB_MENU_AIR_MOISTURE,
-    GEN_SUB_MENU_LIGHTING        = SENS_SUB_MENU_LIGHTING,
+    GEN_SUB_MENU_LIGHT_SENSE     = SENS_SUB_MENU_LIGHT_SENSE,
     GEN_SUB_MENU_SOIL_MOISTURE   = SENS_SUB_MENU_SOIL_MOISTURE,
     GEN_SUB_MENU_RESERVOIR_LEVEL = SENS_SUB_MENU_RESERVOIR_LEVEL,
 
     GEN_SUB_MENU_EXHAUST         = SENS_SUB_MENU_END,
     GEN_SUB_MENU_HUMIDIFIER,
+    GEN_SUB_MENU_LIGHTING,
     GEN_SUB_MENU_END,
 };
 
@@ -286,6 +287,8 @@ struct SwitchWidget {
 #define EXHAUST_PANEL_COUNT 7
 #define EXHAUST_FAN_COUNT   2
 
+#define LIGHT_ARRAY_COUNT 2
+
 struct TempData {
     int dht[DHT_COUNT];
 };
@@ -352,6 +355,27 @@ struct HumidifierWidget {
 
 struct HumidifierSubMenuState {
     struct HumidifierWidget *first_widget;
+    /*
+     * this feels lame
+     * */
+    int sel_widget_idx; /* index */
+    int total_widgets;
+    int cury;
+};
+
+struct LightingData {
+    enum BistableState lights[LIGHT_ARRAY_COUNT];
+};
+
+struct LightingWidget {
+    void *state;
+    void *widget;
+    enum BistableState bfocused;
+    int idx;
+};
+
+struct LightingSubMenuState {
+    struct LightingWidget *first_widget;
     /*
      * this feels lame
      * */
