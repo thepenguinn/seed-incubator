@@ -211,13 +211,14 @@ static struct SwitchWidget peltier_switch_widget = {
     .second_state_size = sizeof(PELTIER_SWITCH_SECOND_STATE_TEXT) - 1,
 };
 
-static const struct ExhaustWidget exhaust_widgets[] = {
+static struct ExhaustWidget exhaust_widgets[] = {
     /* mode    */
     {
         .type = EXHAUST_WIDGET_TYPE_EXHAUST_MODE,
         .state = (void *) &(IncExhaustData.mode),
         .widget = (void *) &exhaust_mode_widget,
         .idx = 0, /* we are not using this */
+        .efocused = EXHAUST_MODE_CMODE,
     },
 
     /* peltier */
@@ -226,6 +227,7 @@ static const struct ExhaustWidget exhaust_widgets[] = {
         .state = (void *) &(IncExhaustData.panels),
         .widget = (void *) &peltier_switch_widget,
         .idx = 0, /* we are not using this */
+        .bfocused = BISTABLE_STATE_OFF,
     },
 
     /* fans    */
@@ -234,12 +236,14 @@ static const struct ExhaustWidget exhaust_widgets[] = {
         .state = (void *) &(IncExhaustData.fans[0]),
         .widget = (void *) &fan_switch_widget,
         .idx = 0,
+        .bfocused = BISTABLE_STATE_OFF,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_FAN,
         .state = (void *) &(IncExhaustData.fans[1]),
         .widget = (void *) &fan_switch_widget,
         .idx = 1,
+        .bfocused = BISTABLE_STATE_OFF,
     },
 
     /* panels  */
@@ -248,42 +252,49 @@ static const struct ExhaustWidget exhaust_widgets[] = {
         .state = (void *) &(IncExhaustData.panels[0]),
         .widget = (void *) &panel_switch_widget,
         .idx = 0,
+        .bfocused = BISTABLE_STATE_OFF,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[1]),
         .widget = (void *) &panel_switch_widget,
         .idx = 1,
+        .bfocused = BISTABLE_STATE_OFF,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[2]),
         .widget = (void *) &panel_switch_widget,
         .idx = 2,
+        .bfocused = BISTABLE_STATE_OFF,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[3]),
         .widget = (void *) &panel_switch_widget,
         .idx = 3,
+        .bfocused = BISTABLE_STATE_OFF,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[4]),
         .widget = (void *) &panel_switch_widget,
         .idx = 4,
+        .bfocused = BISTABLE_STATE_OFF,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[5]),
         .widget = (void *) &panel_switch_widget,
         .idx = 5,
+        .bfocused = BISTABLE_STATE_OFF,
     },
     {
         .type = EXHAUST_WIDGET_TYPE_PANEL,
         .state = (void *) &(IncExhaustData.panels[6]),
         .widget = (void *) &panel_switch_widget,
         .idx = 6,
+        .bfocused = BISTABLE_STATE_OFF,
     },
 };
 
@@ -291,7 +302,6 @@ static struct ExhaustSubMenuState exhaust_sub_menu_state = {
     .first_widget = exhaust_widgets,
     .sel_widget_idx = 0,
     .total_widgets = sizeof(exhaust_widgets) / sizeof(struct ExhaustWidget),
-    .exhaust_focused = EXHAUST_MODE_NONE,
     .cury = 0,
 };
 
@@ -446,6 +456,11 @@ static int color_schemes[SCHEME_END][ELEMENT_END] = {
         [ELEMENT_SWITCH_ACTIVE_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG),
         [ELEMENT_SWITCH_INACTIVE_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)    | A_DIM,
         [ELEMENT_SWITCH_INACTIVE_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_DIM,
+
+        [ELEMENT_SWITCH_ACTIVE_FOCUSED_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG) | A_BLINK,
+        [ELEMENT_SWITCH_ACTIVE_FOCUSED_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG)  | A_BLINK,
+        [ELEMENT_SWITCH_INACTIVE_FOCUSED_NORMAL] = ColorPair(PAIR_PRI_WHITE_DEFAULT_BG)    | A_DIM | A_BLINK,
+        [ELEMENT_SWITCH_INACTIVE_FOCUSED_SELECTED] = ColorPair(PAIR_PRI_ACCENT_DEFAULT_BG) | A_DIM | A_BLINK,
 
 	},
 	/* ill set this later */
@@ -1356,7 +1371,7 @@ static void draw_switch_widget(WINDOW *win, void *widget_data) {
     wmove(win, cury, curx);
     wprintw(win, "%s %s", dot_char, widget->first_state_text);
 
-    wattroff(win, widget->second_state_scheme);
+    wattroff(win, widget->first_state_scheme);
 
     /*
      * second state
@@ -1382,7 +1397,7 @@ static void draw_switch_widget(WINDOW *win, void *widget_data) {
 static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
 
     struct ExhaustSubMenuState *exmenu = &exhaust_sub_menu_state;
-    const struct ExhaustWidget *widget;
+    struct ExhaustWidget *widget;
 
     struct RadioButtonWidget *rwidget;
     struct SwitchWidget *swidget;
@@ -1421,7 +1436,6 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
     }
 
     werase(win);
-
 
     /*
      * if the screen has been resized after the last
@@ -1538,8 +1552,22 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
 
             swidget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_FRAME_NORMAL];
             swidget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_TEXT_NORMAL];
-            swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+
+            /* fill with inactive */
+            swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
             swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+
+            switch (swidget->state) {
+                case BISTABLE_STATE_OFF:
+                    swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                    break;
+                case BISTABLE_STATE_ON:
+                    swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                    break;
+                default:
+                    /* other wise leave as it is */
+                    break;
+            }
 
             draw_switch_widget(win, widget_data);
             cury_offset = SWITCH_WIDGET_HEIGHT;
@@ -1583,7 +1611,7 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
         }
 
         /* filling focused one */
-        switch (exmenu->exhaust_focused) {
+        switch (widget->efocused) {
             case EXHAUST_MODE_CMODE:
                 if (rwidget->mode == EXHAUST_MODE_CMODE) {
                     rwidget->first_state_scheme = color_schemes[SCHEME_DEFAULT]
@@ -1629,8 +1657,48 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
 
         swidget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_FRAME_SELECTED];
         swidget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_TEXT_SELECTED];
-        swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_SELECTED];
+
+        /* fill with inactive */
+        swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_SELECTED];
         swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_SELECTED];
+
+        /* filling active one */
+        switch (swidget->state) {
+            case BISTABLE_STATE_OFF:
+                swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_SELECTED];
+                break;
+            case BISTABLE_STATE_ON:
+                swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_SELECTED];
+                break;
+            default:
+                /* other wise leave as it is */
+                break;
+        }
+
+        /* filling focused one */
+        switch (widget->bfocused) {
+            case BISTABLE_STATE_OFF:
+                if (swidget->state == BISTABLE_STATE_OFF) {
+                    swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT]
+                        [ELEMENT_SWITCH_ACTIVE_FOCUSED_SELECTED];
+                } else {
+                    swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT]
+                        [ELEMENT_SWITCH_INACTIVE_FOCUSED_SELECTED];
+                }
+                break;
+            case BISTABLE_STATE_ON:
+                if (swidget->state == BISTABLE_STATE_ON) {
+                    swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT]
+                        [ELEMENT_SWITCH_ACTIVE_FOCUSED_SELECTED];
+                } else {
+                    swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT]
+                        [ELEMENT_SWITCH_INACTIVE_FOCUSED_SELECTED];
+                }
+                break;
+            default:
+                /* other wise leave as it is */
+                break;
+        }
 
         draw_switch_widget(win, widget_data);
         cury_offset = SWITCH_WIDGET_HEIGHT;
@@ -1689,26 +1757,28 @@ static void draw_sub_menu_exhaust(WINDOW *win, const struct SubMenu *submenu) {
 
             swidget->frame_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_FRAME_NORMAL];
             swidget->text_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_TEXT_NORMAL];
-            swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+
+            /* fill with inactive */
+            swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
             swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_INACTIVE_NORMAL];
+
+            switch (swidget->state) {
+                case BISTABLE_STATE_OFF:
+                    swidget->first_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                    break;
+                case BISTABLE_STATE_ON:
+                    swidget->second_state_scheme = color_schemes[SCHEME_DEFAULT][ELEMENT_SWITCH_ACTIVE_NORMAL];
+                    break;
+                default:
+                    /* other wise leave as it is */
+                    break;
+            }
 
             draw_switch_widget(win, widget_data);
             cury_offset = SWITCH_WIDGET_HEIGHT;
         }
         cury = cury + cury_offset;
     }
-
-    /*draw_radio_button_widget(win, widget_data);*/
-
-    /**/
-    /*cury = curx = 0;*/
-    /**/
-    /*wmove(win, cury, curx);*/
-    /*draw_radio_button_widget(win, &exhaust_mode_widget);*/
-    /**/
-    /*cury = cury + exhaust_mode_widget.height;*/
-    /*wmove(win, cury, curx);*/
-    /*draw_radio_button_widget(win, &exhaust_mode_widget);*/
 
 }
 
@@ -1717,12 +1787,74 @@ static void *sub_menu_exhaust_handler(void *param) {
     assert(param);
     struct MainMenu *mainmenu = (struct MainMenu *) param;
     const struct SubMenu *submenu = mainmenu->first_sub_menu + mainmenu->sel_sub_menu_idx;
+    struct ExhaustSubMenuState *exmenu = &exhaust_sub_menu_state;
 
-    draw_sub_menu_exhaust(MainWin, submenu);
+    struct ExhaustWidget *widget;
+
+    int widget_height;
+
+    widget = exmenu->first_widget + exmenu->sel_widget_idx;
+
     switch(mainmenu->event) {
+        case KEY_UP:
+        case 'k':
+            if (widget->type == EXHAUST_WIDGET_TYPE_EXHAUST_MODE) {
+                widget_height = EXHAUST_RADIO_MODE_HEIGHT;
+            } else {
+                widget_height = SWITCH_WIDGET_HEIGHT;
+            }
+            if (exmenu->sel_widget_idx > 0) {
+                exmenu->cury = exmenu->cury - widget_height;
+                /*assert((mainmenu.cury >= 0));*/
+                exmenu->sel_widget_idx--;
+            }
+            break;
+
+        case KEY_DOWN:
+        case 'j':
+            if (widget->type == EXHAUST_WIDGET_TYPE_EXHAUST_MODE) {
+                widget_height = EXHAUST_RADIO_MODE_HEIGHT;
+            } else {
+                widget_height = SWITCH_WIDGET_HEIGHT;
+            }
+            if (exmenu->sel_widget_idx < exmenu->total_widgets - 1) {
+                exmenu->cury = exmenu->cury + widget_height;
+                /*assert((mainmenu.cury >= 0));*/
+                exmenu->sel_widget_idx++;
+            }
+            break;
+
+        case KEY_RIGHT:
+        case 'l':
+            if (widget->type == EXHAUST_WIDGET_TYPE_EXHAUST_MODE) {
+                if (widget->efocused < EXHAUST_MODE_END - 1) {
+                    widget->efocused++;
+                }
+            } else {
+                if (widget->bfocused == BISTABLE_STATE_OFF) {
+                    widget->bfocused = BISTABLE_STATE_ON;
+                }
+            }
+            break;
+
+        case KEY_LEFT:
+        case 'h':
+            if (widget->type == EXHAUST_WIDGET_TYPE_EXHAUST_MODE) {
+                if (widget->efocused > 0) {
+                    widget->efocused--;
+                }
+            } else {
+                if (widget->bfocused == BISTABLE_STATE_ON) {
+                    widget->bfocused = BISTABLE_STATE_OFF;
+                }
+            }
+            break;
+
         case KEY_ESCAPE:
             break;
     }
+
+    draw_sub_menu_exhaust(MainWin, submenu);
 
     return NULL;
 }

@@ -103,6 +103,11 @@ enum ColorElements {
     ELEMENT_SWITCH_INACTIVE_NORMAL,
     ELEMENT_SWITCH_INACTIVE_SELECTED,
 
+    ELEMENT_SWITCH_ACTIVE_FOCUSED_NORMAL,
+    ELEMENT_SWITCH_ACTIVE_FOCUSED_SELECTED,
+    ELEMENT_SWITCH_INACTIVE_FOCUSED_NORMAL,
+    ELEMENT_SWITCH_INACTIVE_FOCUSED_SELECTED,
+
     ELEMENT_END,
 };
 
@@ -305,6 +310,10 @@ struct ExhaustWidget {
     enum ExhaustWidgetType type;
     void *state;
     void *widget;
+    union {
+        enum ExhaustMode efocused;
+        enum BistableState bfocused;
+    };
     int idx; /* for fans and panels */
 };
 
@@ -317,11 +326,10 @@ struct ExhaustData {
 };
 
 struct ExhaustSubMenuState {
-    const struct ExhaustWidget *first_widget;
+    struct ExhaustWidget *first_widget;
     /*
      * this feels lame
      * */
-    enum ExhaustMode exhaust_focused; /* focused state of exhaust radio widget */
     int sel_widget_idx; /* index */
     int total_widgets;
     int cury;
