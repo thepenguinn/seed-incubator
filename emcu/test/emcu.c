@@ -31,20 +31,11 @@ static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_TUI]          = "tui",
 };
 
-static char ip_addr[128];
-
 static int serverfd;
 
 int emcu(int command, int value);
 int parse_args(int argc, char *argv[], int *value);
 int print_help(void);
-
-int emcu_exhaust(int mode);
-int emcu_monitor();
-int emcu_fans(int state);
-int emcu_peltier(int state);
-int emcu_mux(uint32_t value);
-int emcu_rbd(uint32_t value);
 
 int emcu_exhaust(int mode) {
     return 0;
@@ -64,13 +55,13 @@ int emcu_peltier(int state) {
 
 int emcu_mux(uint32_t value) {
 
-    tcp_send_packet(serverfd, SUB_CMD_MUX, value);
+    tcp_send_packet(SUB_CMD_MUX, value);
     return 0;
 }
 
 int emcu_rbd(uint32_t value) {
 
-    tcp_send_packet(serverfd, SUB_CMD_RBD, value);
+    tcp_send_packet(SUB_CMD_RBD, value);
     return 0;
 }
 
@@ -95,19 +86,19 @@ int emcu (int command, int value) {
         case SUB_CMD_RBD:
             return emcu_rbd(value);
         case SUB_CMD_MONITOR_TEMP:
-            tcp_send_packet(serverfd, SUB_CMD_MONITOR_TEMP, 0);
+            tcp_send_packet(SUB_CMD_MONITOR_TEMP, 0);
             printf(
                 "TEMP_0: %d TEMP_1: %d\n",
-                (int)tcp_recieve_uint32_t(serverfd),
-                (int)tcp_recieve_uint32_t(serverfd)
+                (int)tcp_recieve_uint32_t(),
+                (int)tcp_recieve_uint32_t()
             );
             break;
         case SUB_CMD_MONITOR_HUME:
-            tcp_send_packet(serverfd, SUB_CMD_MONITOR_HUME, 0);
+            tcp_send_packet(SUB_CMD_MONITOR_HUME, 0);
             printf(
                 "HUME_0: %d HUME_1: %d\n",
-                (int)tcp_recieve_uint32_t(serverfd),
-                (int)tcp_recieve_uint32_t(serverfd)
+                (int)tcp_recieve_uint32_t(),
+                (int)tcp_recieve_uint32_t()
             );
             break;
         case SUB_CMD_MONITOR_LDR:
@@ -185,10 +176,6 @@ int print_help (void) {
 
 }
 
-void *test_fn (void *param) {
-    return NULL;
-}
-
 int main (int argc, char *argv[]) {
 
     int value = 0;
@@ -198,28 +185,32 @@ int main (int argc, char *argv[]) {
     printf("%d\n", value);
 
     if (subcommand == SUB_CMD_UNKNOWN) {
-        /*
-         * start ncurses mode
-         * */
-        draw_init_ncurses();
         print_help();
         return 1;
     }
 
+    char *ip_addr = tcp_get_ip_addr_buf();
+
 #ifdef __TEST_BUILD__
     strncpy(ip_addr, TEST_IP_ADDR, sizeof(TEST_IP_ADDR));
 #else
-    if (utils_get_emcu_ip(ip_addr, sizeof(ip_addr))) {
+    if (utils_get_emcu_ip(ip_addr, sizeof(ip_addr)) && subcommand != SUB_CMD_TUI) {
         printf("Seems like emcu is not connected, exiting.\n");
        return 1;
     }
 #endif
 
+    if (subcommand == SUB_CMD_TUI) {
+        draw_init_ncurses();
+        draw_start_tui_app();
+        draw_deinit_ncurses();
+        return 0;
+    }
+
     sockfd = tcp_connect_to_server(ip_addr, PORT);
     if (sockfd < 0) {
+        printf("Failed to connected to emcu\n");
         return 1;
-    } else {
-        serverfd = sockfd;
     }
 
     return emcu(subcommand, value);

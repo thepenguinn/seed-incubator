@@ -5,6 +5,7 @@
 #include<assert.h>
 
 #include "draw.h"
+#include "emcu.h"
 
 static WINDOW *TopWin, *MainWin, *BotWin;
 
@@ -399,7 +400,7 @@ static struct SwitchWidget lighting_switch_widget = {
     .second_state_size = sizeof(LIGHTING_SWITCH_SECOND_STATE_TEXT) - 1,
 };
 
-static struct HumidifierWidget lighting_widgets[] = {
+static struct LightingWidget lighting_widgets[] = {
     {
         .state = (void *) &(IncLightingData.lights[0]),
         .widget = (void *) &lighting_switch_widget,
@@ -2493,7 +2494,7 @@ static void *sub_menu_lighting_handler(void *param) {
     return NULL;
 }
 
-void start_tui_app(void) {
+int draw_start_tui_app(void) {
 
 	int event;
 	struct MainMenu mainmenu;
@@ -2550,6 +2551,8 @@ void start_tui_app(void) {
 
 	}
 
+    return 0;
+
 }
 
 int draw_init_ncurses(void) {
@@ -2578,9 +2581,12 @@ int draw_init_ncurses(void) {
 	keypad(MainWin, TRUE);
 	ESCDELAY = 10;
 
-    start_tui_app();
-
-	endwin();
-
     return 0;
+}
+
+int draw_deinit_ncurses(void) {
+
+    endwin();
+    return 0;
+
 }

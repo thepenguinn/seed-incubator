@@ -26,3 +26,10 @@ enum SubCmd {
 #define MAC_ADDR "1c:69:20:94:53:0c"
 /*#define MAC_ADDR "88:79:7e:be:5e:e4"*/
 #define PORT     10898
+
+int emcu_exhaust(int mode);
+int emcu_monitor();
+int emcu_fans(int state);
+int emcu_peltier(int state);
+int emcu_mux(uint32_t value);
+int emcu_rbd(uint32_t value);

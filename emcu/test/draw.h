@@ -388,6 +388,7 @@ void draw_top_win(const char *title);
 void draw_bot_win(struct MainMenu *menu);
 int draw_sub_menu(struct MainMenu *mainmenu);
 void draw_main_menu(struct MainMenu *menu);
-void start_tui_app(void);
+int draw_start_tui_app(void);
 
 int draw_init_ncurses(void);
+int draw_deinit_ncurses(void);

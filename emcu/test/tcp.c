@@ -9,7 +9,10 @@
 
 #include "tcp.h"
 
-uint32_t tcp_recieve_uint32_t(int serverfd) {
+static char ip_addr[128];
+static int serverfd;
+
+uint32_t tcp_recieve_uint32_t(void) {
 
     char buf[4];
     int i, len;
@@ -38,7 +41,7 @@ uint32_t tcp_recieve_uint32_t(int serverfd) {
 
 }
 
-int tcp_send_packet(int serverfd, uint8_t cmd, uint32_t data) {
+int tcp_send_packet(uint8_t cmd, uint32_t data) {
 
     char buf;
     int i;
@@ -83,6 +86,12 @@ int tcp_connect_to_server(const char *ip_addr, int port) {
     }
     printf("Connected successfully.\n");
 
+    serverfd = sockfd;
+
     return sockfd;
 
+}
+
+char *tcp_get_ip_addr_buf() {
+    return ip_addr;
 }
