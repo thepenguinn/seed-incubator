@@ -61,19 +61,26 @@ int tcp_send_packet(uint8_t cmd, uint32_t data) {
 
 }
 
-int tcp_connect_to_server(const char *ip_addr, int port) {
+int tcp_connect_to_server(const char *ip_addr, int port, int silent) {
 
     int sockfd;
 
-    printf("%s\n", ip_addr);
+    if (silent == 0) {
+        printf("%s\n", ip_addr);
+    }
 
     struct sockaddr_in server_addr;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
-        printf("socket() failed.\n");
+        if (silent == 0) {
+            printf("socket() failed.\n");
+        }
         return -1;
     }
-    printf("Created socket.\n");
+
+    if (silent == 0) {
+        printf("Created socket.\n");
+    }
     bzero(&server_addr, sizeof(server_addr));
 
     server_addr.sin_family = AF_INET;
@@ -81,10 +88,15 @@ int tcp_connect_to_server(const char *ip_addr, int port) {
     server_addr.sin_port = (uint16_t) htons(port);
 
     if (connect(sockfd, (struct sockaddr *) &server_addr, sizeof(server_addr)) == -1) {
-        printf("connect() failed.\n");
+        if (silent == 0) {
+            printf("connect() failed.\n");
+        }
         return -1;
     }
-    printf("Connected successfully.\n");
+
+    if (silent == 0) {
+        printf("Connected successfully.\n");
+    }
 
     serverfd = sockfd;
 

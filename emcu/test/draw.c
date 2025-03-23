@@ -6,6 +6,8 @@
 
 #include "draw.h"
 #include "emcu.h"
+#include "tcp.h"
+#include "utils.h"
 
 static WINDOW *TopWin, *MainWin, *BotWin;
 
@@ -2498,12 +2500,14 @@ int draw_start_tui_app(void) {
 
 	int event;
 	struct MainMenu mainmenu;
+    char *ip_addr;
+    int ret;
 
     mainmenu.sel_sub_menu_idx = 0;
     mainmenu.total_sub_menus = sizeof(sub_menus) / sizeof(struct SubMenu);
     mainmenu.first_sub_menu = sub_menus;
     mainmenu.cury = 0;
-    mainmenu.emcu_connected = 1;
+    mainmenu.emcu_connected = 0;
 
     draw_top_win(app_name);
 	draw_main_menu(&mainmenu);
@@ -2529,6 +2533,15 @@ int draw_start_tui_app(void) {
                 if (mainmenu.sel_sub_menu_idx < mainmenu.total_sub_menus - 1) {
                     mainmenu.cury = mainmenu.cury + 3;
                     mainmenu.sel_sub_menu_idx++;
+                }
+                break;
+            case 'c':
+                if (mainmenu.emcu_connected == 0) {
+                    ip_addr = tcp_get_ip_addr_buf();
+                    ret = tcp_connect_to_server(ip_addr, PORT, 1);
+                    if (ret >= 0) {
+                        mainmenu.emcu_connected = 1;
+                    }
                 }
                 break;
             case KEY_RESIZE:

@@ -207,7 +207,7 @@ int main (int argc, char *argv[]) {
         return 0;
     }
 
-    sockfd = tcp_connect_to_server(ip_addr, PORT);
+    sockfd = tcp_connect_to_server(ip_addr, PORT, 0);
     if (sockfd < 0) {
         printf("Failed to connected to emcu\n");
         return 1;
