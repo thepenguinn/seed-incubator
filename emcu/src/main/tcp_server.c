@@ -14,6 +14,11 @@
 
 #include "driver/mux.h"
 #include "driver/rbd.h"
+#include "driver/ldr.h"
+#include "driver/sms.h"
+#include "driver/dht.h"
+#include "driver/ultrasonic.h"
+
 
 static const char *TAG = "tcp server";
 
@@ -101,7 +106,7 @@ static esp_err_t send_uint32_t(int client_sock, uint32_t data) {
 
     for (i = 0; i < 4; i++) {
         buf = (char) ((data >> i * 8) & 0xff);
-        send(serverfd, &buf, 1, 0);
+        send(client_sock, &buf, 1, 0);
     }
 
     return ESP_OK;
@@ -155,6 +160,10 @@ static esp_err_t serve_client(int client_sock) {
          * matching commands and calling corresponding handler functions
          * */
 
+        /*
+         * TODO: create a bit more sophisticated protocol, like SLIP used by the
+         * UART <-> USB bridge of ESP.
+         * */
         switch (cmd) {
             case SUB_CMD_MONITOR:
                 sub_cmd_monitor_handler();
@@ -166,12 +175,27 @@ static esp_err_t serve_client(int client_sock) {
                 sub_cmd_rbd_push((uint16_t)data);
                 break;
             case SUB_CMD_MONITOR_TEMP:
-                send_uint32_t((uint32_t) drv_dht_get_value(DHT_0, DHT_DATA_TEMP, portMAX_DELAY));
-                send_uint32_t((uint32_t) drv_dht_get_value(DHT_1, DHT_DATA_TEMP, portMAX_DELAY));
+                send_uint32_t(client_sock, (uint32_t) drv_dht_get_value(DHT_0, DHT_DATA_TEMP, portMAX_DELAY));
+                send_uint32_t(client_sock, (uint32_t) drv_dht_get_value(DHT_1, DHT_DATA_TEMP, portMAX_DELAY));
                 break;
-            case SUB_CMD_MONITOR_TEMP:
-                send_uint32_t((uint32_t) drv_dht_get_value(DHT_0, DHT_DATA_HUME, portMAX_DELAY));
-                send_uint32_t((uint32_t) drv_dht_get_value(DHT_1, DHT_DATA_HUME, portMAX_DELAY));
+            case SUB_CMD_MONITOR_HUME:
+                send_uint32_t(client_sock, (uint32_t) drv_dht_get_value(DHT_0, DHT_DATA_HUME, portMAX_DELAY));
+                send_uint32_t(client_sock, (uint32_t) drv_dht_get_value(DHT_1, DHT_DATA_HUME, portMAX_DELAY));
+                break;
+            case SUB_CMD_MONITOR_LDR:
+                send_uint32_t(client_sock, (uint32_t) drv_ldr_get_value(LDR_0, portMAX_DELAY));
+                send_uint32_t(client_sock, (uint32_t) drv_ldr_get_value(LDR_1, portMAX_DELAY));
+                send_uint32_t(client_sock, (uint32_t) drv_ldr_get_value(LDR_2, portMAX_DELAY));
+                break;
+            case SUB_CMD_MONITOR_SMS:
+                send_uint32_t(client_sock, (uint32_t) drv_sms_get_value(SMS_0, portMAX_DELAY));
+                send_uint32_t(client_sock, (uint32_t) drv_sms_get_value(SMS_1, portMAX_DELAY));
+                send_uint32_t(client_sock, (uint32_t) drv_sms_get_value(SMS_2, portMAX_DELAY));
+                send_uint32_t(client_sock, (uint32_t) drv_sms_get_value(SMS_3, portMAX_DELAY));
+                break;
+            case SUB_CMD_MONITOR_USO:
+                send_uint32_t(client_sock, (uint32_t) drv_uso_get_value(USO_0, portMAX_DELAY));
+                send_uint32_t(client_sock, (uint32_t) drv_uso_get_value(USO_1, portMAX_DELAY));
                 break;
             default:
                 ESP_LOGW(TAG, "Got an invalid packet with cmd: %d", cmd);
