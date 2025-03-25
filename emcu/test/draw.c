@@ -449,12 +449,12 @@ static const struct SubMenu sub_menus[GEN_SUB_MENU_END] = {
         .handler = sub_menu_sensor_handler,
         .data = (void *) &SmsSensorData,
     },
-    [GEN_SUB_MENU_RESERVOIR_LEVEL] = {
-        .title = "Reservoir Level",
-        .info = "Water and fertilizer level",
-        .handler = sub_menu_sensor_handler,
-        .data = (void *) &UsoSensorData,
-    },
+    /*[GEN_SUB_MENU_RESERVOIR_LEVEL] = {*/
+    /*    .title = "Reservoir Level",*/
+    /*    .info = "Water and fertilizer level",*/
+    /*    .handler = sub_menu_sensor_handler,*/
+    /*    .data = (void *) &UsoSensorData,*/
+    /*},*/
     [GEN_SUB_MENU_EXHAUST] = {
         .title = "Exhaust",
         .info = "Exhaust control",
@@ -479,9 +479,17 @@ static void (*sensor_sub_menu_draw_lut[SENS_SUB_MENU_END])
     (WINDOW *, const struct SubMenu *) = {
         [SENS_SUB_MENU_TEMPERATURE]     = draw_sub_menu_temp,
         [SENS_SUB_MENU_AIR_MOISTURE]    = draw_sub_menu_hume,
-        [SENS_SUB_MENU_LIGHT_SENSE]        = draw_sub_menu_ldr,
+        [SENS_SUB_MENU_LIGHT_SENSE]     = draw_sub_menu_ldr,
         [SENS_SUB_MENU_SOIL_MOISTURE]   = draw_sub_menu_sms,
-        [SENS_SUB_MENU_RESERVOIR_LEVEL] = draw_sub_menu_uso,
+        /*[SENS_SUB_MENU_RESERVOIR_LEVEL] = draw_sub_menu_uso,*/
+};
+
+static int sensor_sub_cmd_lut[SENS_SUB_MENU_END][2] = {
+        [SENS_SUB_MENU_TEMPERATURE]     = { SUB_CMD_MONITOR_TEMP,  DHT_COUNT},
+        [SENS_SUB_MENU_AIR_MOISTURE]    = { SUB_CMD_MONITOR_HUME,  DHT_COUNT},
+        [SENS_SUB_MENU_LIGHT_SENSE]     = { SUB_CMD_MONITOR_LDR,   LDR_COUNT},
+        [SENS_SUB_MENU_SOIL_MOISTURE]   = { SUB_CMD_MONITOR_SMS,   SMS_COUNT},
+        /*[SENS_SUB_MENU_RESERVOIR_LEVEL] = { SUB_CMD_MONITOR_USO,   USO_COUNT},*/
 };
 
 static const char app_name[] = "Seed Incubator";
@@ -750,12 +758,19 @@ int draw_sub_menu(struct MainMenu *mainmenu) {
 	wrefresh(MainWin);
     wrefresh(BotWin);
 
+    if (mainmenu->sel_sub_menu_idx < SENS_SUB_MENU_END) {
+        wtimeout(MainWin, 100);
+    }
+
 	while ((event = wgetch(MainWin))) {
 
         mainmenu->event = event;
         switch (event) {
             case 'q':
             case KEY_ESCAPE:
+                if (mainmenu->sel_sub_menu_idx < SENS_SUB_MENU_END) {
+                    wtimeout(MainWin, -1);
+                }
                 return 0;
             case KEY_UP:
                 break;
@@ -768,6 +783,9 @@ int draw_sub_menu(struct MainMenu *mainmenu) {
                     draw_top_win(submenu->title);
                     wrefresh(TopWin);
                 }
+                if (mainmenu->sel_sub_menu_idx < SENS_SUB_MENU_END) {
+                    wtimeout(MainWin, 100);
+                }
                 break;
             case KEY_DOWN:
                 break;
@@ -778,6 +796,9 @@ int draw_sub_menu(struct MainMenu *mainmenu) {
                     submenu++;
                     draw_top_win(submenu->title);
                     wrefresh(TopWin);
+                }
+                if (mainmenu->sel_sub_menu_idx >= SENS_SUB_MENU_END) {
+                    wtimeout(MainWin, -1);
                 }
                 break;
             case KEY_RESIZE:
@@ -1203,6 +1224,32 @@ static void *sub_menu_sensor_handler(void *param) {
     assert(param);
     struct MainMenu *mainmenu = (struct MainMenu *) param;
     const struct SubMenu *submenu = mainmenu->first_sub_menu + mainmenu->sel_sub_menu_idx;
+    int i;
+
+    int sens_cmd = sensor_sub_cmd_lut[mainmenu->sel_sub_menu_idx][0];
+    int sens_count = sensor_sub_cmd_lut[mainmenu->sel_sub_menu_idx][1];
+    int *data;
+
+    switch (mainmenu->sel_sub_menu_idx) {
+        case SENS_SUB_MENU_TEMPERATURE:
+            data = ((struct TempData *)submenu->data)->dht;
+        case SENS_SUB_MENU_AIR_MOISTURE:
+            data = ((struct HumeData *)submenu->data)->dht;
+        case SENS_SUB_MENU_LIGHT_SENSE:
+            data = ((struct LdrData *)submenu->data)->ldr;
+        case SENS_SUB_MENU_SOIL_MOISTURE:
+            data = ((struct SmsData *)submenu->data)->sms;
+        /*case SENS_SUB_MENU_RESERVOIR_LEVEL:*/
+        /*    data = ((struct UsoData *)submenu->data)->uso;*/
+        /*    break;*/
+    }
+
+    if (mainmenu->emcu_connected) {
+        tcp_send_packet(sens_cmd, 0);
+        for (i = 0; i < sens_count; i++) {
+            *(data + i) = (int)tcp_recieve_uint32_t();
+        }
+    }
 
     sensor_sub_menu_draw_lut[mainmenu->sel_sub_menu_idx](MainWin, submenu);
     switch(mainmenu->event) {

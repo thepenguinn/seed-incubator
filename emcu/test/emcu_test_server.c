@@ -21,7 +21,7 @@ static int accept_connection(int server_sock);
 static esp_err_t receive_packet(int client_sock, char *buf);
 static esp_err_t send_uint32_t(int client_sock, uint32_t data);
 
-#define RESPONSE_DELAY_US 500000
+#define RESPONSE_DELAY_US 100000
 
 /*
  * dummy data .

@@ -14,7 +14,7 @@
 #include "draw.h"
 #include "tcp.h"
 
-static const char *sub_cmd_str[SUB_CMD_END] = {
+static char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_UNKNOWN]      = "unknown",
     [SUB_CMD_HMODE]        = "hmode",
     [SUB_CMD_CMODE]        = "cmode",
@@ -29,6 +29,12 @@ static const char *sub_cmd_str[SUB_CMD_END] = {
     [SUB_CMD_MONITOR_SMS]  = "msms",
     [SUB_CMD_MONITOR_USO]  = "muso",
     [SUB_CMD_TUI]          = "tui",
+    [SUB_CMD_PANEL_0]      = "panel0",
+    [SUB_CMD_HUME]         = "hume",
+    [SUB_CMD_FAN_0]        = "fan0",
+    [SUB_CMD_FAN_1]        = "fan1",
+    [SUB_CMD_LIGHT_0]      = "light0",
+    [SUB_CMD_LIGHT_1]      = "light1",
 };
 
 static int serverfd;
@@ -50,6 +56,7 @@ int emcu_fans(int state) {
 }
 
 int emcu_peltier(int state) {
+    tcp_send_packet(SUB_CMD_HUME, !!state);
     return 0;
 }
 
@@ -62,6 +69,36 @@ int emcu_mux(uint32_t value) {
 int emcu_rbd(uint32_t value) {
 
     tcp_send_packet(SUB_CMD_RBD, value);
+    return 0;
+}
+
+int emcu_hume(int state) {
+    tcp_send_packet(SUB_CMD_HUME, !!state);
+    return 0;
+}
+
+int emcu_fan_0(int state) {
+    tcp_send_packet(SUB_CMD_FAN_0, !!state);
+    return 0;
+}
+
+int emcu_fan_1(int state) {
+    tcp_send_packet(SUB_CMD_FAN_1, !!state);
+    return 0;
+}
+
+int emcu_light_0(int state) {
+    tcp_send_packet(SUB_CMD_LIGHT_0, !!state);
+    return 0;
+}
+
+int emcu_light_1(int state) {
+    tcp_send_packet(SUB_CMD_LIGHT_1, !!state);
+    return 0;
+}
+
+int emcu_panel_0(int state) {
+    tcp_send_packet(SUB_CMD_PANEL_0, !!state);
     return 0;
 }
 
@@ -112,6 +149,24 @@ int emcu (int command, int value) {
              * start the tui app
              * */
             break;
+        case SUB_CMD_HUME:
+            emcu_panel_0(value);
+            break;
+        case SUB_CMD_HUME:
+            emcu_hume(value);
+            break;
+        case SUB_CMD_FAN_0:
+            emcu_fan_0(value);
+            break;
+        case SUB_CMD_FAN_1:
+            emcu_fan_1(value);
+            break;
+        case SUB_CMD_LIGHT_0:
+            emcu_light_0(value);
+            break;
+        case SUB_CMD_LIGHT_1:
+            emcu_light_1(value);
+            break;
         default:
             return 1;
 
@@ -147,6 +202,11 @@ int parse_args (int argc, char *argv[], int *value) {
             case SUB_CMD_PELTIER:
             case SUB_CMD_MUX:
             case SUB_CMD_RBD:
+            case SUB_CMD_HUME:
+            case SUB_CMD_FAN_0:
+            case SUB_CMD_FAN_1:
+            case SUB_CMD_LIGHT_0:
+            case SUB_CMD_LIGHT_1:
                 if (argc >= 3) {
                     *value = utils_strbtonum(argv[2]);
                 } else {
