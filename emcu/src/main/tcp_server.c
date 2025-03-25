@@ -12,6 +12,8 @@
 #include "wifi.h"
 #include "tcp_server.h"
 
+#include "driver/gpio.h"
+
 #include "driver/mux.h"
 #include "driver/rbd.h"
 #include "driver/ldr.h"
@@ -19,8 +21,11 @@
 #include "driver/dht.h"
 #include "driver/ultrasonic.h"
 
+#include "driver/pins.h"
 
 static const char *TAG = "tcp server";
+
+static int hstate = 0;
 
 static esp_err_t send_all(int client_sock, char *data, size_t len);
 static esp_err_t serve_client(int client_sock);
@@ -197,6 +202,40 @@ static esp_err_t serve_client(int client_sock) {
                 send_uint32_t(client_sock, (uint32_t) drv_uso_get_value(USO_0, portMAX_DELAY));
                 send_uint32_t(client_sock, (uint32_t) drv_uso_get_value(USO_1, portMAX_DELAY));
                 break;
+            case SUB_CMD_HUME:
+                if (hstate == 0) {
+                    gpio_set_level(HUMIDIFIER_PIN, 0);
+                    vTaskDelay(100 / portTICK_PERIOD_MS);
+                    gpio_set_level(HUMIDIFIER_PIN, 1);
+                    hstate = 1;
+                } else {
+                    gpio_set_level(HUMIDIFIER_PIN, 0);
+                    vTaskDelay(100 / portTICK_PERIOD_MS);
+                    gpio_set_level(HUMIDIFIER_PIN, 1);
+                    vTaskDelay(100 / portTICK_PERIOD_MS);
+                    gpio_set_level(HUMIDIFIER_PIN, 0);
+                    vTaskDelay(100 / portTICK_PERIOD_MS);
+                    gpio_set_level(HUMIDIFIER_PIN, 1);
+                    hstate = 0;
+                }
+                break;
+
+            case SUB_CMD_PELTIER:
+                break;
+            case SUB_CMD_PANEL_0:
+                break;
+            case SUB_CMD_FAN_0:
+                break;
+            case SUB_CMD_FAN_1:
+                /* this pin is always high for some reason */
+                break;
+            case SUB_CMD_LIGHT_0:
+                gpio_set_level(LIGHT_0_PIN, !!data);
+                break;
+            case SUB_CMD_LIGHT_1:
+                gpio_set_level(LIGHT_1_PIN, !!data);
+                break;
+
             default:
                 ESP_LOGW(TAG, "Got an invalid packet with cmd: %d", cmd);
         }
@@ -322,7 +361,20 @@ static void tcp_server_task(void *pvParameters) {
 }
 
 esp_err_t tcp_server_init(void) {
-    xTaskCreate(tcp_server_task, "tcp server", 4096, NULL, 5, NULL);
+
+    gpio_reset_pin(HUMIDIFIER_PIN);
+    gpio_reset_pin(LIGHT_0_PIN);
+    gpio_reset_pin(LIGHT_1_PIN);
+
+    gpio_set_direction(HUMIDIFIER_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_direction(LIGHT_0_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_direction(LIGHT_1_PIN, GPIO_MODE_OUTPUT);
+
+    gpio_set_level(HUMIDIFIER_PIN, 1);
+    gpio_set_level(LIGHT_0_PIN, 0);
+    gpio_set_level(LIGHT_1_PIN, 0);
+
+   xTaskCreate(tcp_server_task, "tcp server", 4096, NULL, 5, NULL);
     return ESP_OK;
 }
 
