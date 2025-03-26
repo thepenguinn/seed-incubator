@@ -221,13 +221,25 @@ static esp_err_t serve_client(int client_sock) {
                 break;
 
             case SUB_CMD_PELTIER:
+                drv_rbd_take_access(portMAX_DELAY);
+                drv_rbd_peltier(!!data);
+                drv_rbd_give_access();
                 break;
             case SUB_CMD_PANEL_0:
+                drv_rbd_take_access(portMAX_DELAY);
+                drv_rbd_panel_0(!!data);
+                drv_rbd_give_access();
                 break;
             case SUB_CMD_FAN_0:
+                drv_rbd_take_access(portMAX_DELAY);
+                drv_rbd_fan_0(!!data);
+                drv_rbd_give_access();
                 break;
             case SUB_CMD_FAN_1:
                 /* this pin is always high for some reason */
+                drv_rbd_take_access(portMAX_DELAY);
+                drv_rbd_fan_1(!!data);
+                drv_rbd_give_access();
                 break;
             case SUB_CMD_LIGHT_0:
                 gpio_set_level(LIGHT_0_PIN, !!data);

@@ -14,6 +14,14 @@
 #include "pins.h"
 #include "rbd.h"
 
+/*#define DRV_RBD_PELTIER_BIT 0b0000 0000 0000 0000*/
+#define DRV_RBD_PELTIER_BIT     0b0001000000000000
+#define DRV_RBD_FAN_0_BIT       0b0010000000000000
+#define DRV_RBD_FAN_1_BIT       0b0100000000000000
+
+#define DRV_RBD_DIRECTION_BIT   0b0000000010000000
+#define DRV_RBD_PANEL_0_BIT     0b0000000000000001
+
 static portMUX_TYPE muxtype = portMUX_INITIALIZER_UNLOCKED;
 #define PORT_ENTER_CRITICAL portENTER_CRITICAL(&muxtype)
 #define PORT_EXIT_CRITICAL portEXIT_CRITICAL(&muxtype)
@@ -49,6 +57,65 @@ esp_err_t drv_rbd_push_data(uint16_t data) {
 
 uint16_t drv_rbd_get_data(void) {
     return rbd_data;
+}
+
+esp_err_t drv_rbd_peltier(int state) {
+
+    uint16_t data = drv_rbd_get_data();
+    if (state) {
+        data = data & DRV_RBD_PELTIER_BIT;
+    } else {
+        data = data & ~DRV_RBD_PELTIER_BIT;
+    }
+
+    drv_rbd_push_data(data);
+    return ESP_OK;
+}
+
+esp_err_t drv_rbd_fan_0(int state) {
+
+    uint16_t data = drv_rbd_get_data();
+    if (state) {
+        data = data & DRV_RBD_FAN_0_BIT;
+    } else {
+        data = data & ~DRV_RBD_FAN_0_BIT;
+    }
+
+    drv_rbd_push_data(data);
+    return ESP_OK;
+}
+
+esp_err_t drv_rbd_fan_1(int state) {
+
+    uint16_t data = drv_rbd_get_data();
+    if (state) {
+        data = data & DRV_RBD_FAN_1_BIT;
+    } else {
+        data = data & ~DRV_RBD_FAN_1_BIT;
+    }
+
+    drv_rbd_push_data(data);
+    return ESP_OK;
+}
+
+esp_err_t drv_rbd_panel_0(int state) {
+
+    uint16_t data = drv_rbd_get_data();
+    if (state) {
+        data = data & DRV_RBD_DIRECTION_BIT;
+    } else {
+        data = data & ~DRV_RBD_DIRECTION_BIT;
+    }
+
+    data = data & DRV_RBD_PANEL_0_BIT;
+    drv_rbd_push_data(data);
+
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+    data = data & ~DRV_RBD_PANEL_0_BIT;
+    drv_rbd_push_data(data);
+
+    return ESP_OK;
 }
 
 esp_err_t drv_rbd_take_access(TickType_t wait_ticks) {
