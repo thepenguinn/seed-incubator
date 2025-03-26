@@ -56,7 +56,7 @@ int emcu_fans(int state) {
 }
 
 int emcu_peltier(int state) {
-    tcp_send_packet(SUB_CMD_HUME, !!state);
+    tcp_send_packet(SUB_CMD_PELTIER, !!state);
     return 0;
 }
 
@@ -149,7 +149,7 @@ int emcu (int command, int value) {
              * start the tui app
              * */
             break;
-        case SUB_CMD_HUME:
+        case SUB_CMD_PANEL_0:
             emcu_panel_0(value);
             break;
         case SUB_CMD_HUME:

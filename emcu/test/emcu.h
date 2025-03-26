@@ -30,9 +30,9 @@ enum SubCmd {
 #define EXHAUST_CMODE 1
 
 /* new esp */
-#define MAC_ADDR "1c:69:20:94:53:0c"
+/*#define MAC_ADDR "1c:69:20:94:53:0c"*/
 /* old one i had */
-/*#define MAC_ADDR "e4:65:b8:25:3c:54"*/
+#define MAC_ADDR "e4:65:b8:25:3c:54"
 /* moto */
 /*#define MAC_ADDR "88:79:7e:be:5e:e4"*/
 #define PORT     10898
