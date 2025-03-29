@@ -29,6 +29,7 @@
 \usepackage[style = ieee]{biblatex} %Imports biblatex package
 \usepackage{xfp}
 \usepackage{xifthen}
+\usepackage{tcolorbox}
 
 \addbibresource{abstract.bib} %Import the bibliography file
 
@@ -134,6 +135,113 @@
 \newcommand\BOMAddInv[1] {
     \setcounter{BOMInvCount}{\theBOMInvCount + #1}
     \BOMAddItem{74 LS 03 - quad 2-input NAND gate with open collector outputs}{8}{#1}{}{Tomson}{https://www.tomsonelectronics.com/products/74-ls-03-quad-2-input-nand-gate-with-open-collector-outputs}
+}
+
+% alerts
+
+\newcommand\alertCaution[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertCaution,
+            colbacktitle = colorAlertBgCaution,
+            colback = colorAlertBgCaution,
+            colframe = colorAlertBgCaution,
+            title=Caution,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
+}
+
+\newcommand\alertWarning[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertWarning,
+            colbacktitle = colorAlertBgWarning,
+            colback = colorAlertBgWarning,
+            colframe = colorAlertBgWarning,
+            title=Warning,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
+}
+
+\newcommand\alertImportant[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertImportant,
+            colbacktitle = colorAlertBgImportant,
+            colback = colorAlertBgImportant,
+            colframe = colorAlertBgImportant,
+            title=Important,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
+}
+
+\newcommand\alertTip[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertTip,
+            colbacktitle = colorAlertBgTip,
+            colback = colorAlertBgTip,
+            colframe = colorAlertBgTip,
+            title=Tip,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
+}
+
+\newcommand\alertNote[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertNote,
+            colbacktitle = colorAlertBgNote,
+            colback = colorAlertBgNote,
+            colframe = colorAlertBgNote,
+            title=Note,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
 }
 
 %% for paragraphs
