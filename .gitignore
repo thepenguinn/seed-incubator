@@ -1,4 +1,10 @@
-*.pdf
+logo/**/*.pdf
+report/*.pdf
+*/chapter_*/*.pdf
+*/chapter_*/section_*/*.pdf
+*/tikzpics/**/*.pdf
+*/chapter_*/tikzpics/**/*.pdf
+*/chapter_*/section_*/tikzpics/**/*.pdf
 *.tstp
 *.aux
 *.log
