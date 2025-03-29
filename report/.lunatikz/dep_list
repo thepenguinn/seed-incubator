@@ -35,6 +35,9 @@ return {
     ["endAbsPTC"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
     },
+    ["endAbsPanelActuatorModule"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
     ["endAbsPeltier"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
     },
@@ -106,6 +109,9 @@ return {
     },
     ["subAbsPTC"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["subAbsPanelActuatorModule"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
     },
     ["subAbsPeltier"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",

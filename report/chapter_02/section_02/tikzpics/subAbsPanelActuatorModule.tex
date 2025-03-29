@@ -1,0 +1,25 @@
+\subtikzpicturedef{subAbsPanelActuatorModule} {
+    cmotor, crelay, trigger,
+    pcmotor, pcrelay, ptrigger,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsActuatorModule {#1-absActuatorModule} {#1-origin} {origin}
+    \draw
+    coordinate (#1-absActuatorModule-at0) coordinate (#1-cmotor)
+    coordinate (#1-absActuatorModule-pat0) coordinate (#1-pcmotor)
+
+    coordinate (#1-absActuatorModule-cb0) coordinate (#1-crelay)
+    coordinate (#1-absActuatorModule-pcb0) coordinate (#1-pcrelay)
+
+    coordinate (#1-absActuatorModule-cr1) coordinate (#1-trigger)
+    coordinate (#1-absActuatorModule-pcr1) coordinate (#1-ptrigger)
+    ;
+}
+
+\subtikzpictureactivate{subAbsPanelActuatorModule}
+
+%% subtikzname actname ctrlname
+\newcommand\ovrAbsPanelActuatorModuleDrawLabelName[3] {
+    \ovrAbsActuatorModuleDrawLabelName {#1-absActuatorModule} {#2} {#3}
+}
