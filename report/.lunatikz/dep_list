@@ -69,7 +69,7 @@ return {
         ["parent_dir"] = "chapter_02/section_03/tikzpics",
     },
     ["endClvlInverter"] = {
-        ["parent_dir"] = "chapter_09/section_04/tikzpics",
+        ["parent_dir"] = "chapter_07/section_02/tikzpics",
     },
     ["endIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
@@ -150,7 +150,7 @@ return {
         ["parent_dir"] = "tikzpics",
     },
     ["subClvlInverter"] = {
-        ["parent_dir"] = "chapter_09/section_04/tikzpics",
+        ["parent_dir"] = "chapter_07/section_02/tikzpics",
     },
     ["subFigBase"] = {
         ["parent_dir"] = "tikzpics",
