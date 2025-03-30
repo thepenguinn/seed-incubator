@@ -68,6 +68,9 @@ return {
     ["endAbsThermalSensorSystem"] = {
         ["parent_dir"] = "chapter_02/section_03/tikzpics",
     },
+    ["endClvlInverter"] = {
+        ["parent_dir"] = "chapter_09/section_04/tikzpics",
+    },
     ["endIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
@@ -142,6 +145,9 @@ return {
     },
     ["subAbsThermalSensorSystem"] = {
         ["parent_dir"] = "chapter_02/section_03/tikzpics",
+    },
+    ["subClvlCtkDiagramBase"] = {
+        ["parent_dir"] = "tikzpics",
     },
     ["subFigBase"] = {
         ["parent_dir"] = "tikzpics",
