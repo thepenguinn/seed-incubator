@@ -149,6 +149,9 @@ return {
     ["subClvlCtkDiagramBase"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["subClvlInverter"] = {
+        ["parent_dir"] = "chapter_09/section_04/tikzpics",
+    },
     ["subFigBase"] = {
         ["parent_dir"] = "tikzpics",
     },

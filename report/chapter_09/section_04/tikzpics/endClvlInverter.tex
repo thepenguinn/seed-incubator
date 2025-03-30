@@ -3,10 +3,11 @@
     ]
 
     \draw (0, 0) coordinate (origin);
-    \subClvlCtkDiagramBase {clvlCtkDiagramBase} {origin} {origin}
+    \subClvlInverter {clvlInverter} {origin} {origin}
 
-    \draw
-    (0, 0) -- (1, 1)
-    ;
+    \ovrClvlInverterDrawLabelName {clvlInverter} {BC547} {$\SI{33}{k \ohm}$} {$\SI{15}{k \ohm}$}
+
+    \ovrClvlInverterDrawPwr {clvlInverter} {$V_{CC}$}
+    \ovrClvlInverterDrawPole {clvlInverter}
 
 \end{tikzpicture}
