@@ -47,12 +47,13 @@ almost $64$\footnote{given that every sensor uses a single pin to communicate.} 
 
 An ideal candidate for our design is \emph{74HC4067}, which is a $16$ bit
 \emph{analog multiplexer / demultiplexer} with an \emph{active low} enable. Please refer figures
-\ref{fig:74hc4067Smd} and \ref{fig:74hc4067PinDiagram} for more information. And refer table
-\ref{tbl:74hc4067RelventPins} for the information about relevant pins.
+\ref{fig:74hc4067Smd}, \ref{fig:74hc4067BOB} and \ref{fig:74hc4067PinDiagram} for more information.
+And refer table \ref{tbl:74hc4067RelventPins} for the information about relevant pins.
 
 \begin{center}
     {\begin{minipage}[c] {0.42\textwidth}
         \centering
+
         \includegraphics [
         ] {pics/74hc4067_smd.pdf}
         \captionof{figure} {
@@ -75,26 +76,40 @@ An ideal candidate for our design is \emph{74HC4067}, which is a $16$ bit
 
         %% TODO: add a description of 74HC4067
 
-        \begin{tabularx} {\linewidth} {
-                *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
-                *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
-            }
-            \toprule
-            Pins & Remarks \\
-            \midrule
-            \texttt{C0 - C15} & $16$ channel lines. \\
-            \texttt{S0 - S3} & $4$ select lines. \\
-            \texttt{$\overline{E}$} & Enable line. \\
-            \texttt{SIG} & Signal line. \\
-            \bottomrule
-        \end{tabularx}
-        \captionof{table} {
-            Relevant pins of \emph{74HC4067}.
-            \label{tbl:74hc4067RelventPins}
+        \centering
+
+        \includegraphics [
+            max width = \IGXMaxWidth,
+            max height = \IGXMaxHeight,
+            \IGXDefaultOptionalArgs,
+        ] {pics/74hc4067_bob.png}
+        \captionof{figure} {
+            Breakout board of \emph{74HC4067}.
+            \label{fig:74hc4067BOB}
         }
 
     \end{minipage}}
 
+\end{center}
+
+\begin{center}
+    \begin{tabularx} {\linewidth} {
+            *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
+            *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
+        }
+        \toprule
+        Pins & Remarks \\
+        \midrule
+        \texttt{C0 - C15} & $16$ channel lines. \\
+        \texttt{S0 - S3} & $4$ select lines. \\
+        \texttt{$\overline{E}$} & Enable line. \\
+        \texttt{SIG} & Signal line. \\
+        \bottomrule
+    \end{tabularx}
+    \captionof{table} {
+        Relevant pins of \emph{74HC4067}.
+        \label{tbl:74hc4067RelventPins}
+    }
 \end{center}
 
 \end{document}
