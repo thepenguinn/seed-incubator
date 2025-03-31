@@ -1,5 +1,6 @@
 logo/**/*.pdf
 report/*.pdf
+*/_standalone_tmp/*
 */chapter_*/*.pdf
 */chapter_*/section_*/*.pdf
 */tikzpics/**/*.pdf
