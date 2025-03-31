@@ -66,32 +66,32 @@ An ideal candidate for our design is \emph{74HC4067}, which is a $16$ bit
             \IGXDefaultOptionalArgs,
         ] {tikzpics/endAbsSixteenBitMuxPinout.pdf}
         \captionof{figure} {
-            \label{fig:}
+            Pin diagram of \emph{74HC4067}.
+            \label{fig:74hc4067PinDiagram}
         }
 
     \end{minipage}
     \begin{minipage}[c] {0.52\textwidth}
 
+        %% TODO: add a description of 74HC4067
 
-
-        %\begin{tabularx} {\linewidth} {
-        %        *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
-        %        *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
-        %    }
-        %    \toprule
-        %    Parameter & Value \\
-        %    \midrule
-        %    $\si{V}_{CEO}$ Max. & $45 \si{V}$ \\
-        %    $\si{V}_{EBO}$ Max. & $6 \si{V}$ \\
-        %    $\si{I}_{C}$ Max. & $100 \si{mA}$ \\
-        %    $\si{P}_{C}$ Max. & $500 \si{mW}$ \\
-        %    $\si{C}_{ob}$ (Output Capacitance) Max. & $6 \si{pF}$ \\
-        %    \bottomrule
-        %\end{tabularx}
-        %\captionof{table} {
-        %    Brief specification of \textbf{BC547}.
-        %    \label{tbl:bc547Spec}
-        %}
+        \begin{tabularx} {\linewidth} {
+                *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
+                *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
+            }
+            \toprule
+            Pins & Remarks \\
+            \midrule
+            \texttt{C0 - C15} & $16$ channel lines. \\
+            \texttt{S0 - S3} & $4$ select lines. \\
+            \texttt{$\overline{E}$} & Enable line. \\
+            \texttt{SIG} & Signal line. \\
+            \bottomrule
+        \end{tabularx}
+        \captionof{table} {
+            Relevant pins of \emph{74HC4067}.
+            \label{tbl:74hc4067RelventPins}
+        }
 
     \end{minipage}}
 
