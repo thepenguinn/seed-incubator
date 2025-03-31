@@ -1,0 +1,109 @@
+\def\absSixteenBitMuxPinCountSingleSideTmp{12}
+
+\subtikzpicturedef{subSixteenBitMux} {
+    l1, l12, r1, r12, sig,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \foreach \x in {1,...,\absSixteenBitMuxPinCountSingleSideTmp} {
+        \draw [absCtkModule, line cap = round]
+        (#1-origin) ++(0, -{(\x * \absCtkICPinGap)}) coordinate (#1-l\x)
+        ++({((2 * \absCtkPinPad) + \absCtkICWidth)}, 0) coordinate (#1-r\x)
+        ;
+    }
+
+    %\foreach \x in {3,...,\absSixteenBitMuxPinCountSingleSideTmp} {
+    %    \draw [absCtkModule, line cap = round]
+    %    (#1-l\x) -- +(\absCtkPinPad, 0)
+    %    ;
+    %}
+
+    %\foreach \x in {1,...,\absSixteenBitMuxPinCountSingleSideTmp} {
+    %    \draw [absCtkModule, line cap = round]
+    %    (#1-r\x) -- +(-\absCtkPinPad, 0)
+    %    ;
+    %}
+
+    \draw [absCtkModule]
+    (#1-origin) ++(\absCtkPinPad, 0) coordinate (#1-topLeft)
+    (#1-topLeft) ++(0, -{(\absCtkICPinGap * (\absSixteenBitMuxPinCountSingleSideTmp + 1))})
+    coordinate (#1-bottomLeft)
+
+    (#1-topLeft) ++(\absCtkICWidth, 0) coordinate (#1-topRight)
+    (#1-bottomLeft) ++(\absCtkICWidth, 0) coordinate (#1-bottomRight)
+
+    (#1-topLeft) rectangle (#1-bottomRight)
+
+    ($(#1-l1)!0.50!(#1-l2)$) ++(\absCtkPinPad, 0) node [right = 8pt] {\texttt{74HC4067}}
+    ;
+
+    %% right pins
+
+    %% greyed pins
+
+    \foreach \l/\n in {
+        C0/6,
+        C1/7,
+        C2/8,
+        C3/9,
+        C15/10%
+    } {
+        \draw [absCtkAuxModule, thin]
+        (#1-r\n) circle (2pt)
+        ;
+    }
+
+    \foreach \l/\n in {
+        C0/1,
+        C1/2,
+        C2/3,
+        C3/4,
+        C4/5,
+        C14/11,
+        C15/12%
+    } {
+        \draw [absCtkModule, thin]
+        (#1-r\n) ++(-\absCtkPinPad, 0) node [left = 4pt] {\texttt{\l}}
+        (#1-r\n) circle (2pt)
+        ;
+    }
+
+    %% TODO: create another style
+    \draw [absCtkAuxModule, line cap = round, thin]
+    (#1-r6) ++(-\absCtkPinPad, 0)
+    ++(-0.5, 0) coordinate (#1-tmp)
+    -- (#1-tmp |- #1-r10)
+    ;
+
+    %% sig
+
+    \draw
+    ($(#1-bottomLeft)!0.60!(#1-bottomRight)$) ++(0, -\absCtkPinPad)
+    coordinate (#1-sig)
+    ;
+
+    %% select lines
+
+    \foreach \l/\p/\n in {
+        S0/0/3,
+        S1/1/4,
+        S2/2/5,
+        S3/3/6%
+    } {
+        \draw [absCtkModule, thin]
+        (#1-l\n) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{\l}}
+        (#1-l\n) coordinate (#1-s\p)
+        ;
+    }
+
+    \draw [absCtkModule, thin]
+    (#1-l7) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{EN}}
+    (#1-l7) coordinate (#1-en)
+    ;
+
+}
+
+\subtikzpictureactivate{subSixteenBitMux}

@@ -74,6 +74,9 @@ return {
     ["endAbsThermalSensorSystem"] = {
         ["parent_dir"] = "chapter_02/section_03/tikzpics",
     },
+    ["endAbsThirtyTwoBitMux"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
     ["endClvlInverter"] = {
         ["parent_dir"] = "chapter_07/section_02/tikzpics",
     },
@@ -91,6 +94,9 @@ return {
     },
     ["subAbsCtkDiagramBase"] = {
         ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsCtkSimpleFiveBitShiftRegister"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
     },
     ["subAbsESP"] = {
         ["parent_dir"] = "tikzpics",
@@ -161,6 +167,9 @@ return {
     ["subAbsThermalSensorSystem"] = {
         ["parent_dir"] = "chapter_02/section_03/tikzpics",
     },
+    ["subAbsThirtyTwoBitMux"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
     ["subClvlCtkDiagramBase"] = {
         ["parent_dir"] = "tikzpics",
     },
@@ -175,5 +184,8 @@ return {
     },
     ["subIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subSixteenBitMux"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
     },
 }
