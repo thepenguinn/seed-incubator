@@ -25,6 +25,8 @@ The design requirements are:
     \item The pins required to operate should be minimum as possible.
 \end{itemize}
 
+\subsection{$32$ Bit Multiplexer}
+
 So first of all, we need an \emph{analog multiplexer}. The difference between a \emph{digital
 multiplexer} and an \emph{analog multiplexer} is that, the former one generates the output
 from the inputs using logic gates, and the latter directly connects\footnote{usually using
@@ -112,6 +114,8 @@ And refer table \ref{tbl:74hc4067RelventPins} for the information about relevant
     }
 \end{center}
 
+\subsection{Serially Addressable Multiplexer}
+
 Now we can simply take two \emph{74HC4067s} and merge them into one $32$ bit multiplexer with
 some \emph{home-brew logic gates}. But inorder to drive one of these multiplexers, we need
 a total of $7 = 5 (\mbox{address}) + 1 (\mbox{output}) + 1 (\mbox{enable})$ pins. And we would
@@ -137,9 +141,16 @@ Our \emph{74LS96} will drive those \emph{inverters} and they in turn drives the 
 Choosing \emph{74LS96} has a advantage too, they can be driven by \esp\footnote{output high voltage is
 $3.3\si{V}$.} directly as they will take any voltage greater than $2.2\si{V}$ as logic high.
 
-Please refer to figures \ref{fig:74ls96Dip} and \ref{74ls96PinDiagram} for more information about
+Please refer to figures \ref{fig:74ls96Dip} and \ref{fig:74ls96PinDiagram} for more information about
 \emph{74LS96}. And table \ref{tbl:74ls96RelventPins} goes through some pins that are relevant to
 our design.
+
+\alertWarning{
+    It is wise to tie unused pins, either high or low. In this case the \emph{preset}
+    pins of \emph{74LS96} are left floating. They will be read as high by \emph{74LS}
+    chips. But if you are using \emph{74HC} or \emph{74HCT} versions of this chip, it
+    is recommended to always tie these pins either high or low.
+}
 
 \begin{center}
     {\begin{minipage}[c] {0.42\textwidth}
@@ -176,8 +187,8 @@ our design.
             \midrule
             \texttt{PS A - PS E} & Preset lines (We are not using them). \\
             \texttt{Q A - Q E} & Parallel output lines. \\
-            $\overline{\mbox{\texttt{MR}}}$ & Master reset. \\
-            \texttt{PE} & Preset enable. \\
+            $\overline{\mbox{\texttt{MR}}}$ & Master reset (always tied high). \\
+            \texttt{PE} & Preset enable (always tied low). \\
             \texttt{CP} & Clock pulse. \\
             \texttt{S} & Serial in. \\
             \bottomrule
@@ -190,4 +201,10 @@ our design.
     \end{minipage}}
 
 \end{center}
+
+\subsection{Putting It All Together}
+
+Now that we have sorted out all the components, we can put these all together to make
+our \emph{serially addressable $32$ bit multiplexer}.
+
 \end{document}
