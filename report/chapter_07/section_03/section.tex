@@ -93,7 +93,7 @@ And refer table \ref{tbl:74hc4067RelventPins} for the information about relevant
 \end{center}
 
 \begin{center}
-    \begin{tabularx} {\linewidth} {
+    \begin{xltabular} {\linewidth} {
             *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
             *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
         }
@@ -105,11 +105,36 @@ And refer table \ref{tbl:74hc4067RelventPins} for the information about relevant
         \texttt{$\overline{E}$} & Enable line. \\
         \texttt{SIG} & Signal line. \\
         \bottomrule
-    \end{tabularx}
+    \end{xltabular}
     \captionof{table} {
         Relevant pins of \emph{74HC4067}.
         \label{tbl:74hc4067RelventPins}
     }
 \end{center}
+
+Now we can simply take two \emph{74HC4067s} and merge them into one $32$ bit multiplexer with
+some \emph{home-brew logic gates}. But inorder to drive one of these multiplexers, we need
+a total of $7 = 5 (\mbox{address}) + 1 (\mbox{output}) + 1 (\mbox{enable})$ pins. And we would
+have $2$ of these in total. That would require a total of $14$ pins from \esp. That's not
+feasible.
+
+So we need to find a way to \emph{serially address} the multiplexers. We can simply use a
+\emph{shift register} to accomplish our task. \emph{74LS96} is a good candidate for our
+scenario, as it is $5$ bit shift register. But choosing \emph{74LS96} has a grave disadvantage,
+that is it's a \emph{74LS}\footnote{LS stands for Low-power Schottky.} series IC.
+And our multiplexer is \emph{74HC}\footnote{HC stands for High-speed CMOS.} series. The former
+belongs to \emph{TTL}\footnote{actually, the LS series uses Schottky transistors, but the
+logic voltage levels are comparable to TTL family} logic family and the latter belongs to
+\emph{CMOS} logic family. The problem here is that the \emph{CMOS} logic family cannot be driven
+by \emph{TTL} logic family. The output high voltage of \emph{74LS} series is too low\footnote{around
+$2.2\si{V}$ to $3\si{V}$} for \emph{74HC} series to pick up as a \emph{logic high}.
+
+Inorder to solve this issue, we need to use some \emph{level shifters}. This is where the
+\emph{inverters} we have designed in section \ref{sec:bufferOrInverter} comes in play.
+Our \emph{74LS96} will drive those \emph{inverters} and they in turn drives the pins of
+\emph{74HC4067}.
+
+Choosing \emph{74LS96} has a advantage too, they can be driven by \esp\footnote{voltage high is
+$3.3\si{V}$.} directly as they will take any voltage greater than $2.2\si{V}$ as logic high.
 
 \end{document}
