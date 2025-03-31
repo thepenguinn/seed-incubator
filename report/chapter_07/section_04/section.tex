@@ -1,0 +1,31 @@
+\documentclass[../../main]{subfiles}
+
+\input{section_header.tex}
+
+\begin{document}
+
+\section{NAND Gate} \label{sec:}
+
+In addition to an \emph{inverter}, we also need another logic gate, which is
+a \emph{NAND gate}. This will used in the \emph{multiplexer circuit}\footnote{as
+a way \emph{enable} and \emph{disable} the multiplexer output.}, as we will be
+seeing in the following sections. We will be designing the \emph{NAND gate} just
+as we designed the inverter, using the same \emph{BC547} from section \ref{sec:bufferOrInverter}.
+
+\begin{center}
+    {\begin{minipage} [c] {0.55\textwidth}
+        Figure \ref{fig:clvlNANDGate}
+    \end{minipage}
+    \hfill
+    \begin{minipage} [c] {0.35\textwidth}
+        \centering
+        \includegraphics [
+            max width = \IGXMaxWidth,
+            max height = \IGXMaxHeight,
+            \IGXDefaultOptionalArgs,
+        ] {tikzpics/endClvlNANDGate.pdf}
+        \captionof{figure} {A simple RTL NAND gate using \emph{BC547}.}
+        \label{fig:clvlNANDGate}
+    \end{minipage}\hfill}
+\end{center}
+\end{document}

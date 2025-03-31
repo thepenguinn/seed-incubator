@@ -1,0 +1,87 @@
+\subtikzpicturedef{subClvlNANDGate} {
+    in1, in2, out, vcc, gnd,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subClvlCtkDiagramBase {#1-clvlCtkDiagramBase} {#1-origin} {#1-origin}
+
+    \draw [
+        clvlCtkModule,
+    ]
+    node (#1-npn1) [npn] {}
+    (#1-npn1.C) to[R, name = #1-rc] ++(0, 1.8)
+    (#1-npn1.B) to[R, name = #1-rb1] ++(-1.3, 0)
+
+    (#1-npn1.E) node (#1-npn2) [npn, anchor = C] {}
+    (#1-npn2.B) to[R, name = #1-rb2] ++(-1.3, 0)
+
+    (#1-npn2.E) -- ++(0, -0.5) coordinate (#1-gnd)
+    (#1-rc.east) coordinate (#1-vcc)
+    (#1-npn1.C) -- ++(1.5, 0) coordinate (#1-out)
+    (#1-rb1.east) -- ++(-0.5, 0) coordinate (#1-in1)
+    (#1-rb2.east) -- ++(-0.5, 0) coordinate (#1-in2)
+    ;
+
+}
+
+\subtikzpictureactivate{subClvlNANDGate}
+
+%% subtikzname npn1 npn2 rc rb
+\newcommand\ovrClvlNANDGateDrawLabelName[5] {
+    \path [clvlCtkModule]
+    (#1-npn1.C) -- (#1-npn1.E)
+    node [
+        midway,
+        right = 4pt,
+    ] {#2}
+    ;
+
+    \path [clvlCtkModule]
+    (#1-npn2.C) -- (#1-npn2.E)
+    node [
+        midway,
+        right = 4pt,
+    ] {#3}
+    ;
+
+    \path [clvlCtkModule]
+    (#1-rc.west) -- (#1-rc.east)
+    node [
+        midway,
+        right = 12pt,
+    ] {#4}
+    ;
+
+    \path [clvlCtkModule]
+    (#1-rb1.west) -- (#1-rb1.east)
+    node [
+        midway,
+        below = 12pt,
+    ] {#5}
+    ;
+
+    \path [clvlCtkModule]
+    (#1-rb2.west) -- (#1-rb2.east)
+    node [
+        midway,
+        below = 12pt,
+    ] {#4}
+    ;
+}
+
+%% subtikzname vcc
+\newcommand\ovrClvlNANDGateDrawPwr[2] {
+    \draw [clvlCtkModule]
+    (#1-vcc) node [vcc] {#2}
+    (#1-gnd) node [ground] {}
+    ;
+}
+
+%% subtikzname
+\newcommand\ovrClvlNANDGateDrawPole[1] {
+    \draw [clvlCtkModule]
+    (#1-in1) node [ocirc] {}
+    (#1-in2) node [ocirc] {}
+    (#1-out) node [ocirc] {}
+    ;
+}
