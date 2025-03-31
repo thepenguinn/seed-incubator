@@ -152,6 +152,12 @@ our design.
     is recommended to always tie these pins either high or low.
 }
 
+\alertImportant{
+    Pins $\overline{\mbox{\texttt{E}}}$ and \texttt{PE} of \emph{74LS96} are tied
+    \emph{high} and \emph{low} respectively, so as to disable asynchronous resetting
+    of the internal latches.
+}
+
 \begin{center}
     {\begin{minipage}[c] {0.42\textwidth}
         \centering
@@ -205,6 +211,7 @@ our design.
 \subsection{Putting It All Together}
 
 Now that we have sorted out all the components, we can put these all together to make
-our \emph{serially addressable $32$ bit multiplexer}.
+our \emph{serially addressable $32$ bit multiplexer}. Figure \ref{fig:}
+
 
 \end{document}
