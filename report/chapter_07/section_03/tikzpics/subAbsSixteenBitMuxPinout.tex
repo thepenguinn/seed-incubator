@@ -1,0 +1,99 @@
+\def\absSixteenBitMuxPinCountSingleSide{12}
+
+\subtikzpicturedef{subAbsSixteenBitMuxPinout} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \foreach \x in {1,...,\absSixteenBitMuxPinCountSingleSide} {
+        \draw [absCtkModule, line cap = round]
+        (#1-origin) ++(0, -{(\x * \absCtkICPinGap)}) coordinate (#1-l\x)
+        ++({((2 * \absCtkPinPad) + \absCtkICWidth)}, 0) coordinate (#1-r\x)
+        ;
+    }
+
+    \foreach \x in {3,...,\absSixteenBitMuxPinCountSingleSide} {
+        \draw [absCtkModule, line cap = round]
+        (#1-l\x) -- +(\absCtkPinPad, 0)
+        ;
+    }
+
+    \foreach \x in {1,...,\absSixteenBitMuxPinCountSingleSide} {
+        \draw [absCtkModule, line cap = round]
+        (#1-r\x) -- +(-\absCtkPinPad, 0)
+        ;
+    }
+
+    \draw [absCtkModule]
+    (#1-origin) ++(\absCtkPinPad, 0) coordinate (#1-topLeft)
+    (#1-topLeft) ++(0, -{(\absCtkICPinGap * (\absSixteenBitMuxPinCountSingleSide + 1))})
+    coordinate (#1-bottomLeft)
+
+    (#1-topLeft) ++(\absCtkICWidth, 0) coordinate (#1-topRight)
+    (#1-bottomLeft) ++(\absCtkICWidth, 0) coordinate (#1-bottomRight)
+
+    (#1-topLeft) rectangle (#1-bottomRight)
+
+    ($(#1-l1)!0.50!(#1-l2)$) ++(\absCtkPinPad, 0) node [right = 8pt] {\texttt{74HC4067}}
+    ;
+
+    %% drawing pins left
+
+    \foreach \l/\p/\n in {
+        SIG/1/3,
+        C7/2/4,
+        C6/3/5,
+        C5/4/6,
+        C4/5/7,
+        C3/6/8,
+        C2/7/9,
+        C1/8/10,
+        C0/9/11,
+        S0/10/12%
+    } {
+        \draw [absCtkModule]
+        (#1-l\n) node [left = 4pt] {\texttt{\p}}
+        (#1-l\n) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{\l}}
+        ;
+    }
+
+    %% right pins
+
+    \foreach \l/\p/\n in {
+        C8/23/1,
+        C9/22/2,
+        C10/21/3,
+        C11/20/4,
+        C12/19/5,
+        C13/18/6,
+        C14/17/7,
+        C15/16/8,
+        $\overline{\mbox{\texttt{E}}}$/15/9,
+        S2/14/10,
+        S3/13/11,
+        S1/11/12%
+    } {
+        \draw [absCtkModule]
+        (#1-r\n) node [right = 4pt] {\texttt{\p}}
+        (#1-r\n) ++(-\absCtkPinPad, 0) node [left = 4pt] {\texttt{\l}}
+        ;
+    }
+
+    %% ground and vcc
+
+    \draw [absCtkModule, line cap = round]
+    ($(#1-topLeft)!0.50!(#1-topRight)$) -- ++(0, \absCtkPinPad) coordinate (#1-vcc)
+    ($(#1-bottomLeft)!0.50!(#1-bottomRight)$) -- ++(0, -\absCtkPinPad) coordinate (#1-gnd)
+
+    (#1-vcc) node [above = 4pt] {\texttt{24}}
+    (#1-vcc) ++(0, -\absCtkPinPad) node [below = 4pt] {\texttt{VCC}}
+
+    (#1-gnd) node [below = 4pt] {\texttt{12}}
+    (#1-gnd) ++(0, \absCtkPinPad) node [above = 4pt] {\texttt{GND}}
+
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsSixteenBitMuxPinout}

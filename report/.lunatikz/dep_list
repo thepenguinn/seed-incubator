@@ -53,6 +53,9 @@ return {
     ["endAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
     },
+    ["endAbsSixteenBitMuxPinout"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
     ["endAbsSoilMoistureAndFertilizerControlSystem"] = {
         ["parent_dir"] = "chapter_05/section_03/tikzpics",
     },
@@ -130,6 +133,9 @@ return {
     },
     ["subAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["subAbsSixteenBitMuxPinout"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
     },
     ["subAbsSoilMoistureAndFertilizerControlSystem"] = {
         ["parent_dir"] = "chapter_05/section_03/tikzpics",
