@@ -93,7 +93,7 @@ And refer table \ref{tbl:74hc4067RelventPins} for the information about relevant
 \end{center}
 
 \begin{center}
-    \begin{xltabular} {\linewidth} {
+    \begin{tabularx} {\linewidth} {
             *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
             *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
         }
@@ -102,10 +102,10 @@ And refer table \ref{tbl:74hc4067RelventPins} for the information about relevant
         \midrule
         \texttt{C0 - C15} & $16$ channel lines. \\
         \texttt{S0 - S3} & $4$ select lines. \\
-        \texttt{$\overline{E}$} & Enable line. \\
+        $\overline{\mbox{\texttt{E}}}$ & Enable line. \\
         \texttt{SIG} & Signal line. \\
         \bottomrule
-    \end{xltabular}
+    \end{tabularx}
     \captionof{table} {
         Relevant pins of \emph{74HC4067}.
         \label{tbl:74hc4067RelventPins}
@@ -134,7 +134,60 @@ Inorder to solve this issue, we need to use some \emph{level shifters}. This is 
 Our \emph{74LS96} will drive those \emph{inverters} and they in turn drives the pins of
 \emph{74HC4067}.
 
-Choosing \emph{74LS96} has a advantage too, they can be driven by \esp\footnote{voltage high is
+Choosing \emph{74LS96} has a advantage too, they can be driven by \esp\footnote{output high voltage is
 $3.3\si{V}$.} directly as they will take any voltage greater than $2.2\si{V}$ as logic high.
 
+Please refer to figures \ref{fig:74ls96Dip} and \ref{74ls96PinDiagram} for more information about
+\emph{74LS96}. And table \ref{tbl:74ls96RelventPins} goes through some pins that are relevant to
+our design.
+
+\begin{center}
+    {\begin{minipage}[c] {0.42\textwidth}
+        \centering
+
+        \includegraphics [
+        ] {pics/74ls96_dip.pdf}
+        \captionof{figure} {
+            Dip package of \emph{74LS96}.
+            \label{fig:74ls96Dip}
+        }
+
+        \includegraphics [
+            max width = \IGXMaxWidth,
+            max height = \IGXMaxHeight,
+            \IGXDefaultOptionalArgs,
+        ] {tikzpics/endAbsFiveBitShiftRegisterPinout.pdf}
+        \captionof{figure} {
+            Pin diagram of \emph{74LS96}.
+            \label{fig:74ls96PinDiagram}
+        }
+
+    \end{minipage}
+    \begin{minipage}[c] {0.52\textwidth}
+
+        \centering
+
+        \begin{tabularx} {\linewidth} {
+                *{1}{>{\centering\arraybackslash}m{0.3\linewidth}}
+                *{1}{>{\centering\arraybackslash}m{0.7\linewidth}}
+            }
+            \toprule
+            Pins & Remarks \\
+            \midrule
+            \texttt{PS A - PS E} & Preset lines (We are not using them). \\
+            \texttt{Q A - Q E} & Parallel output lines. \\
+            $\overline{\mbox{\texttt{MR}}}$ & Master reset. \\
+            \texttt{PE} & Preset enable. \\
+            \texttt{CP} & Clock pulse. \\
+            \texttt{S} & Serial in. \\
+            \bottomrule
+        \end{tabularx}
+        \captionof{table} {
+            Relevant pins of \emph{74LS96}.
+            \label{tbl:74ls96RelventPins}
+        }
+
+    \end{minipage}}
+
+\end{center}
 \end{document}

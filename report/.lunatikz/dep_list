@@ -11,6 +11,9 @@ return {
     ["endAbsExhaustSystem"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
     },
+    ["endAbsFiveBitShiftRegisterPinout"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
     ["endAbsHumidifierSystem"] = {
         ["parent_dir"] = "chapter_03/section_01/tikzpics",
     },
@@ -94,6 +97,9 @@ return {
     },
     ["subAbsExhaustSystem"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
+    ["subAbsFiveBitShiftRegisterPinout"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
     },
     ["subAbsHumidifierSystem"] = {
         ["parent_dir"] = "chapter_03/section_01/tikzpics",
