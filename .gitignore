@@ -1,3 +1,4 @@
+*.toc
 logo/**/*.pdf
 report/*.pdf
 */_standalone_tmp/*

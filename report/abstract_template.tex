@@ -68,23 +68,24 @@
 }
 
 \renewenvironment{abstract} {
-    %\vspace{6pt}
+    \vspace{6pt}
     \begin{center}
-        {\large \bfseries \abstractname}
+        {\LARGE \bfseries ABSTRACT}
     \end{center}
-    %\vspace{4pt}
+    \vspace{4pt}
 } {
 }
 
 \newcommand\makeabstractpage[0] {
 
-    \maketitle
+    %\maketitle
 
     %\vspace{10pt}
 
     \begin{abstract}
         \begin{center}
             \begin{minipage}{\textwidth}
+                \setstretch{1.25}
                 \setlength{\parindent}{10pt}
                 {\large
 
@@ -95,133 +96,133 @@
         \end{center}
     \end{abstract}
 
+    %\vspace{6pt}
+    %
+    %\nocite{ieeeComp, ieeeGreenAI, interEsp}
+    %
+    %\nopagebreak
+    %
+    %\begingroup \let\clearpage\relax
+    %\printbibliography[title={\large\vspace{-50pt}\centering \small References \vspace{-30pt}}] %Prints bibliography
+    %\endgroup
+
     \vspace{6pt}
 
-    \nocite{ieeeComp, ieeeGreenAI, interEsp}
-
-    \nopagebreak
-
-    \begingroup \let\clearpage\relax
-    \printbibliography[title={\large\vspace{-50pt}\centering \small References \vspace{-30pt}}] %Prints bibliography
-    \endgroup
-
-    \vspace{6pt}
-
-    \begin{center}
-        \begin{minipage}{\textwidth}
-
-            \begin{center}
-
-                \begin{tikzpicture} []
-
-                    \node (sigNode) [inner sep = 0pt, anchor = center] {
-                        \begin{minipage}[b] {\textwidth}
-                            \noindent
-                            \textit{Student Name \& signature}
-                            \hfill
-                            \textit{Guide Name \& signature}
-
-                            \vspace{8pt}
-
-                            \noindent
-                            {\begin{minipage}[b] {0.5\textwidth}
-                                \vfill
-                                \raggedright
-                                {\linespread{1.2} \itshape \bfseries \author}
-                            \end{minipage}
-                            \hfill
-                            \begin{minipage}[b] {0.5\textwidth}
-                                \vfill
-                                \raggedleft
-                                {\linespread{1.2} \itshape \bfseries \supervisor}
-                            \end{minipage}}
-
-                        \end{minipage}
-
-                    };
-
-                    \draw
-                    (sigNode.center)
-                    ++(-1.75,-1.3)
-                    node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
-                        \includegraphics[width = 1.3cm] {sig/dnl.png}
-                    }
-                    ;
-
-                    \draw
-                    (sigNode.center)
-                    ++(-1.8,-0.8)
-                    node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
-                        \includegraphics[width = 1.2cm] {sig/ata.png}
-                    }
-                    ;
-
-                    \draw
-                    (sigNode.center)
-                    ++(-1.75,0)
-                    node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
-                        \includegraphics[width = 1.05cm] {sig/ast.png}
-                    }
-                    ;
-
-                    \draw
-                    (sigNode.center)
-                    ++(-1.8,0.75)
-                    node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
-                        \includegraphics[width = 1.1cm] {sig/ajn.png}
-                    }
-                    ;
-
-                    \draw
-                    (sigNode.center)
-                    ++(6,0)
-                    node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
-                        \includegraphics[width = 1.5cm] {sig/guide.png}
-                    }
-                    ;
-
-                \end{tikzpicture}
-
-            \end{center}
-
-
-            %\noindent
-            %\textit{Student Name \& signature}
-            %\hfill
-            %\textit{Guide Name \& signature}
-            %
-            %\vspace{10pt}
-            %
-            %\noindent
-            %{\begin{minipage}[b] {0.4\textwidth}
-            %    \vfill
-            %    \raggedright
-            %    {\linespread{1.2} \itshape \bfseries \author}
-            %\end{minipage}
-            %\hfill
-            %\begin{minipage}[b] {0.4\textwidth}
-            %    \vfill
-            %    \raggedleft
-            %    {\linespread{1.2} \itshape \bfseries \supervisor}
-            %\end{minipage}
-
-            \vspace{10pt}
-
-            %\noindent
-            %{\begin{minipage}[b] {0.4\textwidth}
-            %    \vfill
-            %    \raggedright
-            %    {\small \itshape \authordesc}
-            %\end{minipage}
-            %\hfill
-            %\begin{minipage}[b] {0.4\textwidth}
-            %    \vfill
-            %    \raggedleft
-            %    {\small \itshape \supervisordesc}
-            %\end{minipage}}
-
-        \end{minipage}
-    \end{center}
+    %\begin{center}
+    %    \begin{minipage}{\textwidth}
+    %
+    %        \begin{center}
+    %
+    %            \begin{tikzpicture} []
+    %
+    %                \node (sigNode) [inner sep = 0pt, anchor = center] {
+    %                    \begin{minipage}[b] {\textwidth}
+    %                        \noindent
+    %                        \textit{Student Name \& signature}
+    %                        \hfill
+    %                        \textit{Guide Name \& signature}
+    %
+    %                        \vspace{8pt}
+    %
+    %                        \noindent
+    %                        {\begin{minipage}[b] {0.5\textwidth}
+    %                            \vfill
+    %                            \raggedright
+    %                            {\linespread{1.2} \itshape \bfseries \author}
+    %                        \end{minipage}
+    %                        \hfill
+    %                        \begin{minipage}[b] {0.5\textwidth}
+    %                            \vfill
+    %                            \raggedleft
+    %                            {\linespread{1.2} \itshape \bfseries \supervisor}
+    %                        \end{minipage}}
+    %
+    %                    \end{minipage}
+    %
+    %                };
+    %
+    %                \draw
+    %                (sigNode.center)
+    %                ++(-1.75,-1.3)
+    %                node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+    %                    \includegraphics[width = 1.3cm] {sig/dnl.png}
+    %                }
+    %                ;
+    %
+    %                \draw
+    %                (sigNode.center)
+    %                ++(-1.8,-0.8)
+    %                node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+    %                    \includegraphics[width = 1.2cm] {sig/ata.png}
+    %                }
+    %                ;
+    %
+    %                \draw
+    %                (sigNode.center)
+    %                ++(-1.75,0)
+    %                node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+    %                    \includegraphics[width = 1.05cm] {sig/ast.png}
+    %                }
+    %                ;
+    %
+    %                \draw
+    %                (sigNode.center)
+    %                ++(-1.8,0.75)
+    %                node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+    %                    \includegraphics[width = 1.1cm] {sig/ajn.png}
+    %                }
+    %                ;
+    %
+    %                \draw
+    %                (sigNode.center)
+    %                ++(6,0)
+    %                node (dnlNode) [outer sep = 0pt, inner sep = 0pt, anchor = center] {
+    %                    \includegraphics[width = 1.5cm] {sig/guide.png}
+    %                }
+    %                ;
+    %
+    %            \end{tikzpicture}
+    %
+    %        \end{center}
+    %
+    %
+    %        %\noindent
+    %        %\textit{Student Name \& signature}
+    %        %\hfill
+    %        %\textit{Guide Name \& signature}
+    %        %
+    %        %\vspace{10pt}
+    %        %
+    %        %\noindent
+    %        %{\begin{minipage}[b] {0.4\textwidth}
+    %        %    \vfill
+    %        %    \raggedright
+    %        %    {\linespread{1.2} \itshape \bfseries \author}
+    %        %\end{minipage}
+    %        %\hfill
+    %        %\begin{minipage}[b] {0.4\textwidth}
+    %        %    \vfill
+    %        %    \raggedleft
+    %        %    {\linespread{1.2} \itshape \bfseries \supervisor}
+    %        %\end{minipage}
+    %
+    %        \vspace{10pt}
+    %
+    %        %\noindent
+    %        %{\begin{minipage}[b] {0.4\textwidth}
+    %        %    \vfill
+    %        %    \raggedright
+    %        %    {\small \itshape \authordesc}
+    %        %\end{minipage}
+    %        %\hfill
+    %        %\begin{minipage}[b] {0.4\textwidth}
+    %        %    \vfill
+    %        %    \raggedleft
+    %        %    {\small \itshape \supervisordesc}
+    %        %\end{minipage}}
+    %
+    %    \end{minipage}
+    %\end{center}
     %\vspace{20pt}
     %\begin{center}
     %    {\LARGE \bfseries

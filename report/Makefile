@@ -21,6 +21,10 @@ fast:
 	pdflatex -shell-escape -halt-on-error main.tex
 	$(VIEWER) main.pdf
 
+fast_nolt:
+	pdflatex -shell-escape -halt-on-error main.tex
+	$(VIEWER) main.pdf
+
 force:
 	lunatikz build main.tex
 	pdflatex -shell-escape -halt-on-error main.tex
