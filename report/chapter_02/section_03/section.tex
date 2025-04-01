@@ -49,7 +49,8 @@ can be estimated and the \emph{heating and cooling system} can be tweaked accord
     \end{minipage}\hfill}
 \end{center}
 
-Figure \ref{fig:absThermalSensorSystem} shows the connection between
+Also refer figure \ref{fig:absThermalSensorSystem} for the interfacing of \emph{DHT22} sensors
+to the rest of the EMCU.
 
 \begin{figure}
     \centering
@@ -58,10 +59,20 @@ Figure \ref{fig:absThermalSensorSystem} shows the connection between
         max height = \IGXMaxHeight,
         \IGXDefaultOptionalArgs,
     ] {tikzpics/endAbsThermalSensorSystem.pdf}
-    \captionof{figure} {}
+    \captionof{figure} {Interfacing of \emph{DHT22} through multiplexer.}
     \label{fig:absThermalSensorSystem}
 \end{figure}
 
-The temperature can be in a range from .
+\alertWarning{
+    The \emph{BUF} and \emph{0/1} blocks of figure \ref{fig:absThermalSensorSystem} are part of
+    the \emph{auxiliary system} that is not implemented\footnote{there will be a circuit that
+    helps to enable and disable different systems.} yet. Right now the power pins of the sensors
+    are tied directly to $3.3\si{V}$.
+}
+
+\alertNote{
+    Data pins of \emph{DHT22} sensors are connected to the \texttt{C7} and \texttt{C8} pins of
+    $32$ bit multiplexer.
+}
 
 \end{document}
