@@ -32,4 +32,46 @@
     \end{minipage}\hfill}
 \end{center}
 
+
+\begin{center}
+    {\begin{minipage}[c] {0.42\textwidth}
+        \centering
+
+        \includegraphics [
+            max width = \IGXMaxWidth,
+            max height = \IGXMaxHeight,
+            \IGXDefaultOptionalArgs,
+        ] {tikzpics/endAbsESPPinout.pdf}
+        \captionof{figure} {
+            Pin diagram of \texttt{ESP32-D0WD-V3} Board.
+            \label{fig:esp32PinDiagram}
+        }
+
+    \end{minipage}
+    \begin{minipage}[c] {0.52\textwidth}
+
+        \begin{center}
+            \begin{tabularx} {\linewidth} {
+                    *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
+                    *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
+                }
+                \toprule
+                Pins & Remarks \\
+                \midrule
+                \texttt{C0 - C15} & $16$ channel lines. \\
+                \texttt{S0 - S3} & $4$ select lines. \\
+                $\overline{\mbox{\texttt{E}}}$ & Enable line. \\
+                \texttt{SIG} & Signal line. \\
+                \bottomrule
+            \end{tabularx}
+            \captionof{table} {
+                Relevant pins of \esp.
+                \label{tbl:esp32RelventPins}
+            }
+        \end{center}
+
+    \end{minipage}}
+
+\end{center}
+
 \end{document}

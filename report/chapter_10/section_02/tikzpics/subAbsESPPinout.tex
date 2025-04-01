@@ -1,0 +1,97 @@
+\def\absESPPinCountSingleSide{15}
+
+\subtikzpicturedef{subAbsESPPinout} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \foreach \x in {1,...,\absESPPinCountSingleSide} {
+        \draw [absCtkModule, line cap = round]
+        (#1-origin) ++(0, -{(\x * \absCtkICPinGap)}) coordinate (#1-l\x)
+        ++({((2 * \absCtkPinPad) + \absCtkICWidth)}, 0) coordinate (#1-r\x)
+        ;
+    }
+
+    \foreach \x in {1,...,\absESPPinCountSingleSide} {
+        \draw [absCtkModule, line cap = round]
+        (#1-l\x) -- +(\absCtkPinPad, 0)
+        ;
+    }
+
+    \foreach \x in {1,...,\absESPPinCountSingleSide} {
+        \draw [absCtkModule, line cap = round]
+        (#1-r\x) -- +(-\absCtkPinPad, 0)
+        ;
+    }
+
+    \draw [absCtkModule]
+    (#1-origin) ++(\absCtkPinPad, 0) coordinate (#1-topLeft)
+    (#1-topLeft) ++(0, -{(\absCtkICPinGap * (\absESPPinCountSingleSide + 1))})
+    coordinate (#1-bottomLeft)
+
+    (#1-topLeft) ++(\absCtkICWidth, 0) coordinate (#1-topRight)
+    (#1-bottomLeft) ++(\absCtkICWidth, 0) coordinate (#1-bottomRight)
+
+    (#1-topLeft) rectangle (#1-bottomRight)
+
+    ($(#1-topLeft)!0.50!(#1-topRight)$) coordinate (#1-tmp1)
+    ($(#1-l1)!0.50!(#1-l2)$) ++(\absCtkPinPad, 0) coordinate (#1-tmp2)
+    (#1-tmp1 |- #1-tmp2) node [anchor = center] {\texttt{ESP32}}
+    ;
+
+    %% drawing pins left
+
+    \foreach \l/\p/\n in {
+        EN/1/1,
+        VP/2/2,
+        VN/3/3,
+        D34/4/4,
+        D35/5/5,
+        D32/6/6,
+        D33/7/7,
+        D25/8/8,
+        D26/9/9,
+        D27/10/10,
+        D14/11/11,
+        D12/12/12,
+        D13/13/13,
+        GND/14/14,
+        VIN/15/15%
+    } {
+        \draw [absCtkModule]
+        (#1-l\n) node [left = 4pt] {\texttt{\p}}
+        (#1-l\n) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{\l}}
+        ;
+    }
+
+    %% right pins
+
+    \foreach \l/\p/\n in {
+        D23/30/1,
+        D22/29/2,
+        TX0/28/3,
+        RX0/27/4,
+        D21/26/5,
+        D19/25/6,
+        D18/24/7,
+        D5/23/8,
+        TX2/22/9,
+        RX2/21/10,
+        D4/20/11,
+        D2/19/12,
+        D15/18/13,
+        GND/17/14,
+        3V3/16/15%
+    } {
+        \draw [absCtkModule]
+        (#1-r\n) node [right = 4pt] {\texttt{\p}}
+        (#1-r\n) ++(-\absCtkPinPad, 0) node [left = 4pt] {\texttt{\l}}
+        ;
+    }
+
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsESPPinout}

@@ -8,6 +8,9 @@ return {
     ["endAbsESP"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["endAbsESPPinout"] = {
+        ["parent_dir"] = "chapter_10/section_02/tikzpics",
+    },
     ["endAbsExhaustSystem"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
     },
@@ -100,6 +103,9 @@ return {
     },
     ["subAbsESP"] = {
         ["parent_dir"] = "tikzpics",
+    },
+    ["subAbsESPPinout"] = {
+        ["parent_dir"] = "chapter_10/section_02/tikzpics",
     },
     ["subAbsExhaustSystem"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
