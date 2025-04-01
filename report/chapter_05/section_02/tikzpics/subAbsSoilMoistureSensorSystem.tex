@@ -42,16 +42,16 @@
 
     %% labelling
 
-    \ovrAbsESPDrawLabelName {#1-esp} {ESP}
+    \ovrAbsESPDrawLabelName {#1-esp} {\texttt{ESP}}
 
-    \ovrAbsSensorModuleDrawLabelName {#1-s1} {SMS}
-    \ovrAbsSensorModuleDrawLabelName {#1-s0} {SMS}
-    \ovrAbsSensorModuleDrawLabelName {#1-s2} {SMS}
-    \ovrAbsSensorModuleDrawLabelName {#1-s3} {SMS}
+    \ovrAbsSensorModuleDrawLabelName {#1-s1} {\texttt{SMS}}
+    \ovrAbsSensorModuleDrawLabelName {#1-s0} {\texttt{SMS}}
+    \ovrAbsSensorModuleDrawLabelName {#1-s2} {\texttt{SMS}}
+    \ovrAbsSensorModuleDrawLabelName {#1-s3} {\texttt{SMS}}
 
-    \ovrAbsMuxDrawLabelName {#1-mux} {MUX}
+    \ovrAbsMuxDrawLabelName {#1-mux} {\texttt{MUX}}
 
-    \ovrAbsBufferDrawLabelName {#1-b0} {BUF}
+    \ovrAbsBufferDrawLabelName {#1-b0} {\texttt{BUF}}
 
     %% connections
 
@@ -105,49 +105,58 @@
     -- (#1-mux-r0)
     ;
 
-    %% annotation
-
-    \draw
-    (#1-leftVert) ++(-0.25, 0) coordinate (#1-leftVert)
+    \draw [
+        absCtkAuxModule
+    ]
+    (#1-mux-l0) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{C3}}
+    (#1-mux-l1) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{C4}}
+    (#1-mux-l2) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{C5}}
+    (#1-mux-l3) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{C6}}
     ;
 
-    \node at (#1-esp-center -| #1-rightVert) [
-        absCtkAnnotation,
-        anchor = west,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{ESP:} Esp32.
-        }
-    };
-
-    \node at (#1-mux-center -| #1-rightVert) [
-        absCtkAnnotation,
-        anchor = west,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{MUX:} Analog Multiplexer, part of the Auxiliary System.
-        }
-    };
-
-    \draw ($(#1-s1-center)!0.50!(#1-s2-center)$) coordinate (#1-tmp);
-    \node at (#1-tmp -| #1-leftVert) [
-        absCtkAnnotation,
-        anchor = east,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{SMS:} Soil Moisture Sensors.
-        }
-    };
-
-    \node at (#1-b0-center -| #1-leftVert) [
-        absCtkAnnotation,
-        anchor = south east,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{BUF:} Buffer or Enabling Circuit.
-        \item \textbf{0/1:} One Bit Register, part of the Auxiliary System.
-        }
-    };
+    %%% annotation
+    %
+    %\draw
+    %(#1-leftVert) ++(-0.25, 0) coordinate (#1-leftVert)
+    %;
+    %
+    %\node at (#1-esp-center -| #1-rightVert) [
+    %    absCtkAnnotation,
+    %    anchor = west,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{ESP:} Esp32.
+    %    }
+    %};
+    %
+    %\node at (#1-mux-center -| #1-rightVert) [
+    %    absCtkAnnotation,
+    %    anchor = west,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{MUX:} Analog Multiplexer, part of the Auxiliary System.
+    %    }
+    %};
+    %
+    %\draw ($(#1-s1-center)!0.50!(#1-s2-center)$) coordinate (#1-tmp);
+    %\node at (#1-tmp -| #1-leftVert) [
+    %    absCtkAnnotation,
+    %    anchor = east,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{SMS:} Soil Moisture Sensors.
+    %    }
+    %};
+    %
+    %\node at (#1-b0-center -| #1-leftVert) [
+    %    absCtkAnnotation,
+    %    anchor = south east,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{BUF:} Buffer or Enabling Circuit.
+    %    \item \textbf{0/1:} One Bit Register, part of the Auxiliary System.
+    %    }
+    %};
 
 }
 
