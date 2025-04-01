@@ -7,21 +7,33 @@
 \section{Air Moisture Monitoring System} \label{sec:}
 
 
-The \emph{air moisture monitoring system} also make use of DH22 paired sensors
+The \emph{air moisture monitoring system} also make use of \emph{DHT22} paired sensors
 as described in section \ref{sec:tempMonitoringsystem}. Physically these two
-systems\footnote{Thermal and air moisture systems.} make use of same hardware,
-but conceptually they can be seen as two different systems. The DH22 can
-measure $0-100\%$RH\footnote{Relative humidity.} with $1\%$ tolerance.
+systems\footnote{thermal and air moisture systems.} make use of same hardware,
+but conceptually they can be seen as two different systems.
 
-\begin{figure}
-    \centering
-    \includegraphics [
-        max width = \IGXMaxWidth,
-        max height = \IGXMaxHeight,
-        \IGXDefaultOptionalArgs,
-    ] {tikzpics/endAbsHumiditySensorSystem.pdf}
-    \captionof{figure} {}
-    \label{fig:}
-\end{figure}
+Air moisture specification\footnote{for general and temperature related specification
+see section \ref{sec:tempMonitoringsystem}}:
+
+\begin{itemize}
+    \item \textbf{Humidity range:} $0-100\%$RH with $2\%$ tolerance.
+    \item \textbf{Humidity resolution:} $0.1\%$RH.
+\end{itemize}
+
+\alertNote{
+    Refer figures \ref{fig:dht22PinImage}, and \ref{fig:absThermalSensorSystem} from chapter
+    \ref{chp:thermalSystem} for \emph{DHT22} pinout and interfacing respectively.
+}
+
+%\begin{figure}
+%    \centering
+%    \includegraphics [
+%        max width = \IGXMaxWidth,
+%        max height = \IGXMaxHeight,
+%        \IGXDefaultOptionalArgs,
+%    ] {tikzpics/endAbsHumiditySensorSystem.pdf}
+%    \captionof{figure} {}
+%    \label{fig:}
+%\end{figure}
 
 \end{document}
