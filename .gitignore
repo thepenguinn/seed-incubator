@@ -1,3 +1,5 @@
+*.lof
+*.lot
 *.toc
 logo/**/*.pdf
 report/*.pdf
