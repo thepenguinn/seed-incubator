@@ -17,6 +17,9 @@ return {
     ["endAbsFiveBitShiftRegisterPinout"] = {
         ["parent_dir"] = "chapter_07/section_03/tikzpics",
     },
+    ["endAbsFourBitShiftRegisterPinout"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
+    },
     ["endAbsHumidifierSystem"] = {
         ["parent_dir"] = "chapter_03/section_01/tikzpics",
     },
@@ -112,6 +115,9 @@ return {
     },
     ["subAbsFiveBitShiftRegisterPinout"] = {
         ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["subAbsFourBitShiftRegisterPinout"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
     },
     ["subAbsHumidifierSystem"] = {
         ["parent_dir"] = "chapter_03/section_01/tikzpics",
