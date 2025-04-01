@@ -86,6 +86,9 @@ return {
     ["endAbsThirtyTwoBitMux"] = {
         ["parent_dir"] = "chapter_07/section_03/tikzpics",
     },
+    ["endClvlCtkLEDDriver"] = {
+        ["parent_dir"] = "chapter_04/section_03/tikzpics",
+    },
     ["endClvlInverter"] = {
         ["parent_dir"] = "chapter_07/section_02/tikzpics",
     },

@@ -1,0 +1,45 @@
+\begin{tikzpicture} [
+        clvlCtkTikzPicStyle,
+    ]
+
+    \draw (0, 0) coordinate (origin);
+    \subClvlCtkDiagramBase {clvlCtkDiagramBase} {origin} {origin}
+
+    \draw [
+        clvlCtkModule,
+    ]
+    node (npn1) [npn] {}
+    (npn1.C) to[empty led] ++(0, 1.8)
+    to[R, name = rc] ++(0, 1.8)
+    node [vcc] {$V_{cc} = 5\si{V}$}
+    (npn1.B) to[R, name = rb] ++(-1.8, 0)
+    node [ocirc] {} node [left = 4pt] {\texttt{Trigger}}
+    (npn1.E) -- ++(0, -0.5) node [ground] {}
+
+    ;
+
+    \path [clvlCtkModule]
+    (npn1.C) -- (npn1.E)
+    node [
+        midway,
+        right = 4pt,
+    ] {\texttt{BC547}}
+    ;
+
+    \path [clvlCtkModule]
+    (rc.west) -- (rc.east)
+    node [
+        midway,
+        right = 12pt,
+    ] {$68 \si{\ohm}$}
+    ;
+
+    \path [clvlCtkModule]
+    (rb.west) -- (rb.east)
+    node [
+        midway,
+        below = 12pt,
+    ] {$10 \si{k \ohm}$}
+    ;
+
+\end{tikzpicture}
