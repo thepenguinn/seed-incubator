@@ -14,13 +14,13 @@
     (#1-mux-l0) ++(-3, 0) coordinate (#1-s0)
     (#1-mux-l1) ++(-3, 0) coordinate (#1-s1)
     (#1-mux-l2) ++(-3, 0) coordinate (#1-s2)
-    (#1-mux-l3) ++(-3, 0) coordinate (#1-s3)
+    %(#1-mux-l3) ++(-3, 0) coordinate (#1-s3)
     ;
 
     \subAbsSensorModule {#1-s0} {#1-s0} {r0}
     \subAbsSensorModule {#1-s1} {#1-s1} {r0}
     \subAbsSensorModule {#1-s2} {#1-s2} {r0}
-    \subAbsSensorModule {#1-s3} {#1-s3} {r0}
+    %\subAbsSensorModule {#1-s3} {#1-s3} {r0}
 
     \draw
     (#1-mux-b0) ++(0, -1) coordinate (#1-esp)
@@ -29,7 +29,7 @@
     \subAbsESP {#1-esp} {#1-esp} {t0}
 
     \draw
-    (#1-esp-l4 -| #1-s3-l0) coordinate (#1-b0)
+    (#1-esp-l4 -| #1-s0-l0) coordinate (#1-b0)
     ;
 
     \subAbsBuffer {#1-b0} {#1-b0} {l0}
@@ -42,16 +42,16 @@
 
     %% labelling
 
-    \ovrAbsESPDrawLabelName {#1-esp} {ESP}
+    \ovrAbsESPDrawLabelName {#1-esp} {\texttt{ESP}}
 
-    \ovrAbsSensorModuleDrawLabelName {#1-s1} {LDR}
-    \ovrAbsSensorModuleDrawLabelName {#1-s0} {LDR}
-    \ovrAbsSensorModuleDrawLabelName {#1-s2} {LDR}
-    \ovrAbsSensorModuleDrawLabelName {#1-s3} {LDR}
+    \ovrAbsSensorModuleDrawLabelName {#1-s1} {\texttt{LDR}}
+    \ovrAbsSensorModuleDrawLabelName {#1-s0} {\texttt{LDR}}
+    \ovrAbsSensorModuleDrawLabelName {#1-s2} {\texttt{LDR}}
+    %\ovrAbsSensorModuleDrawLabelName {#1-s3} {LDR}
 
-    \ovrAbsMuxDrawLabelName {#1-mux} {MUX}
+    \ovrAbsMuxDrawLabelName {#1-mux} {\texttt{MUX}}
 
-    \ovrAbsBufferDrawLabelName {#1-b0} {BUF}
+    \ovrAbsBufferDrawLabelName {#1-b0} {\texttt{BUF}}
 
     %% connections
 
@@ -62,7 +62,7 @@
         #1-s0-r0/#1-mux-l0,
         #1-s1-r0/#1-mux-l1,
         #1-s2-r0/#1-mux-l2,
-        #1-s3-r0/#1-mux-l3,
+        %#1-s3-r0/#1-mux-l3,
         %%
         #1-esp-t0/#1-mux-b0,
         #1-esp-t1/#1-mux-b1%
@@ -81,8 +81,7 @@
     \foreach \start in {
         #1-s0-l0,
         #1-s1-l0,
-        #1-s2-l0,
-        #1-s3-l0%
+        #1-s2-l0%
     } {
         \draw [
             absCtkInnerConnection,
@@ -105,49 +104,57 @@
     -- (#1-mux-r0)
     ;
 
-    %% annotation
-
-    \draw
-    (#1-leftVert) ++(-0.25, 0) coordinate (#1-leftVert)
+    \draw [
+        absCtkAuxModule
+    ]
+    (#1-mux-l0) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{C0}}
+    (#1-mux-l1) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{C1}}
+    (#1-mux-l2) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{C2}}
     ;
 
-    \node at (#1-esp-center -| #1-rightVert) [
-        absCtkAnnotation,
-        anchor = west,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{ESP:} Esp32.
-        }
-    };
+    %% annotation
 
-    \node at (#1-mux-center -| #1-rightVert) [
-        absCtkAnnotation,
-        anchor = west,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{MUX:} Analog Multiplexer, part of the Auxiliary System.
-        }
-    };
-
-    \draw ($(#1-s1-center)!0.50!(#1-s2-center)$) coordinate (#1-tmp);
-    \node at (#1-tmp -| #1-leftVert) [
-        absCtkAnnotation,
-        anchor = east,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{LDR:} Light Dependent Resistors.
-        }
-    };
-
-    \node at (#1-b0-center -| #1-leftVert) [
-        absCtkAnnotation,
-        anchor = south east,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{BUF:} Buffer or Enabling Circuit.
-        \item \textbf{0/1:} One Bit Register, part of the Auxiliary System.
-        }
-    };
+    %\draw
+    %(#1-leftVert) ++(-0.25, 0) coordinate (#1-leftVert)
+    %;
+    %
+    %\node at (#1-esp-center -| #1-rightVert) [
+    %    absCtkAnnotation,
+    %    anchor = west,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{ESP:} Esp32.
+    %    }
+    %};
+    %
+    %\node at (#1-mux-center -| #1-rightVert) [
+    %    absCtkAnnotation,
+    %    anchor = west,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{MUX:} Analog Multiplexer, part of the Auxiliary System.
+    %    }
+    %};
+    %
+    %\draw ($(#1-s1-center)!0.50!(#1-s2-center)$) coordinate (#1-tmp);
+    %\node at (#1-tmp -| #1-leftVert) [
+    %    absCtkAnnotation,
+    %    anchor = east,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{LDR:} Light Dependent Resistors.
+    %    }
+    %};
+    %
+    %\node at (#1-b0-center -| #1-leftVert) [
+    %    absCtkAnnotation,
+    %    anchor = south east,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{BUF:} Buffer or Enabling Circuit.
+    %    \item \textbf{0/1:} One Bit Register, part of the Auxiliary System.
+    %    }
+    %};
 
 }
 
