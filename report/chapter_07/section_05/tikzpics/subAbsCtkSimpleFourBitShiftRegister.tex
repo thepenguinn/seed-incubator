@@ -1,11 +1,11 @@
-\def\absSimpleFiveBitSRPinCountTS{7}
-\def\absSimpleFiveBitSRPinCountLS{3}
+\def\absSimpleFourBitSRPinCountTS{6}
+\def\absSimpleFourBitSRPinCountLS{3}
 
-\subtikzpicturedef{subAbsCtkSimpleFiveBitShiftRegister} {
-    addr, clk,
+\subtikzpicturedef{subAbsCtkSimpleFourBitShiftRegister} {
+    data, clk,
     l1, l2, l3,
-    t1, t2, t3, t4, t5, t6, t7,
-    qa, qb, qc, qd, qe,
+    t1, t2, t3, t4, t5, t6,
+    q0, q1, q2, q3,
     origin%
 } {
     \draw (#1-start) coordinate (#1-origin);
@@ -16,7 +16,7 @@
     coordinate (#1-tmp)
     ;
 
-    \foreach \x in {1,...,\absSimpleFiveBitSRPinCountLS} {
+    \foreach \x in {1,...,\absSimpleFourBitSRPinCountLS} {
         \draw [absCtkModule, line cap = round]
         (#1-tmp) ++(0, -{(\x * \absCtkICPinGapComp)}) coordinate (#1-l\x)
         ;
@@ -27,7 +27,7 @@
     coordinate (#1-tmp)
     ;
 
-    \foreach \x in {1,...,\absSimpleFiveBitSRPinCountTS} {
+    \foreach \x in {1,...,\absSimpleFourBitSRPinCountTS} {
         \draw [absCtkModule, line cap = round]
         (#1-tmp) ++({(\x * \absCtkICPinGapComp)}, 0) coordinate (#1-t\x)
         ;
@@ -35,8 +35,8 @@
 
     \draw [absCtkModule]
     (#1-t1) ++(-\absCtkICPinGapComp, -\absCtkPinPad) coordinate (#1-topLeft)
-    (#1-t\absSimpleFiveBitSRPinCountTS) ++(\absCtkICPinGapComp, -\absCtkICPinGapComp) coordinate (#1-topRight)
-    (#1-l\absSimpleFiveBitSRPinCountLS) ++(\absCtkICPinGapComp, -\absCtkICPinGapComp) coordinate (#1-bottomLeft)
+    (#1-t\absSimpleFourBitSRPinCountTS) ++(\absCtkICPinGapComp, -\absCtkICPinGapComp) coordinate (#1-topRight)
+    (#1-l\absSimpleFourBitSRPinCountLS) ++(\absCtkICPinGapComp, -\absCtkICPinGapComp) coordinate (#1-bottomLeft)
     (#1-bottomLeft -| #1-topRight) coordinate (#1-bottomRight)
 
     (#1-topLeft) rectangle (#1-bottomRight)
@@ -45,16 +45,15 @@
     ($(#1-l3)!0.01!(#1-l2)$) coordinate (#1-tmp)
     (#1-tmp -| #1-topRight) coordinate (#1-tmp)
 
-    (#1-tmp) node [left = 8pt] {\texttt{74LS96}}
+    (#1-tmp) node [left = 8pt] {\texttt{74LS95}}
 
     ;
 
     \foreach \l/\p/\n in {
-        QA/a/3,
-        QB/b/4,
-        QC/c/5,
-        QD/d/6,
-        QE/e/7%
+        Q0/0/3,
+        Q1/1/4,
+        Q2/2/5,
+        Q3/3/6%
     } {
         \draw [absCtkModule, thin]
         (#1-t\n) ++(0, -\absCtkPinPad) node [below = 4pt] {\texttt{\l}}
@@ -62,16 +61,19 @@
         ;
     }
 
-    %% clk and addr pin
+    %% clk and data pin
 
     \draw [absCtkModule, thin]
-    (#1-l2) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{CLK}}
-    (#1-l2) coordinate (#1-clk)
+    (#1-l3) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{$\overline{\mbox{\texttt{CP1}}}$}}
+    (#1-l3) coordinate (#1-clk)
+    ++(-0.5, 0) coordinate (#1-pclk)
 
-    (#1-l3) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{ADDR}}
-    (#1-l3) coordinate (#1-addr)
+    (#1-l2) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{DS}}
+    (#1-l2) coordinate (#1-data)
+    ++(-0.5, 0) coordinate (#1-pdata)
     ;
+
 
 }
 
-\subtikzpictureactivate{subAbsCtkSimpleFiveBitShiftRegister}
+\subtikzpictureactivate{subAbsCtkSimpleFourBitShiftRegister}

@@ -8,8 +8,17 @@
 
 Now let's move on to the controlling of \emph{actuators}. We can simply facilitate
 this by using a handful of \emph{shift registers} as we did with multiplexer addressing
-circuit. We have chosen to use \emph{74LS95}, a $4$ bit shift register that can be
-directly driven by \esp as it is a \emph{74LS} series chip. Figure \ref{}
+circuit. Right now we want to control atmost $16$ different things. So we need a $16$
+bit shift register. But $16$ bit shift registers are not readily available in the market.
+So we need to cascade available shift registers to build a $16$ bit one.
+
+\subsection{Choosing the Base Shift Register}
+
+We can pick \emph{74LS95} as our base shift register and build from it. It is
+a $4$ bit shift register that can be directly driven by \esp as it is a \emph{74LS}
+series chip. Refer figures \ref{fig:74ls95Dip} and \ref{fig:74ls95PinDiagram} for
+more info about the IC. And table \ref{tbl:74ls95RelventPins} goes through the pins
+of \emph{74LS95}.
 
 \alertTip{
     There is no special reason to \emph{74LS95} over \emph{74LS96}, as we are using them
@@ -76,5 +85,21 @@ directly driven by \esp as it is a \emph{74LS} series chip. Figure \ref{}
     The mode select pin \texttt{S} determines that mode, if it is low, the chip will be in \emph{serial} mode.
     Otherwise it will be in \emph{parallel} mode. We are simple using the IC in \emph{serial} mode.
 }
+
+\subsection{Building a 16 Bit Shift Register}
+
+Now we need $4$ of \emph{74LS95} ICs to accomplish our task. The circuit is really simple, we just
+need to cascade these four as in the figure \ref{fig:absSixteenBitShiftRegister}.
+
+\begin{figure}
+    \centering
+    \includegraphics [
+        max width = \IGXMaxWidth,
+        max height = \IGXMaxHeight,
+        \IGXDefaultOptionalArgs,
+    ] {tikzpics/endAbsSixteenBitShiftRegister.pdf}
+    \captionof{figure} {$4$ \emph{74LS95} ICs are cascaded to form a $16$ bit shift register.}
+    \label{fig:absSixteenBitShiftRegister}
+\end{figure}
 
 \end{document}

@@ -65,6 +65,9 @@ return {
     ["endAbsSixteenBitMuxPinout"] = {
         ["parent_dir"] = "chapter_07/section_03/tikzpics",
     },
+    ["endAbsSixteenBitShiftRegister"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
+    },
     ["endAbsSoilMoistureAndFertilizerControlSystem"] = {
         ["parent_dir"] = "chapter_05/section_03/tikzpics",
     },
@@ -103,6 +106,9 @@ return {
     },
     ["subAbsCtkSimpleFiveBitShiftRegister"] = {
         ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["subAbsCtkSimpleFourBitShiftRegister"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
     },
     ["subAbsESP"] = {
         ["parent_dir"] = "tikzpics",
@@ -163,6 +169,9 @@ return {
     },
     ["subAbsSixteenBitMuxPinout"] = {
         ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["subAbsSixteenBitShiftRegister"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
     },
     ["subAbsSoilMoistureAndFertilizerControlSystem"] = {
         ["parent_dir"] = "chapter_05/section_03/tikzpics",
