@@ -7,9 +7,49 @@
 \section{Temperature Monitoring System} \label{sec:tempMonitoringsystem}
 
 For effectively controlling the indoor temperature of the Incubator, a \emph{paired} temperature
-sensor would be essential. One will monitors the \emph{outdoor} temperature, as the other monitors
+sensor would be essential. One will monitor the \emph{outdoor} temperature, as the other monitors
 the \emph{indoor} temperature. From the output of each of these sensors, a \emph{relative} temperature
 can be estimated and the \emph{heating and cooling system} can be tweaked accordingly.
+
+\subsection{DHT22}
+
+\begin{center}
+    {\begin{minipage} [c] {0.55\textwidth}
+
+        First of all we need a \emph{sensor} to measure the temperature reliably.
+        \emph{DHT22}, a sensor which can measure both the \emph{relative humidity}\footnote{EMCU will monitor
+        and control \emph{air moisture} too.} and \emph{temperature} would be ideal choice for our scenario.
+        Another advantage of \emph{DHT22} is that the communication is done via a single pin.
+        Please refer the figure \ref{fig:dht22PinImage} for a quick glance at the sensor.
+
+        General and temperature specification:
+
+        \begin{itemize}
+            \item \textbf{Operating voltage:} $3.3\si{V}$ to $6\si{V}$.
+            \item \textbf{Temperature range:} $-40^\circ$C to $80^\circ$C, with $\pm 0.5^\circ$C tolerance.
+            \item \textbf{Temperature resolution:} $0.1^\circ$C.
+            \item \textbf{Sensing period:} $2$ seconds.
+            %\item \textbf{Humidity range:} $0-100\%$RH with $2\%$ tolerance.
+            %\item \textbf{Humidity resolution:} $0.1\%$RH.
+        \end{itemize}
+
+    \end{minipage}
+    \hfill
+    \begin{minipage} [c] {0.35\textwidth}
+        \centering
+        \includegraphics [
+            max width = \IGXMaxWidth,
+            max height = \IGXMaxHeight,
+            \IGXDefaultOptionalArgs,
+        ] {pics/dht22.png}
+        \captionof{figure} {
+            Pinout of \emph{DHT22} sensor.
+            \label{fig:dht22PinImage}
+        }
+    \end{minipage}\hfill}
+\end{center}
+
+Figure \ref{fig:absThermalSensorSystem} shows the connection between
 
 \begin{figure}
     \centering
@@ -19,10 +59,9 @@ can be estimated and the \emph{heating and cooling system} can be tweaked accord
         \IGXDefaultOptionalArgs,
     ] {tikzpics/endAbsThermalSensorSystem.pdf}
     \captionof{figure} {}
-    \label{fig:}
+    \label{fig:absThermalSensorSystem}
 \end{figure}
 
-A DH22 sensor would be ideal as it can measure both the \emph{relative humidity} and \emph{temperature}.
-The temperature can be in a range from $-40^\circ$C to $80^\circ$C, with $\pm 0.5^\circ$C tolerance.
+The temperature can be in a range from .
 
 \end{document}
