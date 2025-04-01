@@ -46,4 +46,8 @@ return {
     ["chapter_10"] = "chapter.tex",
     ["chapter_10/section_01"] = "section.tex",
     ["chapter_10/section_02"] = "section.tex",
+    ["chapter_11"] = "chapter.tex",
+    ["chapter_11/section_01"] = "section.tex",
+    ["chapter_11/section_02"] = "section.tex",
+    ["chapter_11/section_03"] = "section.tex",
 }
