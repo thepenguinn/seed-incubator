@@ -11,6 +11,15 @@ this by using a handful of \emph{shift registers} as we did with multiplexer add
 circuit. We have chosen to use \emph{74LS95}, a $4$ bit shift register that can be
 directly driven by \esp as it is a \emph{74LS} series chip. Figure \ref{}
 
+\alertTip{
+    There is no special reason to \emph{74LS95} over \emph{74LS96}, as we are using them
+    only in their serial mode. Another thing to note is that if you want to control lights
+    or actuators other than \emph{fans} or \emph{relays}\footnote{as we are using these
+    for.}, you may need to consider shift registers with a secondary set of \emph{storage latches},
+    as the \emph{shifting effect}\footnote{if you connect LEDs to these, you can see some of the
+    LEDs turning on for a small amount of time as we \emph{shift} the data in.} completely.
+}
+
 \begin{center}
     {\begin{minipage}[c] {0.42\textwidth}
         \centering
@@ -21,16 +30,6 @@ directly driven by \esp as it is a \emph{74LS} series chip. Figure \ref{}
             Dip package of \emph{74LS95}.
             \label{fig:74ls95Dip}
         }
-
-        %\includegraphics [
-        %    max width = \IGXMaxWidth,
-        %    max height = \IGXMaxHeight,
-        %    \IGXDefaultOptionalArgs,
-        %] {../section_03/tikzpics/endAbsFiveBitShiftRegisterPinout.pdf}
-        %\captionof{figure} {
-        %    Pin diagram of \emph{74LS95}.
-        %    \label{fig:74ls95PinDiagram}
-        %}
 
         \includegraphics [
             max width = \IGXMaxWidth,
@@ -55,12 +54,12 @@ directly driven by \esp as it is a \emph{74LS} series chip. Figure \ref{}
             \toprule
             Pins & Remarks \\
             \midrule
-            \texttt{PS A - PS E} & Preset lines (We are not using them). \\
-            \texttt{Q A - Q E} & Parallel output lines. \\
-            $\overline{\mbox{\texttt{MR}}}$ & Master reset (always tied high). \\
-            \texttt{PE} & Preset enable (always tied low). \\
-            \texttt{CP} & Clock pulse. \\
-            \texttt{S} & Serial in. \\
+            \texttt{DS} & Serial in. \\
+            \texttt{Q0 - Q3} & Parallel output lines. \\
+            \texttt{P0 - P3} & Parallel input lines. \\
+            \texttt{S} & Mode select pin. \\
+            $\overline{\mbox{\texttt{CP1}}}$ & Clock pin for serial mode. \\
+            $\overline{\mbox{\texttt{CP2}}}$ & Clock pin for parallel mode. \\
             \bottomrule
         \end{tabularx}
         \captionof{table} {
@@ -71,5 +70,11 @@ directly driven by \esp as it is a \emph{74LS} series chip. Figure \ref{}
     \end{minipage}}
 
 \end{center}
+
+\alertNote{
+    \emph{74LS95} can be configured in $2$ different modes, \emph{parallel} mode an \emph{serial} mode.
+    The mode select pin \texttt{S} determines that mode, if it is low, the chip will be in \emph{serial} mode.
+    Otherwise it will be in \emph{parallel} mode. We are simple using the IC in \emph{serial} mode.
+}
 
 \end{document}
