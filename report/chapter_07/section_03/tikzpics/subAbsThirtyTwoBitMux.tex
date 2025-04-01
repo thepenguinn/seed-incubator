@@ -15,6 +15,11 @@
     ;
     \subAbsCtkSimpleFiveBitShiftRegister {#1-sreg} {#1-sreg} {qe}
 
+    \draw
+    (#1-sreg-qe) ++(0, 5)
+    node [not port, anchor = in] {}
+    ;
+
 }
 
 \subtikzpictureactivate{subAbsThirtyTwoBitMux}

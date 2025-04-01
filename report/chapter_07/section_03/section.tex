@@ -41,16 +41,33 @@ and can act as a \emph{demultiplexer}.
     Also note that the \emph{analog multiplexer} can be used as a \emph{digital multiplexer}.
 }
 
-For future proofing, let the input count of a single multiplexer set be $32$. That means the
-each set of multiplexer will take a $5$ bit address, and can \emph{read} / \emph{write} to
-$32$ different \emph{source} / \emph{destination}. That would give us the ability to connect
-almost $64$\footnote{given that every sensor uses a single pin to communicate.} different
-\emph{sensors} to the \esp. And can simultaneously use $2$ different \emph{source} / \emph{destination}.
+\begin{center}
+    {\begin{minipage} [c] {0.55\textwidth}
+        For future proofing, let the input count of a single multiplexer set be $32$. That means the
+        each set of multiplexer will take a $5$ bit address, and can \emph{read} / \emph{write} to
+        $32$ different \emph{source} / \emph{destination}. That would give us the ability to connect
+        almost $64$\footnote{given that every sensor uses a single pin to communicate.} different
+        \emph{sensors} to the \esp. And can simultaneously use $2$ different \emph{source} / \emph{destination}.
 
-An ideal candidate for our design is \emph{74HC4067}, which is a $16$ bit
-\emph{analog multiplexer / demultiplexer} with an \emph{active low} enable. Please refer figures
-\ref{fig:74hc4067Smd}, \ref{fig:74hc4067BOB} and \ref{fig:74hc4067PinDiagram} for more information.
-And refer table \ref{tbl:74hc4067RelventPins} for the information about relevant pins.
+        An ideal candidate for our design is \emph{74HC4067}, which is a $16$ bit
+        \emph{analog multiplexer / demultiplexer} with an \emph{active low} enable. Please refer figures
+        \ref{fig:74hc4067Smd}, \ref{fig:74hc4067BOB} and \ref{fig:74hc4067PinDiagram} for more information.
+        And refer table \ref{tbl:74hc4067RelventPins} for the information about relevant pins.
+    \end{minipage}
+    \hfill
+    \begin{minipage} [c] {0.35\textwidth}
+        \centering
+        \includegraphics [
+            max width = \IGXMaxWidth,
+            max height = \IGXMaxHeight,
+            \IGXDefaultOptionalArgs,
+        ] {pics/74hc4067_bob.png}
+        \captionof{figure} {
+            Breakout board of \emph{74HC4067}.
+            \label{fig:74hc4067BOB}
+        }
+    \end{minipage}\hfill}
+\end{center}
 
 \begin{center}
     {\begin{minipage}[c] {0.42\textwidth}
@@ -78,41 +95,30 @@ And refer table \ref{tbl:74hc4067RelventPins} for the information about relevant
 
         %% TODO: add a description of 74HC4067
 
-        \centering
-
-        \includegraphics [
-            max width = \IGXMaxWidth,
-            max height = \IGXMaxHeight,
-            \IGXDefaultOptionalArgs,
-        ] {pics/74hc4067_bob.png}
-        \captionof{figure} {
-            Breakout board of \emph{74HC4067}.
-            \label{fig:74hc4067BOB}
-        }
+        \begin{center}
+            \begin{tabularx} {\linewidth} {
+                    *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
+                    *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
+                }
+                \toprule
+                Pins & Remarks \\
+                \midrule
+                \texttt{C0 - C15} & $16$ channel lines. \\
+                \texttt{S0 - S3} & $4$ select lines. \\
+                $\overline{\mbox{\texttt{E}}}$ & Enable line. \\
+                \texttt{SIG} & Signal line. \\
+                \bottomrule
+            \end{tabularx}
+            \captionof{table} {
+                Relevant pins of \emph{74HC4067}.
+                \label{tbl:74hc4067RelventPins}
+            }
+        \end{center}
 
     \end{minipage}}
 
 \end{center}
 
-\begin{center}
-    \begin{tabularx} {\linewidth} {
-            *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
-            *{1}{>{\centering\arraybackslash}m{0.5\linewidth}}
-        }
-        \toprule
-        Pins & Remarks \\
-        \midrule
-        \texttt{C0 - C15} & $16$ channel lines. \\
-        \texttt{S0 - S3} & $4$ select lines. \\
-        $\overline{\mbox{\texttt{E}}}$ & Enable line. \\
-        \texttt{SIG} & Signal line. \\
-        \bottomrule
-    \end{tabularx}
-    \captionof{table} {
-        Relevant pins of \emph{74HC4067}.
-        \label{tbl:74hc4067RelventPins}
-    }
-\end{center}
 
 \subsection{Serially Addressable Multiplexer}
 
