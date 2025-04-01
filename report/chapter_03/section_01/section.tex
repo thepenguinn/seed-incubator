@@ -10,6 +10,12 @@ The \emph{air moisture control system} make use of \emph{piezoelectric} humidifi
 As they are placed in water and powered, they can vibrate in the \emph{ultrasonic} ranges,
 and sprays water as particles into the air.
 
+\alertNote{
+    These humidifiers can only increase the humidity of the atmosphere, in order to decrease
+    the relative humidity, they need to work with the \emph{exhaust system} mentioned in the
+    section \ref{sec:thermalControlAndExhaustSystem}.
+}
+
 \subsection{Piezoelectric Humidifiers}
 
 \begin{center}
@@ -72,11 +78,15 @@ Refer figure \ref{fig:absHumidifierSystem} for the interfacing of the module, wi
 \end{figure}
 
 \alertNote{
-    These humidifiers can only increase the humidity of the atmosphere, in order to decrease
-    the relative humidity, they need to work with the \emph{exhaust system} mentioned in the
-    section \ref{sec:thermalControlAndExhaustSystem}.
+    Trigger pin of \emph{humidifier} is connected to the \texttt{D21} of the \esp as we can see
+    from figure \ref{fig:absHumidifierSystem}.
 }
 
-
+\alertImportant{
+    Right now, the \emph{humidifier} is triggered directly from the \esp itself. In the future
+    all the \emph{actuator control} will be moved to the \emph{auxiliary system} with a separate
+    control board\footnote{will be another shift register board.} and \esp will simply interface
+    the board through couple of pins.
+}
 
 \end{document}
