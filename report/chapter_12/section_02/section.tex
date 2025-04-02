@@ -1,0 +1,60 @@
+\documentclass[../../main]{subfiles}
+
+\input{section_header.tex}
+
+\begin{document}
+
+\section{EMCU} \label{sec:}
+
+The software side of \esp is implemented using \texttt{esp-idf}, which is build
+on top of \emph{FreeRTOS}. By choosing to use \texttt{esp-idf}, we could benefit
+from all the goodness of a Real Time OS.
+
+\subsection{Tasks}
+
+So all the things happening on the software side are separated into tasks. A task is
+a simple loop that takes care of only one thing. The \emph{FreeRTOS} scheduler will
+take care of running these tasks one after the other.
+
+So right now there's two types of task:
+
+\begin{itemize}
+    \item Communication task\footnote{tcp server task.}.
+    \item Sensor tasks\footnote{task corresponding to each of the sensors}.
+\end{itemize}
+
+\subsubsection{Communication Task}
+
+The communication task waits for the WiFi connection and requests and commands from the
+SINC app.
+
+\subsubsection{Sensor Tasks}
+
+These tasks will sample the sensor data in a fixed interval and fills into a buffer. These buffers
+are guarded by corresponding \emph{mutex locks}\footnote{these tasks are running concurrently, so we need to
+protect the reading and writing data to these buffers.}.
+
+\subsection{Drivers to Multiplexer and Relay Board}
+
+Just like the buffers mentioned above we need to guard these hardware resources. So we
+just implemented a simple driver for these two boards. Inorder to use any of these
+hardware, each task needs to get the access of the corresponding board. This is done
+through the driver interface. Once the task finishes using the hardware, it needs to
+give back the access.
+
+\subsection{Algorithm}
+
+Here are the things that will happen after a fresh boot up:
+
+\begin{itemize}
+    \item Initializes and starts TCP server task.
+    \item TCP task will be in blocked state waiting for the WiFi or request event to happen.
+    \item Initializes multiplexer circuit.
+    \item Initializes relay board circuit.
+    \item Initializes and starts each of the sensor tasks.
+    \item Sensor tasks will periodically sample the corresponding sensor and fills the buffer.
+    \item If a command request from SINC receives, the TCP task will be awaken.
+    \item It will serve the request and wait for the closing of the connection.
+\end{itemize}
+
+\end{document}
