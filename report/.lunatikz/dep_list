@@ -95,6 +95,9 @@ return {
     ["endClvlNANDGate"] = {
         ["parent_dir"] = "chapter_07/section_04/tikzpics",
     },
+    ["endFanControl"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
     ["endIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },

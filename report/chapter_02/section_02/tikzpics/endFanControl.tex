@@ -1,0 +1,61 @@
+\begin{tikzpicture} [
+        clvlCtkTikzPicStyle,
+    ]
+
+    \draw (0, 0) coordinate (origin);
+    \subClvlCtkDiagramBase {clvlCtkDiagramBase} {origin} {origin}
+
+    \draw [
+        clvlCtkModule,
+    ]
+    node (npn1) [npn] {}
+    (npn1.C) -- ++(0, 2.8) coordinate (fan)
+    node [ocirc] {} node [above = 4pt] {Fan -ve}
+
+
+    (npn1.B) ++(-1, 0) node (npn2) [npn, anchor = E] {}
+    (npn2.C) to[R, name = rt] ++(0, 1.8)
+    node [vcc] {$V_{cc} = 12\si{V}$}
+
+    (npn2.B) to[R, name = rb] ++(-1.8, 0)
+    node [ocirc] {} node [left = 4pt] {Trigger}
+
+    (npn1.E) -- ++(0, -0.5) node [ground] {}
+
+    (npn1.B) -- (npn2.E)
+
+    ;
+
+    \path [clvlCtkModule]
+    (npn2.C) -- (npn2.E)
+    node [
+        midway,
+        right = 4pt,
+    ] {BC547}
+    ;
+
+    \path [clvlCtkModule]
+    (npn1.C) -- (npn2.E)
+    node [
+        midway,
+        right = 4pt,
+    ] {CD148D}
+    ;
+
+    \path [clvlCtkModule]
+    (rt.west) -- (rt.east)
+    node [
+        midway,
+        right = 12pt,
+    ] {$1 \si{k \ohm}$}
+    ;
+
+    \path [clvlCtkModule]
+    (rb.west) -- (rb.east)
+    node [
+        midway,
+        below = 12pt,
+    ] {$10 \si{k \ohm}$}
+    ;
+
+\end{tikzpicture}
