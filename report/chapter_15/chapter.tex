@@ -4,6 +4,13 @@
 
 \begin{document}
 
+\titleformat{\chapter} [display]
+{\bfseries\normalfont\huge\filright\sffamily\vspace{-2cm}}
+{\Large\textsc{chapter \num[minimum-integer-digits = 2]{\thechapter}} \vspace{1em}}
+{1pc}
+{\titlerule\vspace{0.5em}\scshape}
+[\vspace{0.5em}{\titlerule[1pt]}]
+
 %\chapter{References} \label{chp:}
 
 \nocite{ieeeComp, ieeeGreenAI, interEsp}
@@ -11,5 +18,6 @@
 \begingroup \let\clearpage\relax
 \printbibliography[title={References}] %Prints bibliography
 \endgroup
+\addcontentsline{toc}{chapter}{References}
 
 \end{document}

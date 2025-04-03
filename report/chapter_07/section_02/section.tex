@@ -23,8 +23,8 @@ the cost of \emph{flipping} the logic.
 }
 
 We have some design requirements. These inverts / buffers are either driven by
-\textbf{74LS}\footnote{They are TTL based.} ICs or \esp. \textbf{74LS} ICs are known
-for their low $\si{V}_{OH}$ and low source current. Logic high of \textbf{74LS} series ranges
+\emph{74LS}\footnote{They are TTL based.} ICs or \esp. \emph{74LS} ICs are known
+for their low $\si{V}_{OH}$ and low source current. Logic high of \emph{74LS} series ranges
 from $2.2\si{V}$ to $3\si{V}$. And can only source upto $0.4\si{mA}$. So we need to
 design an inverter with this in mind.
 
@@ -33,15 +33,16 @@ good candidate for our scenario. Refer Figure \ref{fig:bc547Pinout} for pinout a
 \ref{tbl:bc547Spec} for a brief specification of \emph{BC547}.
 
 \begin{center}
-    {\begin{minipage}[c] {0.42\textwidth}
+    {\begin{minipage}[c] {0.35\textwidth}
         \centering
         \includegraphics [
         ] {pics/bc547.pdf}
         \captionof{figure} {
-            Pinout of \textbf{BC547}.
+            Pinout of \emph{BC547}.
             \label{fig:bc547Pinout}
         }
     \end{minipage}
+    \hfill
     \begin{minipage}[c] {0.52\textwidth}
 
         \begin{tabularx} {\linewidth} {
@@ -59,7 +60,7 @@ good candidate for our scenario. Refer Figure \ref{fig:bc547Pinout} for pinout a
             \bottomrule
         \end{tabularx}
         \captionof{table} {
-            Brief specification of \textbf{BC547}.
+            Brief specification of \emph{BC547}.
             \label{tbl:bc547Spec}
         }
     \end{minipage}}
@@ -80,7 +81,7 @@ good candidate for our scenario. Refer Figure \ref{fig:bc547Pinout} for pinout a
             &= 0.2 \si{mA}
         \end{align}
 
-        Which is just below the maximum source current \textbf{74LS} series can provide.
+        Which is just below the maximum source current \emph{74LS} series can provide.
 
     \end{minipage}
     \hfill
