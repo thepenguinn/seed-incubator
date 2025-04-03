@@ -167,16 +167,12 @@ The $12^{\mbox{th}}$ bit will control the peltier and the fan connected to it.
 
 \begin{center}
     {\begin{minipage} [c] {0.55\textwidth}
-        The air of the exhaust is controlled using three fans, one is directly connected to the
-        peltier and the other two connected to the $13^{\mbox{th}}$ and $14^{\mbox{th}}$ bits
-        of the shift register. Figure \ref{fig:fanImage} show that 12V fan we are using.
-
-        Specification:
-
-        \begin{itemize}
-            \item \textbf{Operating voltage:} $12\si{V}$.
-            \item \textbf{Operating current:} $220\si{mA}$.
-        \end{itemize}
+        Inorder to low side switch the fans, we need to
+        use a power transistor, as the fans can pull 220mA.
+        We have chosen \emph{CD148D}, as the switching transistor.
+        And the \emph{BC547} is used to drive this power transistor.
+        Refer figure \ref{fig:fanControl} for more information about
+        the circuit.
 
     \end{minipage}
     \hfill
