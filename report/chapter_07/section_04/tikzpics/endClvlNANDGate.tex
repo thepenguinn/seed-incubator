@@ -1,0 +1,13 @@
+ \begin{tikzpicture} [
+         clvlCtkTikzPicStyle,
+     ]
+
+     \draw (0, 0) coordinate (origin);
+     \subClvlNANDGate {clvlNANDGate} {origin} {origin}
+
+     \ovrClvlNANDGateDrawLabelName {clvlNANDGate} {BC547} {BC547} {$\si{R}_{c}$} {$\si{R}_{b}$}
+
+     \ovrClvlNANDGateDrawPwr {clvlNANDGate} {$V_{CC}$}
+     \ovrClvlNANDGateDrawPole {clvlNANDGate}
+
+ \end{tikzpicture}

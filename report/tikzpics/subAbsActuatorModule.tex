@@ -6,9 +6,13 @@
 
 \def\absActuatorModuleGap{0.25}
 
+\def\absActuatorModulePinPad{0.25}
+
 \subtikzpicturedef{subAbsActuatorModule} {
     at0, ab0,
     al0, ct0, cb0, cr0, cr1,
+    pat0, pab0,
+    pal0, pct0, pcb0, pcr0, pcr1,
     north, south, east, west,
     northeast, northwest, southeast, southwest,
     center,
@@ -76,9 +80,22 @@
     (#1-northeast) ++(\absCtkPinPad, -0.5) coordinate (#1-cr0)
     (#1-southeast) ++(\absCtkPinPad,  0.5) coordinate (#1-cr1)
 
+    %% padding
+
+    (#1-at0) ++(0, \absActuatorModulePinPad) coordinate (#1-pat0)
+    (#1-ab0) ++(0, -\absActuatorModulePinPad) coordinate (#1-pab0)
+
+    (#1-al0) ++(-\absActuatorModulePinPad, 0) coordinate (#1-pal0)
+
+    (#1-ct0) ++(0, \absActuatorModulePinPad) coordinate (#1-pct0)
+    (#1-cb0) ++(0, -\absActuatorModulePinPad) coordinate (#1-pcb0)
+
+    (#1-cr0) ++(\absActuatorModulePinPad, 0) coordinate (#1-pcr0)
+    (#1-cr1) ++(\absActuatorModulePinPad, 0) coordinate (#1-pcr1)
+
     \markgeocoordinate {#1}
-    {(#1-ct0)} {(#1-cb0)}
-    {(#1-al0)} {(#1-cr0)}
+    {(#1-pct0)} {(#1-pcb0)}
+    {(#1-pal0)} {(#1-pcr0)}
 
     ;
 

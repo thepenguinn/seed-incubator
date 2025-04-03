@@ -1,0 +1,77 @@
+\def\absSimpleFiveBitSRPinCountTS{7}
+\def\absSimpleFiveBitSRPinCountLS{3}
+
+\subtikzpicturedef{subAbsCtkSimpleFiveBitShiftRegister} {
+    addr, clk,
+    l1, l2, l3,
+    t1, t2, t3, t4, t5, t6, t7,
+    qa, qb, qc, qd, qe,
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \draw
+    (#1-origin) ++(0, -\absCtkPinPad)
+    coordinate (#1-tmp)
+    ;
+
+    \foreach \x in {1,...,\absSimpleFiveBitSRPinCountLS} {
+        \draw [absCtkModule, line cap = round]
+        (#1-tmp) ++(0, -{(\x * \absCtkICPinGapComp)}) coordinate (#1-l\x)
+        ;
+    }
+
+    \draw
+    (#1-origin) ++(\absCtkPinPad, 0)
+    coordinate (#1-tmp)
+    ;
+
+    \foreach \x in {1,...,\absSimpleFiveBitSRPinCountTS} {
+        \draw [absCtkModule, line cap = round]
+        (#1-tmp) ++({(\x * \absCtkICPinGapComp)}, 0) coordinate (#1-t\x)
+        ;
+    }
+
+    \draw [absCtkModule]
+    (#1-t1) ++(-\absCtkICPinGapComp, -\absCtkPinPad) coordinate (#1-topLeft)
+    (#1-t\absSimpleFiveBitSRPinCountTS) ++(\absCtkICPinGapComp, -\absCtkICPinGapComp) coordinate (#1-topRight)
+    (#1-l\absSimpleFiveBitSRPinCountLS) ++(\absCtkICPinGapComp, -\absCtkICPinGapComp) coordinate (#1-bottomLeft)
+    (#1-bottomLeft -| #1-topRight) coordinate (#1-bottomRight)
+
+    (#1-topLeft) rectangle (#1-bottomRight)
+
+    %% draw the name of the ic
+    ($(#1-l3)!0.01!(#1-l2)$) coordinate (#1-tmp)
+    (#1-tmp -| #1-topRight) coordinate (#1-tmp)
+
+    (#1-tmp) node [left = 8pt] {\texttt{74LS96}}
+
+    ;
+
+    \foreach \l/\p/\n in {
+        QA/a/3,
+        QB/b/4,
+        QC/c/5,
+        QD/d/6,
+        QE/e/7%
+    } {
+        \draw [absCtkModule, thin]
+        (#1-t\n) ++(0, -\absCtkPinPad) node [below = 4pt] {\texttt{\l}}
+        (#1-t\n) coordinate (#1-q\p)
+        ;
+    }
+
+    %% clk and addr pin
+
+    \draw [absCtkModule, thin]
+    (#1-l2) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{CLK}}
+    (#1-l2) coordinate (#1-clk)
+
+    (#1-l3) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{ADDR}}
+    (#1-l3) coordinate (#1-addr)
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsCtkSimpleFiveBitShiftRegister}

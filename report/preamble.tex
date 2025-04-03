@@ -29,6 +29,19 @@
 \usepackage[style = ieee]{biblatex} %Imports biblatex package
 \usepackage{xfp}
 \usepackage{xifthen}
+\usepackage{tcolorbox}
+\usepackage{xltabular}
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+\usepackage[numbib]{tocbibind}
+
+%% for bold textsc to work
+\rmfamily % To load Latin Modern Roman and enable the following NFSS declarations.
+% Declare that Latin Modern Roman (lmr) should take
+% its bold (b) and bold extended (bx) weight, and small capital (sc) shape,
+% from the corresponding Computer Modern Roman (cmr) font, for the T1 font encoding.
+\DeclareFontShape{T1}{lmr}{b}{sc}{<->ssub*cmr/bx/sc}{}
+\DeclareFontShape{T1}{lmr}{bx}{sc}{<->ssub*cmr/bx/sc}{}
 
 \addbibresource{abstract.bib} %Import the bibliography file
 
@@ -50,7 +63,7 @@
 \usetikzlibrary{decorations.markings}
 
 \setlength{\arraycolsep}{0pt}
-\renewcommand\arraystretch{2}
+\renewcommand\arraystretch{1.5}
 
 %% custom packages
 
@@ -136,6 +149,113 @@
     \BOMAddItem{74 LS 03 - quad 2-input NAND gate with open collector outputs}{8}{#1}{}{Tomson}{https://www.tomsonelectronics.com/products/74-ls-03-quad-2-input-nand-gate-with-open-collector-outputs}
 }
 
+% alerts
+
+\newcommand\alertCaution[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertCaution,
+            colbacktitle = colorAlertBgCaution,
+            colback = colorAlertBgCaution,
+            colframe = colorAlertBgCaution,
+            title=Caution,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
+}
+
+\newcommand\alertWarning[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertWarning,
+            colbacktitle = colorAlertBgWarning,
+            colback = colorAlertBgWarning,
+            colframe = colorAlertBgWarning,
+            title=Warning,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
+}
+
+\newcommand\alertImportant[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertImportant,
+            colbacktitle = colorAlertBgImportant,
+            colback = colorAlertBgImportant,
+            colframe = colorAlertBgImportant,
+            title=Important,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
+}
+
+\newcommand\alertTip[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertTip,
+            colbacktitle = colorAlertBgTip,
+            colback = colorAlertBgTip,
+            colframe = colorAlertBgTip,
+            title=Tip,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
+}
+
+\newcommand\alertNote[1] {
+    \begin{tcolorbox}[
+            coltitle = colorAlertNote,
+            colbacktitle = colorAlertBgNote,
+            colback = colorAlertBgNote,
+            colframe = colorAlertBgNote,
+            title=Note,
+            fonttitle=\bfseries,
+            detach title,
+        ]
+        \begin{minipage}[t]{0.18\textwidth}
+            \begin{flushleft}
+                \tcbtitle
+            \end{flushleft}
+        \end{minipage}
+        \begin{minipage}[t]{0.8\textwidth}
+            #1
+        \end{minipage}
+    \end{tcolorbox}
+}
+
 %% for paragraphs
 \setlength{\parskip}{0.5\baselineskip}
 
@@ -200,6 +320,11 @@
 \def\IGXMaxWidth{\textwidth}
 \def\IGXMaxHeight{\textheight}
 \def\IGXDefaultOptionalArgs{keepaspectratio}
+
+%% resister values
+
+\def\resValThreeThreeK{$\SI{33}{k \ohm}$}
+\def\resValOneFiveK{$\SI{15}{k \ohm}$}
 
 \makeatletter
 \def\fps@figure{htbp}

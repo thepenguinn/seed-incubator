@@ -1,0 +1,91 @@
+\def\absFiveBitShiftRegisterSingleSide{8}
+
+\subtikzpicturedef{subAbsFiveBitShiftRegisterPinout} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \foreach \x in {1,...,\absFiveBitShiftRegisterSingleSide} {
+        \draw [absCtkModule, line cap = round]
+        (#1-origin) ++(0, -{(\x * \absCtkICPinGap)}) coordinate (#1-l\x)
+        ++({((2 * \absCtkPinPad) + \absCtkICWidth)}, 0) coordinate (#1-r\x)
+        ;
+    }
+
+    \foreach \x in {3,...,\absFiveBitShiftRegisterSingleSide} {
+        \draw [absCtkModule, line cap = round]
+        (#1-l\x) -- +(\absCtkPinPad, 0)
+        ;
+    }
+
+    \foreach \x in {1,...,\absFiveBitShiftRegisterSingleSide} {
+        \draw [absCtkModule, line cap = round]
+        (#1-r\x) -- +(-\absCtkPinPad, 0)
+        ;
+    }
+
+    \draw [absCtkModule]
+    (#1-origin) ++(\absCtkPinPad, 0) coordinate (#1-topLeft)
+    (#1-topLeft) ++(0, -{(\absCtkICPinGap * (\absFiveBitShiftRegisterSingleSide + 1))})
+    coordinate (#1-bottomLeft)
+
+    (#1-topLeft) ++(\absCtkICWidth, 0) coordinate (#1-topRight)
+    (#1-bottomLeft) ++(\absCtkICWidth, 0) coordinate (#1-bottomRight)
+
+    (#1-topLeft) rectangle (#1-bottomRight)
+
+    ($(#1-l1)!0.50!(#1-l2)$) ++(\absCtkPinPad, 0) node [right = 8pt] {\texttt{74LS96}}
+    ;
+
+    %% drawing pins left
+
+    \foreach \l/\p/\n in {
+        CP/1/3,
+        PS A/2/4,
+        PS B/3/5,
+        PS C/4/6,
+        PS D/6/7,
+        PS E/7/8%
+    } {
+        \draw [absCtkModule]
+        (#1-l\n) node [left = 4pt] {\texttt{\p}}
+        (#1-l\n) ++(\absCtkPinPad, 0) node [right = 4pt] {\texttt{\l}}
+        ;
+    }
+
+    %% right pins
+
+    \foreach \l/\p/\n in {
+        $\overline{\mbox{\texttt{MR}}}$/16/1,
+        Q A/15/2,
+        Q B/14/3,
+        Q C/13/4,
+        Q D/11/5,
+        Q E/10/6,
+        S/9/7,
+        PE/8/8%
+    } {
+        \draw [absCtkModule]
+        (#1-r\n) node [right = 4pt] {\texttt{\p}}
+        (#1-r\n) ++(-\absCtkPinPad, 0) node [left = 4pt] {\texttt{\l}}
+        ;
+    }
+
+    %% ground and vcc
+
+    \draw [absCtkModule, line cap = round]
+    ($(#1-topLeft)!0.50!(#1-topRight)$) -- ++(0, \absCtkPinPad) coordinate (#1-vcc)
+    ($(#1-bottomLeft)!0.50!(#1-bottomRight)$) -- ++(0, -\absCtkPinPad) coordinate (#1-gnd)
+
+    (#1-vcc) node [above = 4pt] {\texttt{5}}
+    (#1-vcc) ++(0, -\absCtkPinPad) node [below = 4pt] {\texttt{VCC}}
+
+    (#1-gnd) node [below = 4pt] {\texttt{12}}
+    (#1-gnd) ++(0, \absCtkPinPad) node [above = 4pt] {\texttt{GND}}
+
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsFiveBitShiftRegisterPinout}

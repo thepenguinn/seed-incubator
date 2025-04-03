@@ -1,0 +1,63 @@
+\def\clvlCtkCornerRadius{0.125cm}
+
+\tikzset{
+    clvlCtkTikzPicStyle/.style = {
+        %transform shape,
+        %scale = 0.55,
+    },
+    clvlCtkModule/.style = {
+        %thick,
+        %rounded corners = \clvlCtkCornerRadius,
+    },
+    clvlCtkAuxModule/.style = {
+        thick,
+        dashdotted,
+        %colorShadowGray,
+        rounded corners = \clvlCtkCornerRadius,
+    },
+    clvlCtkInnerConnection/.style = {
+        thick,
+        colorShadowGray,
+        rounded corners = \clvlCtkCornerRadius,
+        DUInterConnectFromOpenToOpen = 2pt,
+    },
+    clvlCtkAnnotationTo/.style = {
+        thick,
+        colorMerlinBlue,
+        rounded corners = \clvlCtkCornerRadius,
+        DUInterConnectFromFillToOpen = 3pt,
+    },
+    clvlCtkAnnotationFrom/.style = {
+        thick,
+        colorMerlinBlue,
+        rounded corners = \clvlCtkCornerRadius,
+        DUInterConnectFromOpenToFill = 3pt,
+    },
+    clvlCtkAnnotation/.style = {
+        colorMerlinBlue,
+        inner sep = 0cm,
+        outer sep = 0cm,
+    },
+}
+
+\def\clvlCtkPinPad{0.50}
+
+\newcommand\clvlCtkAnnotationWrap[1] {
+    \textcolor{colorMerlinBlue} {
+        \begin{minipage} {5cm}
+            \raggedright
+            \begin{itemize} [label=]
+                #1
+            \end{itemize}
+        \end{minipage}
+    }
+}
+
+\subtikzpicturedef{subClvlCtkDiagramBase} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subFigBase {#1-figBase} {#1-origin} {origin}
+}
+
+\subtikzpictureactivate{subClvlCtkDiagramBase}

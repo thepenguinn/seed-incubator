@@ -8,8 +8,17 @@ return {
     ["endAbsESP"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["endAbsESPPinout"] = {
+        ["parent_dir"] = "chapter_10/section_02/tikzpics",
+    },
     ["endAbsExhaustSystem"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
+    ["endAbsFiveBitShiftRegisterPinout"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["endAbsFourBitShiftRegisterPinout"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
     },
     ["endAbsHumidifierSystem"] = {
         ["parent_dir"] = "chapter_03/section_01/tikzpics",
@@ -35,6 +44,9 @@ return {
     ["endAbsPTC"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
     },
+    ["endAbsPanelActuatorModule"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
     ["endAbsPeltier"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
     },
@@ -49,6 +61,12 @@ return {
     },
     ["endAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["endAbsSixteenBitMuxPinout"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["endAbsSixteenBitShiftRegister"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
     },
     ["endAbsSoilMoistureAndFertilizerControlSystem"] = {
         ["parent_dir"] = "chapter_05/section_03/tikzpics",
@@ -65,6 +83,21 @@ return {
     ["endAbsThermalSensorSystem"] = {
         ["parent_dir"] = "chapter_02/section_03/tikzpics",
     },
+    ["endAbsThirtyTwoBitMux"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["endClvlCtkLEDDriver"] = {
+        ["parent_dir"] = "chapter_04/section_03/tikzpics",
+    },
+    ["endClvlInverter"] = {
+        ["parent_dir"] = "chapter_07/section_02/tikzpics",
+    },
+    ["endClvlNANDGate"] = {
+        ["parent_dir"] = "chapter_07/section_04/tikzpics",
+    },
+    ["endFanControl"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
     ["endIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
     },
@@ -77,11 +110,26 @@ return {
     ["subAbsCtkDiagramBase"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["subAbsCtkSimpleFiveBitShiftRegister"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["subAbsCtkSimpleFourBitShiftRegister"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
+    },
     ["subAbsESP"] = {
         ["parent_dir"] = "tikzpics",
     },
+    ["subAbsESPPinout"] = {
+        ["parent_dir"] = "chapter_10/section_02/tikzpics",
+    },
     ["subAbsExhaustSystem"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
+    ["subAbsFiveBitShiftRegisterPinout"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["subAbsFourBitShiftRegisterPinout"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
     },
     ["subAbsHumidifierSystem"] = {
         ["parent_dir"] = "chapter_03/section_01/tikzpics",
@@ -107,6 +155,9 @@ return {
     ["subAbsPTC"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
     },
+    ["subAbsPanelActuatorModule"] = {
+        ["parent_dir"] = "chapter_02/section_02/tikzpics",
+    },
     ["subAbsPeltier"] = {
         ["parent_dir"] = "chapter_02/section_02/tikzpics",
     },
@@ -121,6 +172,12 @@ return {
     },
     ["subAbsServo"] = {
         ["parent_dir"] = "chapter_02/tikzpics",
+    },
+    ["subAbsSixteenBitMuxPinout"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["subAbsSixteenBitShiftRegister"] = {
+        ["parent_dir"] = "chapter_07/section_05/tikzpics",
     },
     ["subAbsSoilMoistureAndFertilizerControlSystem"] = {
         ["parent_dir"] = "chapter_05/section_03/tikzpics",
@@ -137,10 +194,25 @@ return {
     ["subAbsThermalSensorSystem"] = {
         ["parent_dir"] = "chapter_02/section_03/tikzpics",
     },
+    ["subAbsThirtyTwoBitMux"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
+    },
+    ["subClvlCtkDiagramBase"] = {
+        ["parent_dir"] = "tikzpics",
+    },
+    ["subClvlInverter"] = {
+        ["parent_dir"] = "chapter_07/section_02/tikzpics",
+    },
+    ["subClvlNANDGate"] = {
+        ["parent_dir"] = "chapter_07/section_04/tikzpics",
+    },
     ["subFigBase"] = {
         ["parent_dir"] = "tikzpics",
     },
     ["subIncOverview"] = {
         ["parent_dir"] = "chapter_01/section_01/tikzpics",
+    },
+    ["subSixteenBitMux"] = {
+        ["parent_dir"] = "chapter_07/section_03/tikzpics",
     },
 }

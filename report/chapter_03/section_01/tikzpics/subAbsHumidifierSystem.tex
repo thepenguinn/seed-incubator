@@ -11,44 +11,41 @@
     \subAbsESP {#1-esp} {#1-esp} {center}
 
     \draw
-    (#1-esp-r0) ++(1, 0) coordinate (#1-sr0)
+    (#1-esp-r0) ++(1, 0) coordinate (#1-h0)
     ;
 
-    \subAbsOneBitRegister {#1-sr0} {#1-sr0} {l0}
-
-    \draw
-    (#1-sr0-b0) ++(0, -1) coordinate (#1-sr1)
-    ;
-
-    \subAbsOneBitRegister {#1-sr1} {#1-sr1} {t0}
-
-    \draw
-    (#1-sr0-r0) ++(1, 0) coordinate (#1-h0)
-    ;
-
+    %\subAbsOneBitRegister {#1-sr0} {#1-sr0} {l0}
+    %
+    %\draw
+    %(#1-sr0-b0) ++(0, -1) coordinate (#1-sr1)
+    %;
+    %
+    %\subAbsOneBitRegister {#1-sr1} {#1-sr1} {t0}
+    %
+    %\draw
+    %(#1-sr0-r0) ++(1, 0) coordinate (#1-h0)
+    %;
+    %
 
     \begin{scope} [
             rotate = 180,
         ]
         \subAbsActuatorModule {#1-h0} {#1-h0} {cr1}
-        \subAbsActuatorModule {#1-h1} {#1-h0-cr1 |- #1-sr1-r0} {cr1}
+        %\subAbsActuatorModule {#1-h1} {#1-h0-cr1 |- #1-sr1-r0} {cr1}
     \end{scope}
 
     %% labelling
 
-    \ovrAbsESPDrawLabelName {#1-esp} {ESP}
+    \ovrAbsESPDrawLabelName {#1-esp} {\texttt{ESP}}
 
-    \ovrAbsActuatorModuleDrawLabelName {#1-h0} {H0} {CTRL}
+    \ovrAbsActuatorModuleDrawLabelName {#1-h0} {\texttt{H0}} {\texttt{CTRL}}
 
-    \ovrAbsActuatorModuleDrawLabelName {#1-h1} {H1} {CTRL}
+    %\ovrAbsActuatorModuleDrawLabelName {#1-h1} {H1} {CTRL}
 
     %% connections
 
     \foreach \start/\stop in {
-        #1-esp-r0/#1-sr0-l0,
-        #1-sr0-b0/#1-sr1-t0,
-        #1-sr0-r0/#1-h0-cr1,
-        #1-sr1-r0/#1-h1-cr1%
+        #1-esp-r0/#1-h0-cr1%
     } {
         \draw [
             absCtkInnerConnection,
@@ -57,45 +54,51 @@
         ;
     }
 
+    \draw [
+        absCtkModule
+    ]
+    (#1-esp-r0) ++(-\absCtkPinPad, 0) node [left = 4pt] {\texttt{D21}}
+    ;
+
     %% annotation
 
-    \draw
-    (#1-esp-west) coordinate (#1-leftVert)
-    (#1-h0-west) coordinate (#1-rightVert) %% west because it is rotated
-    (#1-sr0-t0) coordinate (#1-topHori)
-    ;
-
-    \node at (#1-esp-center -| #1-leftVert) [
-        absCtkAnnotation,
-        anchor = east,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{ESP:} Esp32.
-        }
-    };
-
-    \draw
-    ($(#1-h0-center)!0.50!(#1-h1-center)$) coordinate (#1-tmp)
-    ;
-
-    \node at (#1-tmp -| #1-rightVert) [
-        absCtkAnnotation,
-        anchor = west,
-    ] {
-        \absCtkAnnotationWrap{
-        \item \textbf{HX:} Piezoelectric Humidifiers.
-        \item \textbf{CTRL:} Control circuits for Humidifiers.
-        }
-    };
-
-    \node at (#1-sr0-t0 |- #1-topHori) [
-        absCtkAnnotation,
-        anchor = south,
-    ] {
-        \absCtkAnnotationWrap{
-        \item Enable Shift Register.
-        }
-    };
+    %\draw
+    %(#1-esp-west) coordinate (#1-leftVert)
+    %(#1-h0-west) coordinate (#1-rightVert) %% west because it is rotated
+    %(#1-sr0-t0) coordinate (#1-topHori)
+    %;
+    %
+    %\node at (#1-esp-center -| #1-leftVert) [
+    %    absCtkAnnotation,
+    %    anchor = east,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{ESP:} Esp32.
+    %    }
+    %};
+    %
+    %\draw
+    %($(#1-h0-center)!0.50!(#1-h1-center)$) coordinate (#1-tmp)
+    %;
+    %
+    %\node at (#1-tmp -| #1-rightVert) [
+    %    absCtkAnnotation,
+    %    anchor = west,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item \textbf{HX:} Piezoelectric Humidifiers.
+    %    \item \textbf{CTRL:} Control circuits for Humidifiers.
+    %    }
+    %};
+    %
+    %\node at (#1-sr0-t0 |- #1-topHori) [
+    %    absCtkAnnotation,
+    %    anchor = south,
+    %] {
+    %    \absCtkAnnotationWrap{
+    %    \item Enable Shift Register.
+    %    }
+    %};
 
 }
 

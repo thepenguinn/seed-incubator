@@ -1,0 +1,25 @@
+\subtikzpicturedef{subAbsThirtyTwoBitMux} {
+    origin%
+} {
+    \draw (#1-start) coordinate (#1-origin);
+    \subAbsCtkDiagramBase {#1-absCtkDiagramBase} {#1-origin} {origin}
+
+    \subSixteenBitMux {#1-mux1} {#1-origin} {origin}
+    \draw
+    (#1-mux1-r12) ++(0, -2) coordinate (#1-mux2)
+    ;
+    \subSixteenBitMux {#1-mux2} {#1-mux2} {r1}
+
+    \draw
+    (#1-mux2-l12) ++(-3, 0) coordinate (#1-sreg)
+    ;
+    \subAbsCtkSimpleFiveBitShiftRegister {#1-sreg} {#1-sreg} {qe}
+
+    \draw
+    (#1-sreg-qe) ++(0, 5)
+    node [not port, anchor = in] {}
+    ;
+
+}
+
+\subtikzpictureactivate{subAbsThirtyTwoBitMux}

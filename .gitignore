@@ -1,4 +1,15 @@
-*.pdf
+*_standalone_sub.pdf
+*.lof
+*.lot
+*.toc
+logo/**/*.pdf
+report/*.pdf
+*/_standalone_tmp/*
+*/chapter_*/*.pdf
+*/chapter_*/section_*/*.pdf
+*/tikzpics/**/*.pdf
+*/chapter_*/tikzpics/**/*.pdf
+*/chapter_*/section_*/tikzpics/**/*.pdf
 *.tstp
 *.aux
 *.log
